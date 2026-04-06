@@ -1,0 +1,34 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = Bo Ramsey
+	email = psychosledge@gmail.com
+[alias]
+	lg = !git log --graph --decorate --all -n 20 && git status
+	lgs = !git log --graph --decorate -n 20 $@ && git status
+	lga = log --graph --decorate --all
+	ec = config --global -e
+	co = !git checkout $@ && git branch && git status
+	up = !git pull --rebase --autostash --prune $@ && git submodule update --init --recursive
+	cob = checkout -b
+	cm = commit -m
+	cma = !git add -A && git commit -m
+	cmf = commit --no-verify -m
+	undo = reset HEAD~1 --mixed
+	amend = commit --amend
+	wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+	nm = branch --no-merged
+	pf = push --force-with-lease
+	pub = !git push --set-upstream origin $(git symbolic-ref --short HEAD)
+	ab = branch -a
+	feta = fetch --all --prune
+	b = branch
+	rd = push -d origin
+	rbi = "!f() { git rebase -i \"${1:-$(git merge-base HEAD origin/$(git remote show origin | awk '/HEAD branch/ {print $NF}'))}\"; }; f"
+	rbo = "!b=$(git rev-parse --abbrev-ref HEAD) && set -- $(git rev-list --left-right --count $b...origin/$b) && if [ \"$2\" = \"0\" ]; then git rebase origin/HEAD; else echo 'You have commits to pull from origin/'$b; fi"
+	dpb = branch -D @{-1}
+[format]
+	#example: xxxxxxxx  30 minutes ago  Bo Ramsey  (HEAD -> master, origin/master, origin/HEAD)  did some stuff
+	pretty = format:%C(auto,yellow)%h  %C(auto,cyan)%as  %C(auto,green)%aN%C(auto)% gd% d  %C(auto,reset)%s
+[core]
+	editor = code --wait
