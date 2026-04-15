@@ -78,7 +78,41 @@ Stay in exploration mode until the human explicitly asks to formalize. Only then
 Describe entities, their fields, and relationships. Use the project's primary language for concrete examples. Explain the rationale and relationships.
 
 ### For Architecture Decisions:
-Create a structured ADR with clear sections. Reference existing ADRs in the project where applicable.
+
+Use this structure for every ADR. When multiple decisions are covered in one ADR, repeat the Options / Recommendation block for each.
+
+```
+## ADR-NNN: [Title]
+
+### Context
+[1–3 sentences: what situation requires this decision]
+
+### Decision: [Short label for what is being decided]
+
+| Option | Summary | Key cost |
+|--------|---------|----------|
+| A — [name] | [one line] | [one line] |
+| B — [name] | [one line] | [one line] |
+| C — [name] | [one line] | [one line] |
+
+**Option A — [name]**
+[2–4 sentences: approach + tradeoffs]
+
+**Option B — [name]**
+[2–4 sentences: approach + tradeoffs]
+
+**Option C — [name]** *(if applicable)*
+[2–4 sentences: approach + tradeoffs]
+
+### ✅ Recommendation: Option [X] — [name]
+[2–3 sentences: why this option wins and what would make it wrong]
+
+### Consequences
+- [bullet: what this decision costs or constrains]
+- [bullet: what it enables]
+```
+
+Reference existing ADRs in the project where applicable.
 
 ### For System Design:
 Provide diagrams (ASCII or description), component breakdown, and data flow explanations.
