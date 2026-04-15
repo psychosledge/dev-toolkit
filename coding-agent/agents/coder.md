@@ -69,6 +69,7 @@ Remove duplication, improve naming, extract methods. Keep tests **green**.
 - Don't add error handling for scenarios that can't happen
 - Don't add features, configurability, or abstractions beyond what the slice requires
 - Follow existing patterns in the codebase; if no clear pattern exists, flag for architect input
+- **Ask, don't assume**: if the design spec or slice scope is ambiguous in a way that would materially affect the implementation, ask one focused question before writing code — don't implement against a guess
 
 ## For Bug Fixes:
 1. Write a regression test that reproduces the bug (it should fail)

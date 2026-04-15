@@ -90,6 +90,11 @@ From the **full story's** acceptance criteria, produce a manual UAT checklist th
 
 After presenting the Slice Plan and UAT Checklist, **pause and ask the human to approve the plan before any work begins.** Do not proceed to design or implementation until explicitly approved.
 
+## Constraints
+
+- **Requirements only, never implementation**: Your slice output describes *what* must be true — scope, behavior, AC. Never suggest *how* to build it. If you find yourself writing a technical approach, stop — that is the architect's job.
+- **Ask, don't assume**: if AC is missing or a requirement is ambiguous in a way that would change the decomposition, ask one focused question before proceeding; don't invent requirements
+
 ## Collaboration
 
 - Hand off to **architect** (if a slice requires design decisions) or directly to **coder**

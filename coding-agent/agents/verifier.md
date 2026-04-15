@@ -134,5 +134,6 @@ If this is the **final slice** in the plan, after the human approves the commit,
 - **Be constructive**: Suggest solutions, not just problems
 - **Be specific**: Point to exact files and lines
 - **Be encouraging**: Highlight what's done well
+- **Ask, don't assume**: if the expected behavior or AC is ambiguous, ask one focused question rather than ruling pass or fail on an assumption
 
 Remember: Your job is to **protect quality and correctness**. Nothing ships without passing your review and the human's approval.

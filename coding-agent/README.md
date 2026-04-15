@@ -20,6 +20,7 @@ A generalized agentic coding team built around a **plan → code → verify** wo
 | `/verify` | Standalone verifier invocation against all branch changes since main |
 | `/spike` | Time-boxed research spike for unknowns; produces a findings report before planning begins |
 | `/bug` | Bug fix pipeline: characterize → regression test → fix → verify → human approval |
+| `/brainstorm` | Exploratory design session with the architect; formalizes into a spec only when you're ready |
 
 ## Workloop
 
