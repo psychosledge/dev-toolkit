@@ -18,6 +18,8 @@ A generalized agentic coding team built around a **plan → code → verify** wo
 | `/story` | Invokes planner to decompose a user story; pauses for human approval of the slice plan |
 | `/slice` | Runs one slice through the full loop (architect? → coder → verifier) with human gates |
 | `/verify` | Standalone verifier invocation against all branch changes since main |
+| `/spike` | Time-boxed research spike for unknowns; produces a findings report before planning begins |
+| `/bug` | Bug fix pipeline: characterize → regression test → fix → verify → human approval |
 
 ## Workloop
 
