@@ -1,3 +1,9 @@
+---
+name: bug
+description: Characterize and fix a bug with TDD — architect check, coder fix with regression test, verifier sign-off, human approval gate before commit.
+argument-hint: "[bug description]"
+---
+
 Investigate and fix a bug using the coder's TDD bug-fix workflow, then verify the fix.
 
 Bug report:

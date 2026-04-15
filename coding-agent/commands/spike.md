@@ -1,3 +1,9 @@
+---
+name: spike
+description: Time-boxed research spike to answer a focused question before planning. Produces a findings report and recommendation. Use before /story when requirements are unclear.
+argument-hint: "[research question]"
+---
+
 Conduct a time-boxed spike to answer a focused research question before planning begins.
 
 Research question:

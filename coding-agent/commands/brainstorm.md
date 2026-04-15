@@ -1,3 +1,9 @@
+---
+name: brainstorm
+description: Collaborative design exploration with the architect. Open-ended by default — formalizes into a spec or ADR only when you say so.
+argument-hint: "[design topic or problem]"
+---
+
 Invoke the **architect** subagent in brainstorm mode to think through a design problem collaboratively.
 
 Topic:

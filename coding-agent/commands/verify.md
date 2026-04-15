@@ -1,3 +1,9 @@
+---
+name: verify
+description: Verify the current slice against acceptance criteria and review code quality. Human approval gate before commit.
+argument-hint: "[acceptance criteria (optional)]"
+---
+
 Invoke the **verifier** subagent to verify the current slice against its acceptance criteria and review code quality.
 
 Provide the slice's acceptance criteria if known, or ask the user to paste them before proceeding.

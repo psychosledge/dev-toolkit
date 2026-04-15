@@ -1,3 +1,9 @@
+---
+name: slice
+description: Execute a planned slice through architect → coder → verifier with human approval gates. Use after /story has produced an approved plan.
+argument-hint: "[slice name and acceptance criteria]"
+---
+
 Execute the following slice through the full design → code → verify loop with human approval gates at each checkpoint.
 
 Slice to implement:
