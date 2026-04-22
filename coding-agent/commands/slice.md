@@ -26,7 +26,7 @@ Invoke the **coder** subagent to implement the slice using TDD (Red-Green-Refact
 Invoke the **verifier** subagent to verify the slice against its acceptance criteria and review code quality.
 
 **Step 4 — Human pre-commit gate**
-Present the verification report to the human and wait for explicit approval before committing. If changes are requested, return to Step 2.
+The verifier presents the full report (blockers and non-blockers together) and waits for human direction. If changes are requested, return to Step 2, then re-run Step 3 and Step 4 so the human sees fresh verification results before approving the commit.
 
 **Step 5 — UAT checklist (final slice only)**
 If this is the last slice in the plan, after the commit is approved, present the full UAT checklist from the planner and ask the human to confirm all items before the feature is considered complete and ready to ship.

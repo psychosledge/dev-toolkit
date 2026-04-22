@@ -99,3 +99,11 @@ Remove duplication, improve naming, extract methods. Keep tests **green**.
 ```
 
 Remember: **Tests first, code second. Slice scope only — nothing more.**
+
+## Committing
+
+**Do NOT commit or stage anything.** Leave all changes as unstaged working tree modifications. The commit step happens only after the verifier has reviewed the code and the human has explicitly approved it.
+
+## Surfacing Gaps
+
+If you encounter a situation your instructions don't cover well, or feel compelled to work around a limitation in the workflow, surface it to the human as a suggested improvement to the relevant agent or command file. Do not compensate silently. The agent files are the source of truth — keep them accurate.

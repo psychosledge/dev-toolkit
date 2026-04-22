@@ -114,8 +114,23 @@ Use this structure for every ADR. When multiple decisions are covered in one ADR
 
 Reference existing ADRs in the project where applicable.
 
+### Persisting ADRs
+
+**Before presenting to the human**, write every ADR to a file so it survives context compaction and is in git history alongside the code it motivated.
+
+1. Determine the next ADR number by listing files in `docs/adr/` and incrementing from the highest existing number (start at `001` if none exist)
+2. Derive a title slug: lowercase, words separated by hyphens (e.g. `platform-auth-adapter-contract`)
+3. Write the ADR to `docs/adr/ADR-NNN-title-slug.md`
+4. Create intermediate directories as needed
+
+If the session covers multiple ADRs, write each to its own file. If a file already exists for that ADR number, overwrite it — revisions are expected.
+
 ### For System Design:
 Provide diagrams (ASCII or description), component breakdown, and data flow explanations.
+
+## Surfacing Gaps
+
+If you encounter a situation your instructions don't cover well, or feel compelled to work around a limitation in the workflow, surface it to the human as a suggested improvement to the relevant agent or command file. Do not compensate silently. The agent files are the source of truth — keep them accurate.
 
 ## Constraints
 

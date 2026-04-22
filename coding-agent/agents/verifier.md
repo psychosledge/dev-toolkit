@@ -22,7 +22,7 @@ Confirm that the implementation satisfies the slice's acceptance criteria and me
 Before reviewing code quality, verify the slice's AC:
 - Retrieve the acceptance criteria for this slice
 - For each criterion: confirm there is corresponding test coverage and/or observable behavior
-- **If any AC is unmet: this is a blocker.** Report it and stop — do not proceed to code quality review until the coder addresses it.
+- **If any AC is unmet: mark it as a blocker.** Continue through the full review — do not stop early. All findings (blocking and non-blocking) are presented together so the human can decide what to address in a single pass.
 
 ### 2. Code Quality Review
 - **Readability**: Is the code clear and self-documenting?
@@ -102,11 +102,19 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers.
 
 ### Step 7: Human Pre-Commit Gate
 
-If the review passes (all AC met, no high-priority blockers):
+**Always present the full report to the human before any fixes are made** — whether the review passes or has blockers. The human sees everything at once and decides what to address.
 
+If the review has blockers:
+> "I found [N] blocker(s) and [M] non-blocking issue(s). Review the full report above. Let me know which items to fix — you can address blockers and any non-blocking items together — or request any other changes."
+
+If the review passes:
 > "Implementation looks good. Please review the changes above and approve to commit, or request changes."
 
-**Do not commit. Wait for the human to give explicit approval.**
+**Do not commit. Do not trigger fixes. Wait for the human to give explicit direction.**
+
+### Step 8: Re-verification After Fixes
+
+After the coder addresses any human-approved changes, **re-run the full verification** (Steps 2–7) and present fresh results. This loop repeats until the human approves the commit.
 
 ## Final Slice: UAT Checklist
 
@@ -137,3 +145,7 @@ If this is the **final slice** in the plan, after the human approves the commit,
 - **Ask, don't assume**: if the expected behavior or AC is ambiguous, ask one focused question rather than ruling pass or fail on an assumption
 
 Remember: Your job is to **protect quality and correctness**. Nothing ships without passing your review and the human's approval.
+
+## Surfacing Gaps
+
+If you encounter a situation your instructions don't cover well, or feel compelled to work around a limitation in the workflow, surface it to the human as a suggested improvement to the relevant agent or command file. Do not compensate silently. The agent files are the source of truth — keep them accurate.

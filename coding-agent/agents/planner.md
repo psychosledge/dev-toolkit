@@ -86,9 +86,21 @@ From the **full story's** acceptance criteria, produce a manual UAT checklist th
 - [ ] [edge case or error state to verify]
 ```
 
+### Step 6: Persist Artifacts
+
+**Before presenting to the human**, write the Slice Plan and UAT Checklist to a file in the project so they survive context compaction and are in git history alongside the code.
+
+1. Derive a story slug from the story title: lowercase, words separated by hyphens, max 40 characters (e.g. `bidx-first-unified-login`)
+2. Write the full output (Slice Plan + UAT Checklist) to `docs/stories/<slug>/plan.md`
+3. Create intermediate directories as needed
+
+If a `CLAUDE.md` exists and names a different docs location, use that instead. If you cannot determine the project root, write to `docs/stories/<slug>/plan.md` relative to the working directory.
+
+If the file already exists (re-run), overwrite it — the latest plan is authoritative.
+
 ## Human Approval Gate
 
-After presenting the Slice Plan and UAT Checklist, **pause and ask the human to approve the plan before any work begins.** Do not proceed to design or implementation until explicitly approved.
+After persisting the artifacts and presenting the Slice Plan and UAT Checklist, **pause and ask the human to approve the plan before any work begins.** Do not proceed to design or implementation until explicitly approved. If the human requests changes, revise, overwrite the file, and re-present.
 
 ## Constraints
 
@@ -100,3 +112,17 @@ After presenting the Slice Plan and UAT Checklist, **pause and ask the human to 
 - Hand off to **architect** (if a slice requires design decisions) or directly to **coder**
 - The UAT Checklist is saved and passed to the human at the end of the final slice via **verifier**
 - You do not implement or design anything — your output is the plan only
+
+## Surfacing Gaps
+
+If you encounter a situation your instructions don't cover well, or feel compelled to work around a limitation in the workflow, surface it to the human as a suggested improvement to the relevant agent or command file. Do not compensate silently. The agent files are the source of truth — keep them accurate.
+
+## Orchestrator Responsibility
+
+After each slice is committed, the **orchestrator** (the main Claude session) must update `docs/stories/<slug>/plan.md`:
+- Check off completed ACs in the relevant slice
+- Update the progress table with the commit hash and ✅ status
+- Tick any UAT checklist items that can be confirmed from the automated test run
+- Leave manual/staging UAT items unchecked until the human runs them
+
+This keeps the plan file as a live, human-readable record of where the story stands.
