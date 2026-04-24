@@ -1,6 +1,6 @@
 ---
 name: slice
-description: Execute a planned slice through architect → coder → verifier with human approval gates. Use after /story has produced an approved plan.
+description: Execute a planned slice through architect → coder → verifier with human approval gates. Use after /plan has produced an approved plan.
 argument-hint: "[slice name and acceptance criteria]"
 ---
 
