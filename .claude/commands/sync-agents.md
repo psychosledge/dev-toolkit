@@ -44,12 +44,13 @@ For each filename, run `diff` between the global and repo versions and classify 
 This is the critical step. For every non-identical file, evaluate the diff against the intended workloop. Be skeptical — question whether each change is genuinely better, genuinely worse, or just different.
 
 **The intended workloop:**
-1. `/story` — planner decomposes a user story into thin vertical slices with AC and a UAT checklist; writes plan to `docs/stories/<slug>/plan.md`
-2. `/slice` — for each slice: architect check (if needed) → coder implements with TDD → verifier runs full review → **human sees full report unconditionally** → human approves → commit
-3. `/bug` — characterize → architect check → coder fix with regression test → verifier → human approves → commit
-4. `/verify` — standalone verification pass
-5. Human gates are **unconditional** — the human always sees complete results before any action is taken, whether passing or failing
-6. Agents surface issues to the human; they never compensate silently or loop autonomously
+1. `/story` — author a story card in product-centric, PM-legible language; draft and iterate with the human; no planning begins until the human explicitly approves the card
+2. `/plan` — planner decomposes the approved story into thin vertical slices with AC and a UAT checklist; writes plan to `docs/stories/<slug>/plan.md`; human approves before any work begins
+3. `/slice` — for each slice: architect check (if needed) → coder implements with TDD → verifier runs full review → **human sees full report unconditionally** → human approves → commit
+4. `/bug` — characterize → architect check → coder fix with regression test → verifier → human approves → commit
+5. `/verify` — standalone verification pass
+6. Human gates are **unconditional** — the human always sees complete results before any action is taken, whether passing or failing
+7. Agents surface issues to the human; they never compensate silently or loop autonomously
 
 **For each non-identical file, work through these questions:**
 
