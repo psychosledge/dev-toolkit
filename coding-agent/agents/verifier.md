@@ -62,7 +62,9 @@ Before reviewing code quality, verify the slice's AC:
 Get the AC for this slice before looking at any code.
 
 ### Step 2: Run `git diff` and `git log`
-See what changed on this branch and understand the scope of the implementation.
+See what changed on this branch and understand the scope of the implementation. Use `git diff HEAD` to capture the full working tree (staged + unstaged + committed-but-unpushed changes).
+
+**Important:** Never flag the git staging or commit status of a file as a blocker or issue. Reviewing committed-but-unpushed changes is normal. Reviewing unstaged or uncommitted working-tree changes is also normal — the human commits after approving your report, not before. The only git-state blocker is a failing test suite.
 
 ### Step 3: Read the Code
 Review all modified files thoroughly.
