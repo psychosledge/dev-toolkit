@@ -77,6 +77,20 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers.
 
 ### Step 6: Provide Verification Report
 
+**Populating Scaffolding Inventory**:
+1. Read the plan file (`docs/stories/<slug>/plan.md`) and find the current slice's `Scaffolding for` and `Interface contract` fields, if any.
+2. Inspect the implementation for stubs, `TODO` markers, `NotImplementedError`, placeholder returns, or any code path that is intentionally incomplete.
+3. For each gap found:
+   - If it matches a `Scaffolding for` entry in the plan: list it as intentional with a forward reference to the named future slice.
+   - If it does not match any `Scaffolding for` entry: flag it for human review. Do not stamp it clean. Unaccounted gaps are NOT automatic blockers — they are flagged for the human to classify.
+4. If no gaps exist in either category, write the self-contained message (see template below).
+
+**Populating Explain-Back Prompt**:
+- After reviewing the implementation, identify the 1-2 most consequential decisions — choices about structure, pattern, naming, tradeoff, or approach that a reviewer might challenge.
+- Frame each as an open-ended question naming specific constructs from the actual implementation (e.g., "Why does X delegate to Y rather than handling this directly?").
+- Questions should reveal whether the human understands the tradeoff, not just whether they remember the choice.
+- This section appears in every report.
+
 ```markdown
 # Verification Report: [Slice Name]
 
@@ -97,9 +111,32 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers.
 ## Test Coverage Analysis
 - What's tested well, what's missing, edge cases to add
 
+## Scaffolding Inventory
+
+### Intentional (forward-referenced in plan)
+- [description of stub/gap] — closes in **Slice N: [name]**
+  - Contract: [repeat the Interface contract text from the plan]
+
+### Unaccounted gaps (human review required)
+- [description of stub/gap in file:line] — not referenced in plan's Scaffolding for fields; confirm this is intentional or raise as a blocker
+
+## Explain-Back Prompt
+
+Before approving, confirm you can answer these:
+
+1. [Question about the most consequential decision — names specific constructs from the actual code]
+2. [Question about the second most consequential decision — omit if only one decision qualifies]
+
 ## Approval Status
 - [ ] Ready for human pre-commit review
 - [ ] Needs changes (blockers listed above)
+```
+
+When no gaps exist, the Scaffolding Inventory section reads:
+
+```markdown
+## Scaffolding Inventory
+No intentional gaps or stubs. This slice is self-contained.
 ```
 
 ### Step 7: Human Pre-Commit Gate
