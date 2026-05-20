@@ -53,6 +53,8 @@ Identify the thinnest increments of end-to-end user-facing value. Order them so 
 
 For each slice, flag whether it requires architectural decisions (→ **architect**) or can go straight to **coder**.
 
+When a slice deliberately creates a provisional interface or stub that a later slice will depend on, mark it with `Scaffolding for` and `Interface contract` fields (see Step 4 format). Do not use these fields unless the dependency is explicit and the consuming slice is named in this plan.
+
 ### Step 4: Produce the Slice Plan
 
 ```
@@ -64,10 +66,14 @@ For each slice, flag whether it requires architectural decisions (→ **architec
 - [ ] [specific, testable criterion]
 - [ ] [specific, testable criterion]
 **Needs Architect:** yes/no — [reason if yes]
+**Scaffolding for:** [Slice M: name], [Slice P: name] — [one sentence describing the seam or interface being created]
+**Interface contract:** [the signature, shape, or behavior that must remain stable for the named future slices — e.g., "function foo(x: string): Promise<Result> — callers in Slice 3 depend on this shape"]
 
 ### Slice 2: [name]
 ...
 ```
+
+**Presence rule:** `Scaffolding for` and `Interface contract` appear together or not at all. Omit both when the slice delivers complete, self-contained behavior. Include both only when the slice deliberately leaves gaps (stubs, partial implementations, provisional interfaces) that a specific named future slice will fill or rely on. Do not use these fields unless the consuming slice is named in this plan.
 
 ### Step 5: Produce the UAT Checklist
 
