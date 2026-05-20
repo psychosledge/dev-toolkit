@@ -18,12 +18,12 @@ Read the list of working directories from the session context (primary working d
 
 Interpret the argument as:
 
-| Argument | Meaning |
-|---|---|
-| *(none)* | Last 7 days |
-| `1d`, `3d`, `7d`, `Nd` | Last N calendar days |
-| `Nh` | Last N hours |
-| `yesterday` | Since start of yesterday (local midnight) |
+| Argument                  | Meaning                                                  |
+| ------------------------- | -------------------------------------------------------- |
+| _(none)_                  | Last 7 days                                              |
+| `1d`, `3d`, `7d`, `Nd`    | Last N calendar days                                     |
+| `Nh`                      | Last N hours                                             |
+| `yesterday`               | Since start of yesterday (local midnight)                |
 | `friday` / `since-friday` | Since the most recent past Friday at midnight local time |
 
 Convert to an ISO 8601 cutoff timestamp to use with `git log --after`.
@@ -32,14 +32,18 @@ Convert to an ISO 8601 cutoff timestamp to use with `git log --after`.
 
 For each workspace repo, work through the following. If the repo has no configured remote, note it and skip to the next repo.
 
+> **Multi-repo safety:** Always target repos by absolute path using `git -C <absolute-path> <command>` (or run each repo's commands in a separate Bash call). Never use `cd` + `git` in the same shell invocation across multiple repos — the working directory persists between chained commands and will silently run later git commands against the wrong repo.
+
 **3a. Fetch**
+
 ```
-git fetch --all --prune
+git -C <repo-path> fetch --all --prune
 ```
 
 **3b. Find active branches**
 
 Get all remote-tracking branches, then filter to those with at least one commit newer than the cutoff:
+
 ```
 git log --oneline --after="<cutoff>" origin/<branch>
 ```
@@ -47,9 +51,11 @@ git log --oneline --after="<cutoff>" origin/<branch>
 **3c. Separate into two groups**
 
 - **In progress**: branches that have NOT been merged into the default branch. Check with:
+
   ```
   git branch -r --merged origin/main   # or origin/master
   ```
+
   Any remote branch not in that list with recent commits is in-progress.
 
 - **Recently merged to main**: commits on `origin/main` (or `origin/master`) itself that are newer than the cutoff.
@@ -60,6 +66,8 @@ git log --oneline --after="<cutoff>" origin/<branch>
 git log origin/<branch> --after="<cutoff>" --pretty=format:"%h|%s|%an|%ar"
 ```
 
+The `%h` short hash must be included in every commit line in the output.
+
 Cap at 15 commits per branch. If there are more, note "and N more commits" at the end.
 
 **3e. Check for PR status (optional)**
@@ -67,6 +75,7 @@ Cap at 15 commits per branch. If there are more, note "and N more commits" at th
 Only if both conditions hold: `gh` CLI is available (`which gh`) AND the repo has a GitHub remote (`git remote -v | grep github.com`).
 
 If both hold:
+
 ```
 gh pr list --head <branch> --json number,title,state,isDraft,reviewDecision
 ```
@@ -89,11 +98,11 @@ Use this format:
 **In Progress**
 
 **[branch-name]** — [author of most recent commit] · [N commits]  [PR #N: "title" — open / draft / changes requested]
-  • [commit subject] — [author], [relative time]
-  • [commit subject] — [author], [relative time]
+  • `abc1234` [commit subject] — [author], [relative time]
+  • `abc1234` [commit subject] — [author], [relative time]
 
 **Recently Merged to Main**
-  • [commit subject] — [author], [relative time]
+  • `abc1234` [commit subject] — [author], [relative time]
   • ...
 
 ---
