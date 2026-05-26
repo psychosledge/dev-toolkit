@@ -9,10 +9,12 @@ You are performing a drift audit between global Claude config files and this rep
 ## Locations
 
 **Global (what Claude actually runs):**
+- `~/.claude/CLAUDE.md` — global instructions
 - `~/.claude/agents/` — subagent definitions
 - `~/.claude/commands/` — slash command skills
 
 **Repo (source of truth):**
+- `coding-agent/CLAUDE.md` — global instructions
 - `coding-agent/agents/` — subagent definitions
 - `coding-agent/commands/` — slash command skills
 
@@ -22,7 +24,7 @@ If a repo root was passed as an argument, use that path instead of the current d
 
 ## Step 1: Discovery
 
-List all `.md` files in each of the four directories. Build a complete matrix of every unique filename across all four locations.
+List all `.md` files in each of the four directories, plus `CLAUDE.md` at the repo and global roots. Build a complete matrix of every unique filename across all locations.
 
 ---
 
@@ -106,7 +108,11 @@ Also report the count of identical files skipped.
 For each approved action:
 
 1. **Copy repo → global**: copy the repo file to the global location, overwriting the global version
+   - For `CLAUDE.md`: `coding-agent/CLAUDE.md` → `~/.claude/CLAUDE.md`
+   - For agents/commands: `coding-agent/<dir>/<file>` → `~/.claude/<dir>/<file>`
 2. **Copy global → repo**: copy the global file to the repo location, overwriting the repo version
+   - For `CLAUDE.md`: `~/.claude/CLAUDE.md` → `coding-agent/CLAUDE.md`
+   - For agents/commands: `~/.claude/<dir>/<file>` → `coding-agent/<dir>/<file>`
 3. **Manual merge**: show both versions side-by-side, work through the merge interactively with the human before writing anything
 4. Confirm each write with the exact source → destination path
 
