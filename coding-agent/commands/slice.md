@@ -13,6 +13,21 @@ $ARGUMENTS
 
 Follow this sequence exactly. Do not skip steps or approval gates.
 
+**Step 0 — Slice recap**
+Before any work begins, orient the human to exactly what this slice covers.
+
+1. Locate the plan file: list `docs/stories/` and identify the active story directory. If exactly one exists, use it. If multiple exist, match against the slice name or story context.
+2. Read `docs/stories/<slug>/plan.md` and find the section for this slice (match by name or number from `$ARGUMENTS`).
+3. Present the recap to the human:
+
+> **Slice [N]: [name]**
+> **Scope:** [scope from plan]
+> **Acceptance Criteria:**
+> - [ ] [criterion]
+> - [ ] [criterion]
+
+Then proceed immediately to Step 1 — no approval needed here. If the human flags a scope concern, pause and surface it before continuing.
+
 **Step 1 — Architect check**
 Does this slice require architectural decisions (new domain concepts, new external integrations, cross-cutting concerns, or anything warranting an ADR)?
 
@@ -62,6 +77,19 @@ After the explain-back resolves (pass or skip), ask for commit approval normally
 > "All good. Approve to commit, or request any other changes."
 
 If changes are requested, return to Step 2, re-run Step 3, and return to Step 4 (the comprehension gate runs again after any new verification).
+
+**Phase 4c — Update plan file**
+
+After the commit is made, update `docs/stories/<slug>/plan.md` for this slice:
+
+1. Run `git log -1 --format="%h"` to get the commit hash.
+2. In this slice's section:
+   - Change `**Status:** not started` → `**Status:** ✅ done`
+   - Change `**Commit:** —` → `**Commit:** <hash>`
+   - Check off each AC that was verified: `- [ ]` → `- [x]`
+3. Write the updated file.
+
+Do not modify other slices' sections or the UAT checklist.
 
 **Step 5 — UAT checklist (final slice only)**
 If this is the last slice in the plan, after the commit is approved, present the full UAT checklist from the planner and ask the human to confirm all items before the feature is considered complete and ready to ship.

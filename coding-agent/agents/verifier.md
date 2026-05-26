@@ -87,7 +87,9 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers.
 
 **Populating Explain-Back Prompt**:
 - After reviewing the implementation, identify the 1-2 most consequential decisions — choices about structure, pattern, naming, tradeoff, or approach that a reviewer might challenge.
+- **Only consider decisions the verifier does NOT flag as issues.** If a construct appears in the Issues section, do not ask about it here — asking "why did you do X?" when X is flagged as a problem reads as a trick question, not a comprehension check.
 - Frame each as an open-ended question naming specific constructs from the actual implementation (e.g., "Why does X delegate to Y rather than handling this directly?").
+- Include a short code excerpt (2–8 lines) showing exactly the construct being asked about, so the human has enough context without switching to the file.
 - Questions should reveal whether the human understands the tradeoff, not just whether they remember the choice.
 - This section appears in every report.
 
@@ -125,7 +127,16 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers.
 Before approving, confirm you can answer these:
 
 1. [Question about the most consequential decision — names specific constructs from the actual code]
-2. [Question about the second most consequential decision — omit if only one decision qualifies]
+
+   ```
+   [2–8 line code excerpt showing exactly the construct being asked about]
+   ```
+
+2. [Second question — omit if only one decision qualifies]
+
+   ```
+   [2–8 line code excerpt]
+   ```
 
 ## Approval Status
 - [ ] Ready for human pre-commit review

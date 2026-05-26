@@ -39,7 +39,7 @@ Convert to an ISO 8601 cutoff timestamp to use with `git log --after`.
 
 ## Step 3A — Fetch and collect activity per repo (Mode A: Time Window)
 
-For each workspace repo, work through the following. If the repo has no configured remote, note it and skip to the next repo.
+Work through the following for all workspace repos. **Run each step as a single parallel batch across all repos** — one Bash call per repo, all fired simultaneously. If a repo has no configured remote, note it and skip it in all subsequent steps.
 
 **3A-a. Fetch**
 
@@ -127,7 +127,7 @@ Then skip to **Step 5**.
 
 ## Step 3B — Fetch and collect remote gap per repo (Mode B: Unsynced)
 
-For each workspace repo, work through the following. If the repo has no configured remote, note it and skip to the next repo.
+Work through the following for all workspace repos. **Run each step as a single parallel batch across all repos** — one Bash call per repo, all fired simultaneously. If a repo has no configured remote, note it and skip it in all subsequent steps.
 
 **3B-a. Fetch with prune**
 
@@ -137,13 +137,54 @@ git -C <repo-path> fetch --all --prune
 
 The prune removes stale remote-tracking refs and is what surfaces the "gone" state below.
 
-**3B-b. New remote branches** (branches on remote with no local counterpart)
+**3B-a2. Resolve integration branch per repo**
+
+For each repo, determine the integration branch using this two-step lookup — run both in the same parallel batch as the fetch where possible:
+
+1. **Check for an explicit override first:**
+
+   ```
+   git -C <repo-path> config catchup.integrationBranch
+   ```
+
+   If this returns a value, use it. Stop here.
+
+2. **Fall back to the remote default branch:**
+   ```
+   git -C <repo-path> symbolic-ref refs/remotes/origin/HEAD
+   ```
+   Strip the `refs/remotes/origin/` prefix to get the branch name (e.g. `main`, `master`).
+
+**After resolving**, check whether a `dev` branch exists on the remote AND is not already merged into the resolved integration branch:
+
+```
+git -C <repo-path> branch -r | grep origin/dev
+git -C <repo-path> branch -r --merged origin/<integration> | grep origin/dev
+```
+
+If `origin/dev` exists but is NOT merged in, emit a hint at the end of this repo's section:
+
+```
+Tip: origin/dev has unmerged commits — if it's your integration branch, run: git -C <repo-path> config catchup.integrationBranch dev
+```
+
+> **Batch these queries:** Steps 3B-b, 3B-c, and 3B-d all read local branch state. After the fetch wave completes, fire `branch -r`, `branch -vv`, and `branch -r --merged origin/<integration>` for all repos simultaneously in a single parallel batch before processing any results.
+
+**3B-b. New remote branches** (branches on remote with no local counterpart, not yet merged)
 
 ```
 git -C <repo-path> branch -r | grep -v '\->'
 ```
 
-Cross-reference with local branches to find remote branches that have no local tracking branch. For each, collect the 5 most recent commits:
+Cross-reference with local branches to find remote branches that have no local tracking branch. Then filter out any already merged into the integration branch resolved in step 3B-a2:
+
+```
+git -C <repo-path> branch -r --merged origin/<integration>
+```
+
+Silently skip any remote branch that appears in that merged list. Only branches with commits **not yet in the integration branch** should be shown.
+
+For each remaining branch, collect the 5 most recent commits:
 
 ```
 git -C <repo-path> log origin/<branch> -5 --pretty=format:"%h|%s|%an|%ar"
@@ -201,6 +242,38 @@ Use this format:
 ```
 
 Omit any section that has nothing to report. If every section is empty for a repo, include it in the "All up to date" line instead of showing an empty block. Sort repos with changes first; within a repo, sort tracked-branch entries by how far behind they are (most behind first).
+
+If any unmerged remote branches appear old (4+ weeks with no recent commits), group them on one line rather than listing commits: `[branch], [branch] — old, likely squash-merged; will clear when remote is deleted.`
+
+Then continue to **Step 4B-post**.
+
+---
+
+## Step 4B-post — Auto-sync fast-forwardable branches (Mode B only)
+
+After presenting the summary, silently fast-forward every local tracked branch that is **strictly behind** its upstream (no diverged commits — `git branch -vv` showed `behind N` with no `ahead` component). Do this for all workspace repos.
+
+For the **currently checked-out branch** in a repo:
+
+```
+git -C <repo-path> pull --ff-only
+```
+
+For **non-checked-out branches** that are strictly behind:
+
+```
+git -C <repo-path> fetch origin <branch>:<branch>
+```
+
+If a branch is **diverged** (shows both ahead and behind in `git branch -vv`), skip it — do not attempt a merge or rebase.
+
+After syncing, output a single summary line:
+
+```
+*Synced: repo/branch (+N commits), repo/branch (+N commits) — repo/branch skipped (diverged)*
+```
+
+Omit the line entirely if nothing was synced and nothing needed skipping.
 
 Then continue to **Step 5**.
 

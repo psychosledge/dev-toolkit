@@ -62,6 +62,8 @@ When a slice deliberately creates a provisional interface or stub that a later s
 
 ### Slice 1: [name]
 **Scope:** [what changes, what doesn't]
+**Status:** not started
+**Commit:** —
 **Acceptance Criteria:**
 - [ ] [specific, testable criterion]
 - [ ] [specific, testable criterion]
@@ -125,10 +127,4 @@ If you encounter a situation your instructions don't cover well, or feel compell
 
 ## Orchestrator Responsibility
 
-After each slice is committed, the **orchestrator** (the main Claude session) must update `docs/stories/<slug>/plan.md`:
-- Check off completed ACs in the relevant slice
-- Update the progress table with the commit hash and ✅ status
-- Tick any UAT checklist items that can be confirmed from the automated test run
-- Leave manual/staging UAT items unchecked until the human runs them
-
-This keeps the plan file as a live, human-readable record of where the story stands.
+After each slice is committed, the `/slice` command updates `docs/stories/<slug>/plan.md` automatically (see Phase 4c in the slice command). The fields it writes are `**Status:**`, `**Commit:**`, and the AC checkboxes — which is why the plan template includes them pre-populated as `not started` / `—` / `- [ ]`. Do not remove these fields when authoring a plan.
