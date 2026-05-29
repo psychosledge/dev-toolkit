@@ -10,13 +10,20 @@ Provide the slice's acceptance criteria if known, or ask the user to paste them 
 
 Check all files changed on this branch since it diverged from main.
 
-Provide:
+The verifier will produce:
 - AC verification (each criterion: met or not met)
 - Quality rating (X/10)
 - Strengths and issues (with priority)
 - Refactoring suggestions
 - Test coverage analysis
-- Pre-commit approval gate — pause for explicit human approval before any commit
+
+After the verifier presents its report, read `~/.claude/commands/code-review.md` and follow the walk-through process (Steps 2 and 3: orient through fix loop). The verifier's findings are already in context — surface them alongside the relevant code when you reach it.
+
+Once the walk-through is complete and the human is satisfied, ask for explicit commit approval:
+
+> "Approve to commit?"
+
+Commit on approval.
 
 Branch changes:
 !`git diff --stat $(git merge-base main HEAD)`

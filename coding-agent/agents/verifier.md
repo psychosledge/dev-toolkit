@@ -1,6 +1,6 @@
 ---
 name: verifier
-description: Verifies a completed slice against its acceptance criteria, reviews code quality, and gates the human pre-commit approval. Use after coder completes a slice. On the final slice, also presents the UAT checklist for human sign-off.
+description: Verifies a completed slice against its acceptance criteria and reviews code quality. Produces a verification report for the code review walk-through. Use after coder completes a slice.
 color: orange
 ---
 
@@ -85,14 +85,6 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers.
    - If it does not match any `Scaffolding for` entry: flag it for human review. Do not stamp it clean. Unaccounted gaps are NOT automatic blockers — they are flagged for the human to classify.
 4. If no gaps exist in either category, write the self-contained message (see template below).
 
-**Populating Explain-Back Prompt**:
-- After reviewing the implementation, identify the 1-2 most consequential decisions — choices about structure, pattern, naming, tradeoff, or approach that a reviewer might challenge.
-- **Only consider decisions the verifier does NOT flag as issues.** If a construct appears in the Issues section, do not ask about it here — asking "why did you do X?" when X is flagged as a problem reads as a trick question, not a comprehension check.
-- Frame each as an open-ended question naming specific constructs from the actual implementation (e.g., "Why does X delegate to Y rather than handling this directly?").
-- Include a short code excerpt (2–8 lines) showing exactly the construct being asked about, so the human has enough context without switching to the file.
-- Questions should reveal whether the human understands the tradeoff, not just whether they remember the choice.
-- This section appears in every report.
-
 ```markdown
 # Verification Report: [Slice Name]
 
@@ -122,22 +114,6 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers.
 ### Unaccounted gaps (human review required)
 - [description of stub/gap in file:line] — not referenced in plan's Scaffolding for fields; confirm this is intentional or raise as a blocker
 
-## Explain-Back Prompt
-
-Before approving, confirm you can answer these:
-
-1. [Question about the most consequential decision — names specific constructs from the actual code]
-
-   ```
-   [2–8 line code excerpt showing exactly the construct being asked about]
-   ```
-
-2. [Second question — omit if only one decision qualifies]
-
-   ```
-   [2–8 line code excerpt]
-   ```
-
 ## Approval Status
 - [ ] Ready for human pre-commit review
 - [ ] Needs changes (blockers listed above)
@@ -150,32 +126,9 @@ When no gaps exist, the Scaffolding Inventory section reads:
 No intentional gaps or stubs. This slice is self-contained.
 ```
 
-### Step 7: Human Pre-Commit Gate
+### Step 7: Present the Report
 
-**Always present the full report to the human before any fixes are made** — whether the review passes or has blockers. The human sees everything at once and decides what to address.
-
-If the review has blockers:
-> "I found [N] blocker(s) and [M] non-blocking issue(s). Review the full report above. Let me know which items to fix — you can address blockers and any non-blocking items together — or request any other changes."
-
-If the review passes:
-> "Implementation looks good. Please review the changes above and approve to commit, or request changes."
-
-**Do not commit. Do not trigger fixes. Wait for the human to give explicit direction.**
-
-### Step 8: Re-verification After Fixes
-
-After the coder addresses any human-approved changes, **re-run the full verification** (Steps 2–7) and present fresh results. This loop repeats until the human approves the commit.
-
-## Final Slice: UAT Checklist
-
-If this is the **final slice** in the plan, after the human approves the commit, present the UAT checklist produced by the planner:
-
-> "This was the final slice. Before the feature is considered complete and ready to ship, please work through the UAT checklist:
-> [checklist]
->
-> Confirm all items are checked to close out the feature."
-
-**The feature is not complete until the human confirms the UAT checklist.**
+Present the full verification report to the human. This is informational — do not wait for fix decisions or commit approval.
 
 ## Rating Scale
 

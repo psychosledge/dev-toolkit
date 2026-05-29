@@ -39,5 +39,12 @@ Invoke the **verifier** subagent with:
 - The bug characterization from Step 1 as the acceptance criteria
 - Expected outcome: the bug no longer occurs and no regressions were introduced
 
-**Step 5 — Human pre-commit gate**
-Present the verification report and wait for explicit human approval before committing.
+**Step 5 — Code review walk-through**
+
+Read `~/.claude/commands/code-review.md` and follow the walk-through process (Steps 2 and 3: orient through fix loop). The verifier's findings are already in context — surface them alongside the relevant code when you reach it.
+
+Once the walk-through is complete and the human is satisfied, ask for explicit commit approval:
+
+> "Approve to commit?"
+
+Commit on approval.
