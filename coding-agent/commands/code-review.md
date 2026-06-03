@@ -14,6 +14,15 @@ Check for a `CLAUDE.md` at the project root. Read it and apply project-specific 
 
 Determine the diff base: use `$ARGUMENTS` if provided (e.g., `main`, a commit hash), otherwise default to `main` (or `HEAD` if no `main` branch exists). Run `git diff` against that base and `git log --oneline -5` for recent context. If the diff is large, scan it first to understand the shape of the change before diving in.
 
+**Check for verifier review notes.** Look for a review notes file written by the verifier — check `docs/stories/` for `review-notes-slice-N.md` files, or `docs/review-notes-*.md` for standalone runs. If found, read it. The pre-flight summary (rating, AC verdict, blockers) and per-file findings will be woven into the walk-through.
+
+**Present the pre-flight summary** (only when review notes exist):
+
+> **Verifier Pre-flight**
+> Quality: X/10 | AC: N/M met | Blockers: [none / list]
+
+If there are blockers, name them here so they're on the human's radar before the walk-through begins.
+
 ## Step 2: Walk Through the Changes
 
 **a) Group the changed files by concern** — not alphabetically, but by what problem they solve together. Examples: "the new middleware and its types", "the store and the views that use it", "tests for the above". Small changes may have only one group.
@@ -23,15 +32,16 @@ Determine the diff base: use `$ARGUMENTS` if provided (e.g., `main`, a commit ha
 2. Read the relevant files and show the meaningful changed code in a code block — actual file contents, not raw diff syntax (typically 10–40 lines)
 3. Explain **what changed** — specifically and concisely
 4. Explain **why** — what problem this solves, what alternative was rejected, what constraint drove the structure. This is the most important part.
-5. Note any quality issues you observe naturally for this code
-6. End with: "Questions on this group before I move on?"
+5. If verifier review notes exist: surface any findings for this group's files from the per-file findings section — present them as "Verifier flagged:" with their priority. If none, skip.
+6. Note any additional quality issues you observe that the verifier didn't catch.
+7. End with: "Questions on this group before I move on?"
 
 **Do not present the next group until the human replies.** One group per response is the rule — not a suggestion.
 
 **c) After all groups, consolidate:**
 - 2–3 sentence summary of the full change
-- Sorted issue list:
-  - **Blockers** (failing tests, unmet requirements)
+- Sorted issue list — merge verifier findings with anything new from the walk-through:
+  - **Blockers** (failing tests, unmet AC — from verifier pre-flight or walk-through)
   - **Recommended fixes** (quality issues worth addressing)
   - **Optional improvements** (low-priority suggestions)
   - If nothing flagged: "No issues — the implementation looks clean."
@@ -45,7 +55,9 @@ For each approved fix:
 3. Ask: "Good? Anything else to adjust?"
 4. Repeat for remaining fixes.
 
-## Step 4: Commit
+## Step 4: Commit (standalone only)
+
+This step applies only when `code-review` is invoked directly as a standalone command — not when invoked from `/slice`, `/bug`, or `/verify`, which own their own commit gates.
 
 Once the human is satisfied, ask for explicit commit approval:
 
@@ -53,4 +65,4 @@ Once the human is satisfied, ask for explicit commit approval:
 
 Commit on approval with a clear commit message describing the change.
 
-This command is standalone — it does not update plan files or UAT checklists. Use `/slice` for the full workloop.
+This command does not update plan files or UAT checklists. Use `/slice` for the full workloop.

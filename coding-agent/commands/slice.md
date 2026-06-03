@@ -42,7 +42,9 @@ Invoke the **verifier** subagent to verify the slice against its acceptance crit
 
 **Step 4 — Code review walk-through**
 
-Read `~/.claude/commands/code-review.md` and follow the walk-through process (Steps 2 and 3: orient through fix loop). The verifier's findings are already in context — surface them alongside the relevant code when you reach it.
+Read `coding-agent/commands/code-review.md` and follow Steps 1 through 3 (orient → walk-through → fix loop). The verifier will have written review notes to `docs/stories/<slug>/review-notes-slice-N.md` — the code-review walk-through reads these automatically for the pre-flight summary and inline findings.
+
+Do not run Step 4 of `code-review.md` (the standalone commit step) — Phase 4b below owns the commit.
 
 Once the walk-through is complete and the human is satisfied, proceed to Phase 4b.
 
@@ -63,5 +65,8 @@ After approval, commit the changes and update `docs/stories/<slug>/plan.md` for 
 
 Do not modify other slices' sections or the UAT checklist.
 
-**Step 5 — UAT checklist (final slice only)**
-If this is the last slice in the plan, after the commit is approved, present the full UAT checklist from the planner and ask the human to confirm all items before the feature is considered complete and ready to ship.
+**Step 5 — UAT checklist and PR prep (final slice only)**
+If this is the last slice in the plan, after the commit is approved:
+
+1. Present the full UAT checklist from `docs/stories/<slug>/plan.md` and ask the human to confirm all items.
+2. Once UAT is confirmed, invoke the `pr-brief` command to produce the PR title and description from the story's artifacts. The human can paste the output directly into GitHub.

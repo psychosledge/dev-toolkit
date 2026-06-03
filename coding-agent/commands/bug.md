@@ -41,7 +41,9 @@ Invoke the **verifier** subagent with:
 
 **Step 5 — Code review walk-through**
 
-Read `~/.claude/commands/code-review.md` and follow the walk-through process (Steps 2 and 3: orient through fix loop). The verifier's findings are already in context — surface them alongside the relevant code when you reach it.
+Read `coding-agent/commands/code-review.md` and follow Steps 1 through 3 (orient → walk-through → fix loop). The verifier will have written review notes to `docs/review-notes-<date>.md` — the walk-through reads these for the pre-flight summary and inline findings.
+
+Do not run Step 4 of `code-review.md` (the standalone commit step) — this step owns the commit.
 
 Once the walk-through is complete and the human is satisfied, ask for explicit commit approval:
 

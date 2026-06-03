@@ -1,75 +1,71 @@
 ---
 name: pr-brief
-description: Synthesizes comprehension history from all approved slices in the current story into a pairing-session-ready brief. Run before a PR review to reconstruct the decisions you approved.
+description: Produces a ready-to-paste PR title and description from the story's plan, review notes, ADRs, and git history. Replaces /pr-description for stories run through the workloop. Invoked automatically on the final slice, or run standalone before opening a PR.
 argument-hint: "[story slug or plan file path (optional)]"
 ---
 
-Produce a PR Brief for the current story by synthesizing the explain-back history and key decisions from all completed slices.
+Produce a PR title and description for the current story, ready to paste into GitHub.
 
 Story context (optional):
 $ARGUMENTS
 
 ---
 
-Follow this sequence:
+## Step 1 — Locate artifacts
 
-**Step 1 — Locate the plan file**
+Find `docs/stories/<slug>/plan.md`. If $ARGUMENTS provides a slug or path, use it. Otherwise identify the slug from the most recent git commits (the plan file path appears in orchestrator update commits) or ask the human to confirm.
 
-Find `docs/stories/<slug>/plan.md`. If $ARGUMENTS provides a slug or path, use it. Otherwise, identify the slug from recent git commits (the plan file path is in the orchestrator update commits) or ask the human to confirm the slug.
+Once located, read:
+- `docs/stories/<slug>/plan.md` — slice list, AC per slice, commit hashes, UAT checklist
+- All `docs/stories/<slug>/review-notes-slice-N.md` files — verifier findings and quality signals per slice
+- Any ADRs referenced in the plan or linked from the story directory (`docs/adr/`)
+- `git log --oneline` for the commits that make up this story (use the commit hashes from the plan)
+- `git diff <first-slice-commit>^..HEAD` for the full change set
 
-**Step 2 — Extract scaffolding and skip flags**
+## Step 2 — Synthesize
 
-Read the plan file. Collect:
-- All `Scaffolding for` and `Interface contract` fields from each slice
-- All `Comprehension skipped` markers and their decision topics
+From the artifacts, extract:
+- The problem being solved (from the story background and AC)
+- The approach taken and what was ruled out (from ADRs and review notes)
+- Notable quality signals — any blockers resolved, significant refactoring suggestions acted on, test coverage decisions
+- The scope: files changed, layers touched, any scaffolding left open
 
-**Step 3 — Synthesize from conversation context**
+Do not fabricate rationale. If a decision's reasoning isn't in the artifacts, say so rather than inventing it.
 
-From the current conversation history, collect:
-- The explain-back exchanges: the questions asked and the human's answers (or the re-explain loops that occurred)
-- Any decisions where the human demonstrated understanding in their own words
+## Step 3 — Produce the PR description
 
-If conversation history for a slice is not available (e.g., context was compacted), note the gap rather than fabricating a summary.
-
-**Step 4 — Produce the PR Brief**
-
-Output the following document:
-
----
-
-# PR Brief: [Story Title]
-
-## What changed and why
-[2-4 sentence narrative covering the full story arc — what problem was solved, what approach was taken, what was ruled out]
-
-## Slice-by-slice decisions
-
-For each slice in the plan:
-
-### [Slice N: name] — [commit hash if known]
-
-**Key decisions:**
-- [Decision 1]: [rationale in 1-2 sentences, synthesized from the explain-back exchange or plan context]
-- [Decision 2 if present]
-
-**Scaffolding note** (if applicable):
-- Created [interface/stub] for [Slice M] — contract: [interface contract text]
-
-**Comprehension skip** (if applicable):
-> FLAGGED: [decision topic] was not explained back on [date]. Review this decision before pairing.
-
-## Likely reviewer questions
-[3-5 questions a code reviewer might ask, derived from the decisions documented above — phrased as the reviewer would ask them, not as the human would answer them]
-
-## Skipped decisions (full list)
-[If any comprehension skips occurred, list them here as a single consolidated block for easy scanning. If none, omit this section.]
+Output the following, ready to paste into GitHub:
 
 ---
 
-**Step 5 — Offer drill-down**
+**Title:** [One declarative sentence, under 70 characters, describing the user-facing outcome]
 
-After presenting the brief, offer:
+**Body:**
 
-> "Want to drill into any of these decisions before the review? I can walk through the rationale for any slice."
+## What changed
+[2–4 sentences: what problem this solves, what approach was taken, what was ruled out. Written for a reviewer who knows the codebase but not this story.]
 
-Wait for the human's direction. If they ask about a specific decision, explain it using the plan and git diff as sources. Do not invent rationale that wasn't in the original implementation.
+## Key decisions
+- **[Decision]:** [1–2 sentence rationale, sourced from ADR or review notes]
+- **[Decision]:** [rationale]
+[Omit this section if no significant decisions were documented.]
+
+## Test coverage
+[1–2 sentences on what's tested and any deliberate gaps or scaffolding left open.]
+
+## UAT
+- [ ] [checklist item from plan]
+- [ ] [checklist item from plan]
+[Copy the UAT checklist from the plan file verbatim. Mark items ✅ if the human confirmed them during Step 5 of /slice.]
+
+---
+
+Keep the description tight. A reviewer should be able to read it in under two minutes and understand what to look for. Omit sections that have nothing meaningful to say.
+
+## Step 4 — Offer drill-down
+
+After presenting the PR description, offer:
+
+> "Want to adjust the framing or expand any section before you open the PR?"
+
+If the human asks for changes, revise inline — do not re-run the full synthesis.

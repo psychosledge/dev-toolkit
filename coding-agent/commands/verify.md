@@ -17,7 +17,9 @@ The verifier will produce:
 - Refactoring suggestions
 - Test coverage analysis
 
-After the verifier presents its report, read `~/.claude/commands/code-review.md` and follow the walk-through process (Steps 2 and 3: orient through fix loop). The verifier's findings are already in context — surface them alongside the relevant code when you reach it.
+After the verifier presents its report, read `coding-agent/commands/code-review.md` and follow Steps 1 through 3 (orient → walk-through → fix loop). The verifier will have written review notes to disk — the walk-through reads these for the pre-flight summary and inline findings.
+
+Do not run Step 4 of `code-review.md` (the standalone commit step) — this command owns the commit.
 
 Once the walk-through is complete and the human is satisfied, ask for explicit commit approval:
 

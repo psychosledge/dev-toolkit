@@ -126,7 +126,44 @@ When no gaps exist, the Scaffolding Inventory section reads:
 No intentional gaps or stubs. This slice is self-contained.
 ```
 
-### Step 7: Present the Report
+### Step 7: Write Review Notes to Disk
+
+Before presenting to the human, write structured review notes to disk so the code-review walk-through and pr-brief can read them.
+
+**Determine the output path:**
+- If a plan file exists at `docs/stories/<slug>/plan.md`: write to `docs/stories/<slug>/review-notes-slice-N.md` where N is the slice number.
+- If no plan file exists (e.g., invoked via `/bug` or `/verify` standalone): write to `docs/review-notes-<timestamp>.md` where timestamp is `YYYY-MM-DD`.
+
+**Write the following structure:**
+
+```markdown
+# Review Notes: [Slice Name]
+
+## Pre-flight Summary
+**Quality Rating:** X/10
+**AC Verdict:** N/M met[— blocker: <criterion name> if any unmet]
+**Blockers:**
+- [blocker description, or "none"]
+
+## Per-file Findings
+### [filename]
+- [finding with priority: high/medium/low]
+- [finding...]
+
+## Strengths
+- [what was done well]
+
+## Refactoring Suggestions
+1. [suggestion] (priority: high/medium/low)
+
+## Test Coverage
+- [what's well covered, what's missing]
+
+## Scaffolding Inventory
+[copy from verification report]
+```
+
+### Step 8: Present the Report
 
 Present the full verification report to the human. This is informational — do not wait for fix decisions or commit approval.
 
