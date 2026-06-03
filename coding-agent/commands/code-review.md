@@ -18,13 +18,15 @@ Determine the diff base: use `$ARGUMENTS` if provided (e.g., `main`, a commit ha
 
 **a) Group the changed files by concern** — not alphabetically, but by what problem they solve together. Examples: "the new middleware and its types", "the store and the views that use it", "tests for the above". Small changes may have only one group.
 
-**b) For each group:**
+**b) For each group — present ONE group per response, then stop and wait:**
 1. Name the group and its purpose in one sentence
 2. Read the relevant files and show the meaningful changed code in a code block — actual file contents, not raw diff syntax (typically 10–40 lines)
 3. Explain **what changed** — specifically and concisely
 4. Explain **why** — what problem this solves, what alternative was rejected, what constraint drove the structure. This is the most important part.
 5. Note any quality issues you observe naturally for this code
-6. Ask: "Questions on this group before I move on?" — wait for the human's response before continuing
+6. End with: "Questions on this group before I move on?"
+
+**Do not present the next group until the human replies.** One group per response is the rule — not a suggestion.
 
 **c) After all groups, consolidate:**
 - 2–3 sentence summary of the full change
