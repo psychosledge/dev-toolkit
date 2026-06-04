@@ -1,12 +1,14 @@
 ---
 name: verify
-description: Verify the current slice against acceptance criteria and review code quality. Human approval gate before commit.
+description: Verify code quality and correctness. Works with or without a plan — AC check runs if criteria are available, quality assessment always runs. Human approval gate before commit.
 argument-hint: "[acceptance criteria (optional)]"
 ---
 
-Invoke the **verifier** subagent to verify the current slice against its acceptance criteria and review code quality.
+Invoke the **verifier** subagent to review code quality and verify correctness.
 
-Provide the slice's acceptance criteria if known, or ask the user to paste them before proceeding.
+**If acceptance criteria are available** (passed as arguments, or findable in `docs/stories/<slug>/plan.md`), verify each criterion and report met/not met.
+
+**If no AC exists**, skip the AC check entirely — do not prompt the user for criteria they don't have. Proceed directly to the quality assessment.
 
 Check all files changed on this branch since it diverged from main.
 
