@@ -37,24 +37,13 @@ Does this slice require architectural decisions (new domain concepts, new extern
 **Step 2 — Implementation**
 Invoke the **coder** subagent to implement the slice using TDD (Red-Green-Refactor). The coder should work within the scope of this slice only.
 
-**Step 3 — Verification**
-Invoke the **verifier** subagent to verify the slice against its acceptance criteria and review code quality.
+**Step 3 — Verify and review**
 
-**Step 4 — Code review walk-through**
+Read `coding-agent/commands/code-review.md` and follow all steps. It will run the verifier, walk through changes, handle fixes, and commit.
 
-Read `coding-agent/commands/code-review.md` and follow Steps 1 through 3 (orient → walk-through → fix loop). The verifier will have written review notes to `docs/stories/<slug>/review-notes-slice-N.md` — the code-review walk-through reads these automatically for the pre-flight summary and inline findings.
+**Phase 4b — Plan update**
 
-Do not run Step 4 of `code-review.md` (the standalone commit step) — Phase 4b below owns the commit.
-
-Once the walk-through is complete and the human is satisfied, proceed to Phase 4b.
-
-**Phase 4b — Commit and plan update**
-
-Ask for explicit commit approval:
-
-> "Approve to commit?"
-
-After approval, commit the changes and update `docs/stories/<slug>/plan.md` for this slice:
+After the commit, update `docs/stories/<slug>/plan.md` for this slice:
 
 1. Run `git log -1 --format="%h"` to get the commit hash.
 2. In this slice's section:

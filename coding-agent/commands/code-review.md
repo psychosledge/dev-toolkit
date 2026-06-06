@@ -1,7 +1,7 @@
 ---
 name: code-review
-description: Walk through code changes with the human — explains what changed and why, surfaces issues in context, handles fixes, and gates commit approval. Works standalone or after /verify.
-argument-hint: "[optional: base ref to diff against, e.g. main or a commit hash]"
+description: Verify correctness, walk through changes with the human, handle fixes, and commit. Runs the verifier automatically — AC check if criteria are available, quality assessment always.
+argument-hint: "[acceptance criteria or base ref (optional)]"
 ---
 
 Walk through the current code changes with the human before committing.
@@ -10,44 +10,49 @@ Walk through the current code changes with the human before committing.
 
 Check for a `CLAUDE.md` at the project root. Read it and apply project-specific context — architecture patterns, code style, domain language — so your explanations are grounded in what this project expects.
 
-## Step 1: Orient
+Run `git diff --stat $(git merge-base main HEAD)` and `git diff --name-only $(git merge-base main HEAD)` to understand the scope of changes.
 
-Determine the diff base: use `$ARGUMENTS` if provided (e.g., `main`, a commit hash), otherwise default to `main` (or `HEAD` if no `main` branch exists). Run `git diff` against that base and `git log --oneline -5` for recent context. If the diff is large, scan it first to understand the shape of the change before diving in.
+## Step 1 — Verify
 
-**Check for verifier review notes.** Look for a review notes file written by the verifier — check `docs/stories/` for `review-notes-slice-N.md` files, or `docs/review-notes-*.md` for standalone runs. If found, read it. The pre-flight summary (rating, AC verdict, blockers) and per-file findings will be woven into the walk-through.
+Invoke the **verifier** subagent to review code quality and verify correctness.
 
-**Present the pre-flight summary** (only when review notes exist):
+- If acceptance criteria are available (passed as `$ARGUMENTS`, or findable in `docs/stories/<slug>/plan.md`), verify each criterion.
+- If no AC exists, skip the AC check and proceed to quality assessment only.
+
+After the verifier completes, present the pre-flight summary:
 
 > **Verifier Pre-flight**
 > Quality: X/10 | AC: N/M met | Blockers: [none / list]
 
 If there are blockers, name them here so they're on the human's radar before the walk-through begins.
 
-## Step 2: Walk Through the Changes
+The verifier's full report — strengths, refactoring suggestions, and test coverage analysis — is available in context and informs the walk-through. Per-file findings surface during each group; refactoring suggestions and test coverage gaps appear in the final consolidation.
 
-**a) Group the changed files by concern** — not alphabetically, but by what problem they solve together. Examples: "the new middleware and its types", "the store and the views that use it", "tests for the above". Small changes may have only one group.
+## Step 2 — Walk Through the Changes
+
+**a) Group the changed files by concern** — not alphabetically, but by what problem they solve together. Small changes may have only one group.
 
 **b) For each group — present ONE group per response, then stop and wait:**
 1. Name the group and its purpose in one sentence
-2. Read the relevant files and show the meaningful changed code in a code block — actual file contents, not raw diff syntax (typically 10–40 lines)
+2. Read the relevant files and show the meaningful changed code in a code block (typically 10–40 lines — actual file contents, not raw diff syntax)
 3. Explain **what changed** — specifically and concisely
 4. Explain **why** — what problem this solves, what alternative was rejected, what constraint drove the structure. This is the most important part.
-5. If verifier review notes exist: surface any findings for this group's files from the per-file findings section — present them as "Verifier flagged:" with their priority. If none, skip.
+5. Surface any verifier findings for this group's files — present as "Verifier flagged:" with their priority. If none, skip.
 6. Note any additional quality issues you observe that the verifier didn't catch.
-7. End with: "Questions on this group before I move on?"
+7. If any findings were surfaced (steps 5 or 6): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If no findings: "Ready to move on?"
 
 **Do not present the next group until the human replies.** One group per response is the rule — not a suggestion.
 
 **c) After all groups, consolidate:**
 - 2–3 sentence summary of the full change
-- Sorted issue list — merge verifier findings with anything new from the walk-through:
-  - **Blockers** (failing tests, unmet AC — from verifier pre-flight or walk-through)
-  - **Recommended fixes** (quality issues worth addressing)
+- Any remaining issues not already addressed during the walk-through:
+  - **Blockers** (failing tests, unmet AC)
+  - **Recommended fixes** (quality issues, verifier refactoring suggestions, test coverage gaps)
   - **Optional improvements** (low-priority suggestions)
-  - If nothing flagged: "No issues — the implementation looks clean."
-- Ask: "Which of these would you like to address? Call out any by number, or say 'commit as-is' to proceed."
+  - If nothing remains: "No outstanding issues — the implementation looks clean."
+- Ask: "Anything else to address before committing? Call out by number, or say 'commit' to proceed."
 
-## Step 3: Fix Loop (if fixes requested)
+## Step 3 — Fix Loop (if fixes requested)
 
 For each approved fix:
 1. Invoke the **coder** subagent with specific, scoped instructions — reference the exact file and issue
@@ -55,14 +60,18 @@ For each approved fix:
 3. Ask: "Good? Anything else to adjust?"
 4. Repeat for remaining fixes.
 
-## Step 4: Commit (standalone only)
+Once all requested fixes are done, ask:
 
-This step applies only when `code-review` is invoked directly as a standalone command — not when invoked from `/slice`, `/bug`, or `/verify`, which own their own commit gates.
+> "Want a clean pass before committing?"
+
+If **yes**: re-invoke the **verifier** subagent on the current state. Present the updated pre-flight summary and any findings not previously surfaced — skip rehashing what was already reviewed and resolved. If new issues come up, go through the per-group decision point and fix as needed, then offer another clean pass. Repeat until the human is satisfied or declines.
+
+If **no**: proceed to commit.
+
+## Step 4 — Commit
 
 Once the human is satisfied, ask for explicit commit approval:
 
 > "Approve to commit?"
 
 Commit on approval with a clear commit message describing the change.
-
-This command does not update plan files or UAT checklists. Use `/slice` for the full workloop.
