@@ -1,5 +1,16 @@
 # Claude Code — Global Instructions
 
+## Narration
+
+During multi-step work, narrate enough to follow along without needing to ask:
+
+- **Before a sequence**: one sentence stating what you're about to do and why
+- **When direction changes**: briefly note what you found and why the approach is shifting
+- **On unexpected findings**: surface them immediately, don't silently work around them
+- **After a meaningful unit of work**: one sentence confirming what changed
+
+Skip narration for mechanical steps within an obvious sequence — individual file reads after announcing "reading the relevant files" don't need their own commentary.
+
 ## Improve the Agents, Don't Work Around Them
 
 When working in a project that uses the coding-agent workloop (`/story`, `/slice`, `/bug`, `/verify`, `/sync-agents`), you will sometimes notice that an agent behaves unexpectedly, skips a step, produces incomplete output, or creates friction in the flow.
