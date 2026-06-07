@@ -39,6 +39,10 @@ For each filename, run `diff` between the global and repo versions and classify 
 - **Repo only** — exists in repo but not in global
 - **Global only** — exists in global but not in repo
 
+**Windows path note:** Use forward-slash paths (e.g., `C:/Users/psych/.claude/...`) in diff commands. Backslash paths in bash cause `\$` to escape the dollar sign, silently breaking variable expansion and producing empty output that looks like "no differences."
+
+**Sanity check:** After completing comparisons, run `ls -la` on each file pair and confirm the sizes match your classification. If sizes differ but you reported "IDENTICAL", the comparison failed — re-run that file's diff individually before proceeding.
+
 ---
 
 ## Step 3: Workloop Impact Analysis

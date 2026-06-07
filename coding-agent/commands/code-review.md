@@ -34,12 +34,13 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 
 **b) For each group — present ONE group per response, then stop and wait:**
 1. Name the group and its purpose in one sentence
-2. Read the relevant files and show the meaningful changed code in a code block (typically 10–40 lines — actual file contents, not raw diff syntax)
+2. Read the relevant files and paste the meaningful changed code **verbatim in a code block** (typically 10–40 lines — actual file contents, not raw diff syntax). The human cannot see file contents unless you paste them; never describe or reference code without showing it.
 3. Explain **what changed** — specifically and concisely
 4. Explain **why** — what problem this solves, what alternative was rejected, what constraint drove the structure. This is the most important part.
 5. Surface any verifier findings for this group's files — present as "Verifier flagged:" with their priority. If none, skip.
 6. Note any additional quality issues you observe that the verifier didn't catch.
-7. If any findings were surfaced (steps 5 or 6): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If no findings: "Ready to move on?"
+7. For each finding surfaced in steps 5 and 6, give your recommendation: fix now, defer, or skip — with a one-sentence reason. Be direct ("Skip — this is a cosmetic preference in a recovery-only path"; "Fix now — untested behavior in a TDD project is a blocker").
+8. If any findings were surfaced (steps 5–6): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If no findings: "Ready to move on?"
 
 **Do not present the next group until the human replies.** One group per response is the rule — not a suggestion.
 
