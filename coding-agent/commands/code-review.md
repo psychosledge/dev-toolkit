@@ -10,6 +10,8 @@ Walk through the current code changes with the human before committing.
 
 Check for a `CLAUDE.md` at the project root. Read it and apply project-specific context — architecture patterns, code style, domain language — so your explanations are grounded in what this project expects.
 
+Check for a story plan at `docs/stories/*/plan.md`. If found, note the story name and its one-line summary — you'll surface it at the top of the review so the human has product context before the technical walk-through begins.
+
 Run `git diff --stat $(git merge-base main HEAD)` and `git diff --name-only $(git merge-base main HEAD)` to understand the scope of changes.
 
 ## Step 1 — Verify
@@ -19,8 +21,9 @@ Invoke the **verifier** subagent to review code quality and verify correctness.
 - If acceptance criteria are available (passed as `$ARGUMENTS`, or findable in `docs/stories/<slug>/plan.md`), verify each criterion.
 - If no AC exists, skip the AC check and proceed to quality assessment only.
 
-After the verifier completes, present the pre-flight summary:
+After the verifier completes, open the review with story context (if found) and the pre-flight summary:
 
+> **Story:** [story name] — [one-line summary] *(omit if no plan.md found)*
 > **Verifier Pre-flight**
 > Quality: X/10 | AC: N/M met | Blockers: [none / list]
 
