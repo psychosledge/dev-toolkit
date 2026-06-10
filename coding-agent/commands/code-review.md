@@ -37,8 +37,8 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 2. Read the relevant files and paste the meaningful changed code **verbatim in a code block** (typically 10–40 lines — actual file contents, not raw diff syntax). The human cannot see file contents unless you paste them; never describe or reference code without showing it.
 3. Explain **what changed** — specifically and concisely
 4. Explain **why** — what problem this solves, what alternative was rejected, what constraint drove the structure. This is the most important part.
-5. Surface any verifier findings for this group's files — present as "Verifier flagged:" with their priority. If none, skip.
-6. Note any additional quality issues you observe that the verifier didn't catch.
+5. Surface any verifier findings for this group's files — present as "Verifier flagged:" with their priority. For each finding, paste the relevant code verbatim in a code block so the human can see exactly what is being discussed. If none, skip.
+6. Note any additional quality issues you observe that the verifier didn't catch. Same rule: show the relevant code verbatim in a code block, never just describe it.
 7. For each finding surfaced in steps 5 and 6, give your recommendation: fix now, defer, or skip — with a one-sentence reason. Be direct ("Skip — this is a cosmetic preference in a recovery-only path"; "Fix now — untested behavior in a TDD project is a blocker").
 8. If any findings were surfaced (steps 5–6): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If no findings: "Ready to move on?"
 
