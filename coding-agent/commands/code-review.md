@@ -16,6 +16,8 @@ Run `git diff --stat $(git merge-base main HEAD)` and `git diff --name-only $(gi
 
 ## Step 1 — Verify
 
+Run `git rev-parse HEAD` and record the hash as the **verifier baseline HEAD**. This is used later to avoid redundant re-invocations.
+
 Invoke the **verifier** subagent to review code quality and verify correctness.
 
 - If acceptance criteria are available (passed as `$ARGUMENTS`, or findable in `docs/stories/<slug>/plan.md`), verify each criterion.
@@ -42,7 +44,9 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 4. Explain **why** — what problem this solves, what alternative was rejected, what constraint drove the structure. This is the most important part.
 5. Surface any verifier findings for this group's files — present as "Verifier flagged:" with their priority. For each finding, paste the relevant code verbatim in a code block so the human can see exactly what is being discussed. If none, skip.
 6. Note any additional quality issues you observe that the verifier didn't catch. Same rule: show the relevant code verbatim in a code block, never just describe it.
-7. For each finding surfaced in steps 5 and 6, give your recommendation: fix now, defer, or skip — with a one-sentence reason. Be direct ("Skip — this is a cosmetic preference in a recovery-only path"; "Fix now — untested behavior in a TDD project is a blocker").
+7. For each finding surfaced in steps 5 and 6, give your recommendation on its own line:
+   > **Recommendation:** Fix now — [one-sentence reason]
+   The label must be `fix now`, `defer`, or `skip`. Be direct: "Fix now — untested behavior in a TDD project is a blocker"; "Skip — cosmetic preference in a recovery-only path".
 8. If any findings were surfaced (steps 5–6): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If no findings: "Ready to move on?"
 
 **Do not present the next group until the human replies.** One group per response is the rule — not a suggestion.
@@ -58,17 +62,22 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 
 ## Step 3 — Fix Loop (if fixes requested)
 
+Keep a running list of files changed during this fix session.
+
 For each approved fix:
 1. Invoke the **coder** subagent with specific, scoped instructions — reference the exact file and issue
 2. After the coder finishes, do a targeted re-walk: show the updated code, explain what changed. Keep it brief — context is already established.
-3. Ask: "Good? Anything else to adjust?"
-4. Repeat for remaining fixes.
+3. Add the changed files to the fix session list.
+4. Ask: "Good? Anything else to adjust?"
+5. Repeat for remaining fixes.
 
 Once all requested fixes are done, ask:
 
 > "Want a clean pass before committing?"
 
-If **yes**: re-invoke the **verifier** subagent on the current state. Present the updated pre-flight summary and any findings not previously surfaced — skip rehashing what was already reviewed and resolved. If new issues come up, go through the per-group decision point and fix as needed, then offer another clean pass. Repeat until the human is satisfied or declines.
+If **yes**: run `git rev-parse HEAD` and compare to the verifier baseline HEAD from Step 1. If HEAD is unchanged (no new commits since the last verifier run), the full verifier report is still valid — skip re-invoking the verifier and proceed directly to the targeted re-walk below. If HEAD changed, re-invoke the **verifier** subagent, passing it the list of files changed during this fix session and instructing it to focus its scan on those files for regressions and new issues; for all other files, only surface findings not previously addressed. Update the verifier baseline HEAD.
+
+Either way, walk through the files changed during this fix session using the same per-group format from Step 2 (show code, explain, surface verifier findings, give recommendations). If new issues come up, go through the per-group decision point and fix as needed, then offer another clean pass. Repeat until the human is satisfied or declines.
 
 If **no**: proceed to commit.
 

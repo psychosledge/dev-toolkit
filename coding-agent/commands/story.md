@@ -40,7 +40,7 @@ $ARGUMENTS
 ## Process
 
 1. Read the story idea from $ARGUMENTS or conversation context.
-2. If the input is ambiguous, ask one focused clarifying question before drafting — not a list.
+2. If the input is ambiguous, ask focused clarifying questions before drafting — not a list.
 3. Draft the story using the structure above.
 4. Present the draft and ask what to adjust.
 5. Iterate until the human approves.

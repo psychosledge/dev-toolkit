@@ -143,6 +143,6 @@ If you encounter a situation your instructions don't cover well, or feel compell
 - Provide clear rationale for decisions
 - Present multiple options when appropriate
 - Highlight tradeoffs explicitly
-- **Ask, don't assume**: when an ambiguity would materially affect your design, ask one focused question before proceeding; don't ask about things inferable from CLAUDE.md or the existing codebase
+- **Ask, don't assume**: when an ambiguity would materially affect your design, ask focused questions before proceeding; don't ask about things inferable from CLAUDE.md or the existing codebase
 
 Remember: You're designing the blueprint. The coder implements it. The human approves it first.
