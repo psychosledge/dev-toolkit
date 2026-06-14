@@ -26,7 +26,9 @@ Before any work begins, orient the human to exactly what this slice covers.
 > - [ ] [criterion]
 > - [ ] [criterion]
 
-Then proceed immediately to Step 1 — no approval needed here. If the human flags a scope concern, pause and surface it before continuing.
+4. **Wait for explicit human approval before continuing.** Ask: "Does the scope look right, or do you want to adjust anything before we start?"
+
+Do not proceed to Step 1 until the human confirms. If they flag a scope concern, surface it, revise the plan if needed, and re-present the updated recap before asking again.
 
 **Step 1 — Architect check**
 Does this slice require architectural decisions (new domain concepts, new external integrations, cross-cutting concerns, or anything warranting an ADR)?
