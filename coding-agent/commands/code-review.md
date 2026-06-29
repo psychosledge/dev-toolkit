@@ -1,12 +1,41 @@
 ---
 name: code-review
 description: Verify correctness, walk through changes with the human, handle fixes, and commit. Runs the verifier automatically — AC check if criteria are available, quality assessment always.
-argument-hint: "[acceptance criteria or base ref (optional)]"
+argument-hint: "[PR URL or #number for reviewer mode | acceptance criteria or base ref for owner mode (optional)]"
 ---
 
 Walk through the current code changes with the human before committing.
 
+## Mode Detection
+
+Inspect `$ARGUMENTS` before doing anything else:
+
+- **Reviewer Mode**: `$ARGUMENTS` contains a GitHub PR URL or PR number (e.g. `#123`). You are reviewing someone else's code — you will propose comments, not make changes or commit.
+- **Owner Mode**: no PR reference in `$ARGUMENTS`. You are reviewing your own changes before committing.
+
+Record the mode. It governs the rest of the steps.
+
 ## Before Starting
+
+**Reviewer Mode — check out the PR branch first:**
+
+Check for a dirty working tree:
+
+```
+git status --porcelain
+```
+
+If dirty, stop and tell the human. Ask them to stash or commit before proceeding. Do not continue until clean.
+
+Once clean, check out the PR branch:
+
+```
+gh pr checkout <PR URL or number from $ARGUMENTS>
+```
+
+Confirm the branch name and that the checkout succeeded before proceeding.
+
+**Both modes:**
 
 Check for a `CLAUDE.md` at the project root. Read it and apply project-specific context — architecture patterns, code style, domain language — so your explanations are grounded in what this project expects.
 
@@ -44,10 +73,19 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 4. Explain **why** — what problem this solves, what alternative was rejected, what constraint drove the structure. This is the most important part.
 5. Surface any verifier findings for this group's files — present as "Verifier flagged:" with their priority. For each finding, paste the relevant code verbatim in a code block so the human can see exactly what is being discussed. If none, skip.
 6. Note any additional quality issues you observe that the verifier didn't catch. Same rule: show the relevant code verbatim in a code block, never just describe it.
-7. For each finding surfaced in steps 5 and 6, give your recommendation on its own line:
+7. For each finding surfaced in steps 5 and 6:
+
+   **Owner Mode** — give your recommendation on its own line:
    > **Recommendation:** Fix now — [one-sentence reason]
    The label must be `fix now`, `defer`, or `skip`. Be direct: "Fix now — untested behavior in a TDD project is a blocker"; "Skip — cosmetic preference in a recovery-only path".
-8. If any findings were surfaced (steps 5–6): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If no findings: "Ready to move on?"
+
+   **Reviewer Mode** — draft a proposed PR comment on its own line:
+   > **Proposed comment ([Blocker | Suggestion | Question | Nit]):** [comment text] *(file:line if inline)*
+   Frame the issue as a question, observation, or concern — do not prescribe a solution. Include the target file and line number when the finding is tied to a specific location. The human must approve, edit, or skip each comment before anything is posted.
+
+8. **Owner Mode:** If any findings were surfaced (steps 5–6): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If no findings: "Ready to move on?"
+
+   **Reviewer Mode:** If any comments were proposed: ask "Post any of these, edit, or continue?" Collect approvals — do not post anything until the human explicitly says so. Approved comments are held and posted together in Step 3. If no findings: "Ready to move on?"
 
 **Do not present the next group until the human replies.** One group per response is the rule — not a suggestion.
 
@@ -55,12 +93,17 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 - 2–3 sentence summary of the full change
 - Any remaining issues not already addressed during the walk-through:
   - **Blockers** (failing tests, unmet AC)
-  - **Recommended fixes** (quality issues, verifier refactoring suggestions, test coverage gaps)
-  - **Optional improvements** (low-priority suggestions)
+  - **Owner Mode:** Recommended fixes (quality issues, verifier refactoring suggestions, test coverage gaps) and optional improvements
+  - **Reviewer Mode:** Any proposed comments not yet approved or skipped
   - If nothing remains: "No outstanding issues — the implementation looks clean."
-- Ask: "Anything else to address before committing? Call out by number, or say 'commit' to proceed."
 
-## Step 3 — Fix Loop (if fixes requested)
+**Owner Mode:** Ask: "Anything else to address before committing? Call out by number, or say 'commit' to proceed."
+
+**Reviewer Mode:** Ask: "Any comments to add or edit before posting? Call out by number, or say 'post' to proceed."
+
+## Step 3 — Fix Loop (Owner Mode) / Post Comments (Reviewer Mode)
+
+### Owner Mode — Fix Loop
 
 Keep a running list of files changed during this fix session.
 
@@ -81,10 +124,24 @@ Either way, walk through the files changed during this fix session using the sam
 
 If **no**: proceed to commit.
 
-## Step 4 — Commit
+### Reviewer Mode — Post Comments
+
+Show the human the complete list of approved comments before posting anything — one entry per line, formatted as: category, file:line (if inline), and comment text.
+
+Ask: "Ready to post these?"
+
+On approval, post each comment:
+- **Inline comment** (file and line known): `gh api repos/{owner}/{repo}/pulls/{number}/comments` with `body`, `commit_id` (from `git rev-parse HEAD`), `path`, and `line`
+- **General comment** (no specific line): `gh pr review {number} --comment -b "{text}"`
+
+Confirm which comments posted successfully. Do not make any code changes to the branch. If the human asks you to fix something directly, confirm explicitly before touching any files — modifying another person's PR is the exception, not the norm.
+
+## Step 4 — Commit (Owner Mode only)
 
 Once the human is satisfied, ask for explicit commit approval:
 
 > "Approve to commit?"
 
 Commit on approval with a clear commit message describing the change.
+
+*Reviewer Mode has no commit step — the review is complete once comments are posted.*
