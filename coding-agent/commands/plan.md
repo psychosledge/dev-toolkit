@@ -8,14 +8,14 @@ Invoke the **planner** subagent to decompose the following user story into seque
 
 After the planner produces the Slice Plan and UAT Checklist, determine the proposed feature branch before presenting anything to the human:
 
-1. Scan `$ARGUMENTS` for a Jira ticket ID (pattern: `[A-Z]+-[0-9]+`) or a URL containing `/browse/`. If found, extract the ticket ID (e.g., `BDXA-156`) and propose `feature/BDXA-156`.
+1. Scan `$ARGUMENTS` for a Jira ticket ID (pattern: `[A-Z]+-[0-9]+`) or a URL containing `/browse/`. If found, extract the ticket ID and derive a short human-readable slug from the story title (lowercase, hyphen-separated, ≤ 30 chars). Propose `feature/<TICKET-ID>-<slug>` (e.g., `feature/ABC-123-short-description`).
 2. If no ticket is found, derive a short slug from the story title (lowercase, hyphen-separated, ≤ 40 chars) and propose `feature/<slug>`.
 3. Check the current repo's `CLAUDE.md` for a branch policy override (e.g., "branch policy: main" or "work directly on main"). If present, skip branch setup and note it in the presentation.
 4. Note whether the proposed branch already exists locally (`git branch --list <branch-name>`).
 
 Present the Slice Plan, UAT Checklist, and proposed branch as a single package:
 
-> **Proposed branch:** `feature/BDXA-156` _(will be created / already exists)_
+> **Proposed branch:** `feature/ABC-123-short-description` _(will be created / already exists)_
 
 Then ask: "Does this plan and branch look right? Approve to begin."
 
