@@ -13,6 +13,15 @@ After the planner produces the Slice Plan and UAT Checklist, determine the propo
 3. Check the current repo's `CLAUDE.md` for a branch policy override (e.g., "branch policy: main" or "work directly on main"). If present, skip branch setup and note it in the presentation.
 4. Note whether the proposed branch already exists locally (`git branch --list <branch-name>`).
 
+**Scan for relevant tech debt.** For each repo this story's slices touch, check for a `TECH_DEBT.md` at that repo's root. If found, cross-reference its entries' file paths against each slice's `Files` field. For any overlap, present the matching entries to the human as an explicit, optional addition — do not fold them into the plan automatically:
+
+> **Related tech debt found:**
+> - `<file>` — <one-line issue description> (from `TECH_DEBT.md`)
+>
+> Fold any of these into this plan's scope, or leave them deferred?
+
+For anything the human chooses to include, add it as its own slice (or fold into an existing slice touching the same file, human's call) before presenting the final package. If no `TECH_DEBT.md` exists in any touched repo, or nothing overlaps, skip this silently — don't mention it.
+
 Present the Slice Plan, UAT Checklist, and proposed branch as a single package:
 
 > **Proposed branch:** `feature/ABC-123-short-description` _(will be created / already exists)_

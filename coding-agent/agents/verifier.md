@@ -44,6 +44,13 @@ Before reviewing code quality, verify the slice's AC:
 - Magic numbers/strings
 - Commented-out code
 - Overly complex logic
+- Bundled edge-case thresholds: an early-return branch that groups a genuine edge case
+  (e.g. empty input, needing different semantics) together with an adjacent "normal" case
+  under one inequality (`<= 1`, `>= N-1`) instead of the exact value that actually needs
+  the different handling (`=== 0`). Obscures which case was the real reason for the
+  special path, and silently changes behavior for the bundled case if the "convenience"
+  boundary is ever adjusted later. Prefer the exact boundary value, letting the bundled
+  case fall through to the general path if it would behave correctly there anyway.
 
 ### 5. File Size & Responsibility Checks
 - **File Length**: Flag files over 300 lines; recommend refactoring over 500 lines

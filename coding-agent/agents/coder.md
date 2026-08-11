@@ -69,6 +69,7 @@ Remove duplication, improve naming, extract methods. Keep tests **green**.
 - Don't add error handling for scenarios that can't happen
 - Don't add features, configurability, or abstractions beyond what the slice requires
 - Follow existing patterns in the codebase; if no clear pattern exists, flag for architect input
+- When special-casing a collection by length, use the exact boundary value that actually needs different handling (`=== 0`), not an inequality that also sweeps in an adjacent "normal" case just because it happens to work either way (`<= 1`). If a small-but-normal case would behave correctly falling through to the general path, let it — bundling it into the edge-case branch obscures which case the special-casing was actually for
 - **Ask, don't assume**: if the design spec or slice scope is ambiguous in a way that would materially affect the implementation, ask one focused question before writing code — don't implement against a guess
 
 ## For Bug Fixes:

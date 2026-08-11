@@ -81,11 +81,11 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 
    **Reviewer Mode** — draft a proposed PR comment on its own line:
    > **Proposed comment ([Blocker | Suggestion | Question | Nit]):** [comment text] *(file:line if inline)*
-   Frame the issue as a question, observation, or concern — do not prescribe a solution. Include the target file and line number when the finding is tied to a specific location. The human must approve, edit, or skip each comment before anything is posted.
+   Frame the issue as a question, observation, or concern — do not prescribe a solution. Include the target file and line number when the finding is tied to a specific location. These are drafts: no comment is approved for posting per group — the single decision of what to post happens once, together, at the end (Step 2c).
 
 8. **Owner Mode:** If any findings were surfaced (steps 5–6): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If no findings: "Ready to move on?"
 
-   **Reviewer Mode:** If any comments were proposed: ask "Post any of these, edit, or continue?" Collect approvals — do not post anything until the human explicitly says so. Approved comments are held and posted together in Step 3. If no findings: "Ready to move on?"
+   **Reviewer Mode:** If any comments were proposed: ask "Do you agree with these, or any questions/concerns?" Use the answer to refine, merge, or drop drafts — this is not a posting decision, so don't frame it as one ("post", "approve", etc.). Findings may need rephrasing or grouping once later groups are in, so keep everything as drafts until Step 2c. If no findings: "Ready to move on?"
 
 **Do not present the next group until the human replies.** One group per response is the rule — not a suggestion.
 
@@ -122,7 +122,27 @@ If **yes**: run `git rev-parse HEAD` and compare to the verifier baseline HEAD f
 
 Either way, walk through the files changed during this fix session using the same per-group format from Step 2 (show code, explain, surface verifier findings, give recommendations). If new issues come up, go through the per-group decision point and fix as needed, then offer another clean pass. Repeat until the human is satisfied or declines.
 
-If **no**: proceed to commit.
+If **no**: proceed to Step 3b.
+
+### Step 3b — Reconcile Tech Debt (Owner Mode only)
+
+Before committing, reconcile every finding from this review against the durable tech-debt record:
+
+1. **Collect deferred findings.** Gather every finding from Step 2 (and any surfaced during the Fix Loop) whose final disposition is `defer` — recommended defer and left unfixed, or explicitly deferred by the human. Skip anything disposed as `fix now` (already handled above) or `skip` (not real debt, no record needed).
+2. **Record each one, twice:**
+   - Append to this story's `docs/stories/<slug>/plan.md` under a `## Deferred tech debt` heading (create the heading if this is the first entry in this story).
+   - Upsert into `TECH_DEBT.md` at the root of the repo the finding belongs to (create the file if it doesn't exist yet). Use this entry format:
+     ```
+     ## <file path>
+     - **Line(s):** <line numbers or range>
+     - **Issue:** <one-line description>
+     - **Why deferred:** <the reviewer's rationale for not fixing now>
+     - **Surfaced in:** <story slug>, Slice <N>
+     ```
+3. **Resolve entries this slice fixed.** Separately — if any fix made *during this slice* resolves a finding that already has an entry in `TECH_DEBT.md` (matched by file and description), remove that entry entirely. `TECH_DEBT.md` is a record of currently-known debt, not a historical log — entries don't accumulate once addressed. If removing an entry leaves the file with no remaining entries, delete the file.
+4. **Show the human a short summary** of what's being added to and removed from `TECH_DEBT.md` (file names and one-line descriptions only) before proceeding to commit. No separate approval gate needed here — this rides along with the commit approval in Step 4.
+
+If there's nothing to defer and nothing to resolve, skip this step silently and proceed to commit.
 
 ### Reviewer Mode — Post Comments
 
@@ -136,7 +156,9 @@ On approval, post each comment:
 
 Confirm which comments posted successfully. Do not make any code changes to the branch. If the human asks you to fix something directly, confirm explicitly before touching any files — modifying another person's PR is the exception, not the norm.
 
-## Step 4 — Commit (Owner Mode only)
+## Step 4 — Commit (Owner Mode) / Save Review Doc (Reviewer Mode)
+
+### Owner Mode — Commit
 
 Once the human is satisfied, ask for explicit commit approval:
 
@@ -144,4 +166,23 @@ Once the human is satisfied, ask for explicit commit approval:
 
 Commit on approval with a clear commit message describing the change.
 
-*Reviewer Mode has no commit step — the review is complete once comments are posted.*
+### Reviewer Mode — Save Review Doc (optional)
+
+The review is functionally complete once comments are posted. Separately, ask:
+
+> "Save a review doc for this?"
+
+If no: done — nothing further to do.
+
+If yes, determine where it should live. **Never assume a destination silently** — this is workspace-specific (single repo vs. a multi-repo workspace with a shared top-level `docs/`) and hardcoding a path here would be wrong for most projects this skill runs in:
+
+- Check the current repo for a `docs/` directory, and check one level up for a multi-repo workspace (a `*.code-workspace` file, or a top-level `CLAUDE.md` referencing sibling repos) with its own `docs/` directory.
+- Present whatever candidates were found and ask the human to confirm one, or provide a different path. If nothing was found, ask directly.
+
+Once confirmed, create `<destination>/<today's date> - Review - <short description of what was reviewed>/findings.md` (e.g. `2026-07-28 - Review - unified-shell-ui PR #88 (More Pendo Events)`) containing:
+- A metadata header: PR URL, author (if known), branch, date reviewed, HEAD hash reviewed
+- The verifier pre-flight (quality score, AC status, blockers)
+- Each group from Step 2 — what changed, why, findings, and disposition (posted / held / skipped, with a link to the comment if posted)
+- The closing summary from Step 2c, plus a table of comments actually posted
+
+This is a durable record of the review itself — what was examined and found — for the reviewer's own documentation, not for the PR author. Keep it concise; it should read like a findings log, not a transcript dump.

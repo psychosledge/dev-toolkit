@@ -67,6 +67,7 @@ When a slice deliberately creates a provisional interface or stub that a later s
 **Acceptance Criteria:**
 - [ ] [specific, testable criterion]
 - [ ] [specific, testable criterion]
+**Files:** [best-guess paths this slice will touch — approximate is fine, may shift during implementation]
 **Needs Architect:** yes/no — [reason if yes]
 **Scaffolding for:** [Slice M: name], [Slice P: name] — [one sentence describing the seam or interface being created]
 **Interface contract:** [the signature, shape, or behavior that must remain stable for the named future slices — e.g., "function foo(x: string): Promise<Result> — callers in Slice 3 depend on this shape"]
