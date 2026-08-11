@@ -41,7 +41,9 @@ Check for a `CLAUDE.md` at the project root. Read it and apply project-specific 
 
 Check for a story plan at `docs/stories/*/plan.md`. If found, note the story name and its one-line summary — you'll surface it at the top of the review so the human has product context before the technical walk-through begins.
 
-Run `git diff --stat $(git merge-base main HEAD)` and `git diff --name-only $(git merge-base main HEAD)` to understand the scope of changes.
+Resolve the diff base per the Branching Model instructions in global `CLAUDE.md` — the nearest known ancestor among the repo's declared diff base and any release-pipeline branches, not a hardcoded `main`. **Before using it, check whether HEAD itself is one of those declared branches** (trunk, integration branch, or any pipeline branch) rather than a feature branch cut from one — if so, this is likely a promotion or release audit, not a feature review. Say so and ask how to proceed instead of walking what could be a large, multi-PR diff as if it were one slice.
+
+Otherwise, run `git diff --stat $(git merge-base <diff-base> HEAD)` and `git diff --name-only $(git merge-base <diff-base> HEAD)` to understand the scope of changes.
 
 ## Step 1 — Verify
 

@@ -8,9 +8,13 @@ Invoke the **planner** subagent to decompose the following user story into seque
 
 After the planner produces the Slice Plan and UAT Checklist, determine the proposed feature branch before presenting anything to the human:
 
-1. Scan `$ARGUMENTS` for a Jira ticket ID (pattern: `[A-Z]+-[0-9]+`) or a URL containing `/browse/`. If found, extract the ticket ID and derive a short human-readable slug from the story title (lowercase, hyphen-separated, ≤ 30 chars). Propose `feature/<TICKET-ID>-<slug>` (e.g., `feature/ABC-123-short-description`).
-2. If no ticket is found, derive a short slug from the story title (lowercase, hyphen-separated, ≤ 40 chars) and propose `feature/<slug>`.
-3. Check the current repo's `CLAUDE.md` for a branch policy override (e.g., "branch policy: main" or "work directly on main"). If present, skip branch setup and note it in the presentation.
+1. Resolve this repo's Branching Model per the instructions in global `CLAUDE.md` (the repo's own `CLAUDE.md` `## Branching` section, with the usual fallbacks). Note the diff base, whether feature branches are used, and the naming convention if declared.
+2. If `Feature branches: no`, skip branch setup entirely and note it in the presentation.
+3. Otherwise, construct the branch name:
+   - Scan `$ARGUMENTS` for a Jira ticket ID (pattern: `[A-Z]+-[0-9]+`) or a URL containing `/browse/`. If found, extract the ticket ID and derive a short human-readable slug from the story title (lowercase, hyphen-separated, ≤ 30 chars).
+   - If no ticket is found, derive a short slug from the story title (lowercase, hyphen-separated, ≤ 40 chars).
+   - If `Feature branch naming` is declared, substitute the ticket/slug into that pattern (e.g. `<TICKET>/<slug>` → `ABC-123/short-description`).
+   - If nothing is declared, propose a bare `<slug>` — no `feature/` prefix, no ticket embedded, even when a ticket ID is on hand. Only add structure once it's actually known to be this repo's convention (`/catchup` is what detects and records it — this command only consumes the declaration).
 4. Note whether the proposed branch already exists locally (`git branch --list <branch-name>`).
 
 **Scan for relevant tech debt.** For each repo this story's slices touch, check for a `TECH_DEBT.md` at that repo's root. If found, cross-reference its entries' file paths against each slice's `Files` field. For any overlap, present the matching entries to the human as an explicit, optional addition — do not fold them into the plan automatically:
@@ -31,8 +35,8 @@ Then ask: "Does this plan and branch look right? Approve to begin."
 **Do not proceed until the human explicitly approves.** If they request changes to the plan or branch name, revise and re-present before asking again.
 
 After approval:
-- If the branch doesn't exist: `git switch -c <branch-name>`
-- If it already exists: `git switch <branch-name>`
+- If the branch doesn't exist: switch to the resolved diff base first (`git switch <diff-base>`, pulling latest if behind), then create the new branch from there with `git switch -c <branch-name>`.
+- If it already exists: `git switch <branch-name>`.
 - Confirm the active branch, then proceed with slice work.
 
 User story:

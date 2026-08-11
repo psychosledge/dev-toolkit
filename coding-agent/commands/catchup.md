@@ -47,6 +47,10 @@ Work through the following for all workspace repos. **Run each step as a single 
 git -C <repo-path> fetch --all --prune
 ```
 
+**3A-a2. Resolve diff base**
+
+Resolve this repo's diff base per the Branching Model instructions in global `CLAUDE.md` (repo's own `CLAUDE.md` `## Branching` declaration → `git -C <repo-path> config workloop.integrationBranch` → remote default branch). Use the resolved branch everywhere below instead of assuming `main`/`master`.
+
 **3A-b. Find active branches**
 
 Get all remote-tracking branches, then filter to those with at least one commit newer than the cutoff:
@@ -57,15 +61,15 @@ git log --oneline --after="<cutoff>" origin/<branch>
 
 **3A-c. Separate into two groups**
 
-- **In progress**: branches that have NOT been merged into the default branch. Check with:
+- **In progress**: branches that have NOT been merged into the resolved diff base. Check with:
 
   ```
-  git branch -r --merged origin/main   # or origin/master
+  git branch -r --merged origin/<diff-base>
   ```
 
-  Any remote branch not in that list with recent commits is in-progress.
+  Any remote branch not in that list with recent commits is in-progress. Exclude any branch that is itself a declared release-pipeline branch — those are long-lived deploy branches, not work in progress.
 
-- **Recently merged to main**: commits on `origin/main` (or `origin/master`) itself that are newer than the cutoff.
+- **Recently merged to `<diff-base>`**: commits on the resolved diff base branch itself that are newer than the cutoff.
 
 **3A-d. Collect commit data per in-progress branch**
 
@@ -108,7 +112,7 @@ Use this format:
   • `abc1234` [commit subject] — [author], [relative time]
   • `abc1234` [commit subject] — [author], [relative time]
 
-**Recently Merged to Main**
+**Recently Merged to `<diff-base>`**
   • `abc1234` [commit subject] — [author], [relative time]
   • ...
 
@@ -119,7 +123,7 @@ Use this format:
 *No activity in this window: [repo], [repo]*
 ```
 
-Omit the **Recently Merged to Main** section entirely if main has no new commits in the window. Omit the PR line if no PR was found. Sort repos by most-recent activity first; within a repo, sort branches by most-recent commit.
+Omit the **Recently Merged to `<diff-base>`** section entirely if the diff base has no new commits in the window. Omit the PR line if no PR was found. Sort repos by most-recent activity first; within a repo, sort branches by most-recent commit.
 
 Then skip to **Step 5**.
 
@@ -137,38 +141,46 @@ git -C <repo-path> fetch --all --prune
 
 The prune removes stale remote-tracking refs and is what surfaces the "gone" state below.
 
-**3B-a2. Resolve integration branch per repo**
+**3B-a2. Resolve this repo's branching model**
 
-For each repo, determine the integration branch using this two-step lookup — run both in the same parallel batch as the fetch where possible:
+Resolve per the Branching Model instructions in global `CLAUDE.md`:
+- **Diff base** — used for merge/staleness checks below.
+- **Release pipeline** — ordered list of long-lived deploy branches, if declared. Trunk-based repos have none.
 
-1. **Check for an explicit override first:**
+If the repo's own `CLAUDE.md` has no `## Branching` section, fall back to:
+```
+git -C <repo-path> config workloop.integrationBranch
+```
+then to:
+```
+git -C <repo-path> symbolic-ref refs/remotes/origin/HEAD
+```
+(strip the `refs/remotes/origin/` prefix to get the branch name).
 
-   ```
-   git -C <repo-path> config catchup.integrationBranch
-   ```
-
-   If this returns a value, use it. Stop here.
-
-2. **Fall back to the remote default branch:**
-   ```
-   git -C <repo-path> symbolic-ref refs/remotes/origin/HEAD
-   ```
-   Strip the `refs/remotes/origin/` prefix to get the branch name (e.g. `main`, `master`).
-
-**After resolving**, check whether a `dev` branch exists on the remote AND is not already merged into the resolved integration branch:
+**Missed-pipeline-branch check** (only if nothing is declared): check whether a `dev` branch exists on the remote and is not merged into the resolved diff base:
 
 ```
 git -C <repo-path> branch -r | grep origin/dev
-git -C <repo-path> branch -r --merged origin/<integration> | grep origin/dev
+git -C <repo-path> branch -r --merged origin/<diff-base> | grep origin/dev
 ```
 
-If `origin/dev` exists but is NOT merged in, emit a hint at the end of this repo's section:
+If `origin/dev` exists but is NOT merged in, that's a concrete signal per the global detection protocol — ask directly rather than emitting a static tip:
+
+> "`origin/dev` has unmerged commits relative to `origin/<diff-base>` — is `dev` actually this repo's integration branch? I can record that in this repo's `CLAUDE.md` if so."
+
+On confirmation, write the `## Branching` section into that repo's `CLAUDE.md` as described in the global instructions.
+
+> **Batch these queries:** Steps 3B-b, 3B-c, and 3B-d all read local branch state. After the fetch wave completes, fire `branch -r`, `branch -vv`, and `branch -r --merged origin/<diff-base>` for all repos simultaneously in a single parallel batch before processing any results.
+
+**3B-a3. Compute release-pipeline drift** (only if a pipeline is declared)
+
+For each adjacent pair in the declared pipeline (upstream → downstream):
 
 ```
-Tip: origin/dev has unmerged commits — if it's your integration branch, run: git -C <repo-path> config catchup.integrationBranch dev
+git -C <repo-path> rev-list --count origin/<upstream>..origin/<downstream>
 ```
 
-> **Batch these queries:** Steps 3B-b, 3B-c, and 3B-d all read local branch state. After the fetch wave completes, fire `branch -r`, `branch -vv`, and `branch -r --merged origin/<integration>` for all repos simultaneously in a single parallel batch before processing any results.
+This is how many commits the downstream branch is missing from its upstream hop. Report per hop in Step 4B.
 
 **3B-b. New remote branches** (branches on remote with no local counterpart, not yet merged)
 
@@ -176,19 +188,26 @@ Tip: origin/dev has unmerged commits — if it's your integration branch, run: g
 git -C <repo-path> branch -r | grep -v '\->'
 ```
 
-Cross-reference with local branches to find remote branches that have no local tracking branch. Then filter out any already merged into the integration branch resolved in step 3B-a2:
+Cross-reference with local branches to find remote branches that have no local tracking branch. Then filter out:
+- any already merged into the diff base resolved in step 3B-a2:
+  ```
+  git -C <repo-path> branch -r --merged origin/<diff-base>
+  ```
+- any branch that is itself a declared release-pipeline branch — those are long-lived deploy branches, reported separately in 3B-a3/4B, not "new work."
+
+Silently skip any remote branch that appears in that merged list. Only branches with commits **not yet in the diff base** should be shown.
+
+For each remaining branch, collect the 5 most recent commits, including author email so it can be compared against `git -C <repo-path> config user.email` (needed for 3B-b2 below):
 
 ```
-git -C <repo-path> branch -r --merged origin/<integration>
+git -C <repo-path> log origin/<branch> -5 --pretty=format:"%h|%s|%an|%ae|%ar"
 ```
 
-Silently skip any remote branch that appears in that merged list. Only branches with commits **not yet in the integration branch** should be shown.
+**3B-b2. Detect feature-branch naming convention** (only if `Feature branch naming` is undeclared)
 
-For each remaining branch, collect the 5 most recent commits:
+Using the branches and commit authors collected in 3B-b: restrict to branches with activity in the **last 30 days**, split by whether the branch's most recent commit author email matches `git -C <repo-path> config user.email`. Prefer whatever pattern the **other-authored** set shows — self-authored branches may just reflect this skill's own past default, not real team convention. If the other-authored set is too sparse to conclude anything, note that rather than falling back silently.
 
-```
-git -C <repo-path> log origin/<branch> -5 --pretty=format:"%h|%s|%an|%ar"
-```
+If a consistent shape emerges, surface it as a finding plus a recommendation and ask before recording anything, e.g. *"4 of 5 other-authored branches in the last 30 days follow `<TICKET>/<slug>`; recommend canonizing that — record it?"* If the sample is mixed, stay silent — don't force a canon on weak signal.
 
 **3B-c. Tracked branches with unpulled commits** (local branch is behind its upstream)
 
@@ -220,6 +239,12 @@ Use this format:
 
 ### [repo-name]
 
+**Release Pipeline** (only if a pipeline is declared)
+  dev → stage → demo → main (prod)
+  - stage: 3 behind dev
+  - demo: 3 behind stage (in sync with dev)
+  - main (prod): 10 behind demo
+
 **New Remote Branches**
   **[branch-name]** — [N commits], last by [author] [relative time]
     • `abc1234` [commit subject] — [author], [relative time]
@@ -241,7 +266,7 @@ Use this format:
 *All up to date: [repo], [repo]*
 ```
 
-Omit any section that has nothing to report. If every section is empty for a repo, include it in the "All up to date" line instead of showing an empty block. Sort repos with changes first; within a repo, sort tracked-branch entries by how far behind they are (most behind first).
+Omit any section that has nothing to report, including **Release Pipeline** when no pipeline is declared for that repo. If every section is empty for a repo, include it in the "All up to date" line instead of showing an empty block. Sort repos with changes first; within a repo, sort tracked-branch entries by how far behind they are (most behind first).
 
 If any unmerged remote branches appear old (4+ weeks with no recent commits), group them on one line rather than listing commits: `[branch], [branch] — old, likely squash-merged; will clear when remote is deleted.`
 
@@ -292,9 +317,9 @@ Then wait. Do not read diffs proactively.
 When asked to summarize a branch:
 
 1. If the branch exists in multiple repos, ask which one before proceeding.
-2. Find the merge base against the default branch:
+2. Find the merge base against the resolved diff base (nearest known ancestor among the diff base and any declared release-pipeline branches — reuse the resolution from Step 3A-a2/3B-a2 if this is the same session, otherwise re-resolve per the Branching Model instructions in global `CLAUDE.md`):
    ```
-   git merge-base origin/main origin/<branch>
+   git merge-base origin/<diff-base> origin/<branch>
    ```
 3. Show changed files and size:
    ```
