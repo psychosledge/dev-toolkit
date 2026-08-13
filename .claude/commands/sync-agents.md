@@ -12,11 +12,13 @@ You are performing a drift audit between global Claude config files and this rep
 - `~/.claude/CLAUDE.md` — global instructions
 - `~/.claude/agents/` — subagent definitions
 - `~/.claude/commands/` — slash command skills
+- `~/.claude/skills/` — skills (each a subdirectory containing `skill.md`, possibly plus supporting files)
 
 **Repo (source of truth):**
 - `coding-agent/CLAUDE.md` — global instructions
 - `coding-agent/agents/` — subagent definitions
 - `coding-agent/commands/` — slash command skills
+- `coding-agent/skills/` — skills (same subdirectory shape as global)
 
 If a repo root was passed as an argument, use that path instead of the current directory.
 
@@ -24,7 +26,9 @@ If a repo root was passed as an argument, use that path instead of the current d
 
 ## Step 1: Discovery
 
-List all `.md` files in each of the four directories, plus `CLAUDE.md` at the repo and global roots. Build a complete matrix of every unique filename across all locations.
+List all `.md` files in the four flat directories (`agents/`, `commands/`, both locations), plus `CLAUDE.md` at the repo and global roots. Build a complete matrix of every unique filename across all locations.
+
+**Skills are a separate shape.** `skills/` holds one subdirectory per skill (`skills/<name>/skill.md`, possibly with supporting files alongside), not flat `.md` files. List subdirectory names in `coding-agent/skills/` and `~/.claude/skills/`, and diff each pair's `skill.md` the same way as an agent/command file. Treat a skill that exists in only one location as **Repo only** / **Global only**, same as any other orphaned file — do not decide whether it "belongs" in the repo (e.g. because it looks project-specific or personal rather than part of the core workloop); surface it and let the human make that call in Step 5. If a skill directory has supporting files beyond `skill.md`, note their presence but diff only `skill.md` unless the human asks to look closer.
 
 ---
 
@@ -114,9 +118,11 @@ For each approved action:
 1. **Copy repo → global**: copy the repo file to the global location, overwriting the global version
    - For `CLAUDE.md`: `coding-agent/CLAUDE.md` → `~/.claude/CLAUDE.md`
    - For agents/commands: `coding-agent/<dir>/<file>` → `~/.claude/<dir>/<file>`
+   - For skills: `coding-agent/skills/<name>/` → `~/.claude/skills/<name>/` (whole directory)
 2. **Copy global → repo**: copy the global file to the repo location, overwriting the repo version
    - For `CLAUDE.md`: `~/.claude/CLAUDE.md` → `coding-agent/CLAUDE.md`
    - For agents/commands: `~/.claude/<dir>/<file>` → `coding-agent/<dir>/<file>`
+   - For skills: `~/.claude/skills/<name>/` → `coding-agent/skills/<name>/` (whole directory)
 3. **Manual merge**: show both versions side-by-side, work through the merge interactively with the human before writing anything
 4. Confirm each write with the exact source → destination path
 

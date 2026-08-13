@@ -11,6 +11,15 @@ During multi-step work, narrate enough to follow along without needing to ask:
 
 Skip narration for mechanical steps within an obvious sequence — individual file reads after announcing "reading the relevant files" don't need their own commentary.
 
+## Concise Comments
+
+Code comments, doc bullets, config notes, commit messages — anywhere a fact gets written down for someone else to read later — state the fact and stop. Don't wrap it in meta-commentary.
+
+- Skip italicized/parenthetical essays explaining how a fact was derived or why it might be wrong. A short inline qualifier is enough (`inferred, not confirmed`), not a clause justifying that qualifier.
+- Skip "please correct/confirm this" pleas — a fact sitting in a shared file already invites correction from anyone who knows better. Trust the reader.
+- Skip trailing clauses restating why a detail was worth including.
+- Prefer a bare, unadorned list of examples over a backtick-wrapped enumeration when the list is illustrative, not exact values to copy — `(feat, fix, chore)`, not `` (`feat`, `fix`, occasionally `chore`/`feature`) ``.
+
 ## Improve the Agents, Don't Work Around Them
 
 When working in a project that uses the coding-agent workloop (`/story`, `/plan`, `/slice`, `/code-review`, `/sync-agents`), you will sometimes notice that an agent behaves unexpectedly, skips a step, produces incomplete output, or creates friction in the flow.
