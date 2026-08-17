@@ -75,6 +75,14 @@ This is the critical step. For every non-identical file, evaluate the diff again
 
 Rate the impact: **Positive** / **Neutral** / **Negative** / **Mixed** — and justify the rating in one or two sentences. Don't default to Positive just because a change adds content.
 
+**For skills specifically, also check for genericity and noise.** A skill in `skills/` isn't automatically workloop machinery like an agent or command — it can be anything from a shared, reusable capability to a personal one-off that happens to live in the global namespace. For every skill that's new, changed, or orphaned (Global only / Repo only), check separately, against three concrete tests:
+
+1. **No real third-party names or identifiers, ever — bright line, not a judgment call.** Colleague names, client/customer names, org names, email domains, meeting names, or any other identifier belonging to a specific person or engagement must not appear in a skill file, including as an "illustrative example." These are personal skills meant to travel across many projects and customers — a customer's name has no business sitting in a file that goes to the next one. Genericize the example instead of citing the real instance (`a named stakeholder`, not `Karoliina`; `a colleague's own session`, not `Sarah's session`). This applies even when the real example reads as harmless in isolation — the rule is categorical, not a severity judgment per instance.
+2. **Distill the rule, don't preserve the journal.** The test: could a reader reconstruct *when this was discovered, who found it, or what the specific incident was* just from reading the skill file? If yes, that's a transcript, not an instruction. A skill file should state the resulting behavior plainly — what to do, or what not to do — without the "Confirmed miss (date): here's the story" wrapper. Drop dates, drop "Added/Confirmed/Reorganized (YYYY-MM-DD)" tags, drop direct quotes from the human, drop specific hashes/PR numbers/incident blow-by-blows. Keep only what's left once the story is stripped out: is there still an actionable rule? If the story *is* the content — a same-day build log, a change history, a single field-test's list of findings — that content belongs in a project memory (a design/field-testing doc), not the skill file. A skill with zero dated annotations and zero "why we changed this" narrative is the healthy target state, not a sign of a skill that hasn't been field-tested.
+3. **Assumed environment**: does the skill assume one specific directory layout, calendar, tool connector, or workflow convention exists, without checking first or asking when it doesn't?
+
+Rate this **Genericity** independently of workloop impact — Positive / Neutral / Negative / Mixed — since a skill can be workloop-safe (no gate weakened) while still being noisy or overly specific. Don't collapse the two into one verdict. Test 1 (real names) is disqualifying on its own regardless of how the other two tests score — treat any hit as Negative and name the exact instance in the report, don't average it away against otherwise-clean content.
+
 ---
 
 ## Step 4: Reconciliation Report
@@ -89,15 +97,18 @@ Present findings using this structure for each non-identical or orphaned file:
 **Workloop impact:** [Positive / Neutral / Negative / Mixed]
 [One or two sentences of critical analysis. Name the specific workloop principle affected.]
 
-**Recommendation:** [Copy repo → global / Copy global → repo / Manual merge needed / No action — with brief rationale]
+**Genericity** (skills only): [Positive / Neutral / Negative / Mixed]
+[One or two sentences — hardcoded specifics, process noise, or assumed environment, if any.]
+
+**Recommendation:** [Copy repo → global / Copy global → repo / Manual merge needed / No action — with brief rationale. For a skill with Negative genericity, the recommendation may be "extract config before syncing" rather than a straight copy.]
 
 ---
 
 After all files, present a summary table:
 
-| File | Direction | Impact | Recommendation |
-|------|-----------|--------|----------------|
-| ... | ... | ... | ... |
+| File | Direction | Impact | Genericity (skills only) | Recommendation |
+|------|-----------|--------|---------------------------|----------------|
+| ... | ... | ... | ... | ... |
 
 Also report the count of identical files skipped.
 
