@@ -197,6 +197,18 @@ both are present, don't require it.
   not part of the goal. Never include Zoom/meeting join links or dial-in passwords in
   the written recap, even though they're present in the raw event description.
 
+**RSVP status is not proof of attendance — do a quick pass with the user before
+finalizing Calendar.** An event classified as attended (accepted, no decline) can
+still be one the user didn't actually attend — e.g. it overlapped their own OOO block
+and they sent a written update instead. The calendar API only reports whether they
+*responded* accepted, not whether they actually *showed up*; nothing in the raw data
+distinguishes the two. Once the day's events are classified, list them back to the
+user in one consolidated question (not the full one-at-a-time treatment Friction and
+Open Questions get below — this is a single lightweight check, not a per-item
+interview) and ask if anything needs correcting: a meeting they didn't actually attend
+despite accepting, one where they gave an update async instead of showing up, or any
+other note worth folding in. Apply corrections before writing the section, not after.
+
 ## 4. Build the recap
 
 Sections, in this order:
