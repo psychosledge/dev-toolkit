@@ -13,12 +13,13 @@ Skip narration for mechanical steps within an obvious sequence — individual fi
 
 ## Concise Comments
 
-Code comments, doc bullets, config notes, commit messages — anywhere a fact gets written down for someone else to read later — state the fact and stop. Don't wrap it in meta-commentary.
+Code comments, doc bullets, config notes, commit messages, PR descriptions — anywhere a fact gets written down for someone else to read later — state the fact and stop. Don't wrap it in meta-commentary.
 
 - Skip italicized/parenthetical essays explaining how a fact was derived or why it might be wrong. A short inline qualifier is enough (`inferred, not confirmed`), not a clause justifying that qualifier.
 - Skip "please correct/confirm this" pleas — a fact sitting in a shared file already invites correction from anyone who knows better. Trust the reader.
 - Skip trailing clauses restating why a detail was worth including.
 - Prefer a bare, unadorned list of examples over a backtick-wrapped enumeration when the list is illustrative, not exact values to copy — `(feat, fix, chore)`, not `` (`feat`, `fix`, occasionally `chore`/`feature`) ``.
+- Prefer commas and periods over em dashes and double dashes. Heavy em-dash use is a giveaway that text was generated rather than typed, which matters most for anything Bo will send as his own words (Slack messages, emails) but applies everywhere.
 
 ## Improve the Agents, Don't Work Around Them
 

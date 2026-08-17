@@ -118,8 +118,15 @@ outgoing week's README (`# Week of <date>`, `## Priority order`, `## Active item
   live embedded inside each active story's own `plan.md` or a topic doc's own "Open
   Questions" section, not in the README directly. Carry the pointer text forward
   unchanged; the actual freshness check on what it points to happens in Step 8 below.
-- **Priority order** — don't invent one. Leave it for the user to fill in, or draft a
-  proposed order from the carried-forward Active items only if asked.
+- **Priority order** — don't invent one, but don't just leave it blank and silently wait
+  either: **ask directly whether the user wants a draft priority order now**, once the
+  Active items list is settled. This is two-stage by design, not a one-shot fill-in — the
+  point is to hand the user something to walk into the week's own planning meeting with
+  (this rollover is meant to run before that meeting, as prep), then finalize/adjust it
+  together afterward once real input from that meeting exists. If they say not yet, leave
+  it blank and don't ask again unprompted this session. If they say yes, draft one from
+  the carried-forward Active items, present it, and treat it as a draft until they
+  explicitly finalize it (possibly in a later message, after their meeting happens).
 - **Closed items** — always starts empty in a new week's README.
 - **Physically move (not copy) every topic doc still referenced by a carried-forward
   Active item or heads-up** from the outgoing week's directory into the new one — a bare
