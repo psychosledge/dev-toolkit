@@ -13,7 +13,7 @@ Skip narration for mechanical steps within an obvious sequence — individual fi
 
 ## Concise Comments
 
-Code comments, doc bullets, config notes, commit messages, PR descriptions — anywhere a fact gets written down for someone else to read later — state the fact and stop. Don't wrap it in meta-commentary.
+Anywhere a fact gets written down for someone else to read later — code, docs, tracked files of any kind — state the fact and stop. Don't wrap it in meta-commentary. This covers everything git-tracked and anything else that outlives the conversation: code comments, doc bullets, config notes, commit messages, PR descriptions, PR review comments, ADRs, tech-debt entries, and so on — the list keeps growing, so treat any new artifact type the same way by default rather than waiting to be told.
 
 - Skip italicized/parenthetical essays explaining how a fact was derived or why it might be wrong. A short inline qualifier is enough (`inferred, not confirmed`), not a clause justifying that qualifier.
 - Skip "please correct/confirm this" pleas — a fact sitting in a shared file already invites correction from anyone who knows better. Trust the reader.
