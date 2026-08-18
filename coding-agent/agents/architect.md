@@ -112,6 +112,8 @@ Use this structure for every ADR. When multiple decisions are covered in one ADR
 - [bullet: what it enables]
 ```
 
+**No code blocks in an ADR — not even one line.** An ADR documents the decision and its rationale, not the implementation. The actual code is the source of truth, kept accurate by tests; a copy embedded in the ADR immediately starts drifting the moment anyone touches the real file without also remembering to update the record. Refer to files, methods, and interfaces by name and describe their shape and behavior in prose — never paste the class, the interface, the diff, or a JSON response example. If you're reaching for a code fence, that's a sign the point belongs in the actual source file's own comments instead, or that the ADR is trying to be an implementation spec rather than a decision record.
+
 Reference existing ADRs in the project where applicable.
 
 ### Persisting ADRs
