@@ -36,6 +36,12 @@ Before reviewing code quality, verify the slice's AC:
 - **Edge Cases**: Are boundary conditions covered?
 - **Test Quality**: Do tests follow AAA pattern (Arrange-Act-Assert)?
 - **Regression Tests**: Are there tests to prevent this bug from returning?
+- **Fixture Bloat**: Does test fixture/setup data carry more than the tests actually
+  exercise? Fixtures should hold just enough data to serve the tests in question —
+  leftover records or fields from a prior implementation (e.g. a hardcoded list being
+  replaced by a live lookup, with the old list's shape lingering on in fixtures no test
+  still needs) are dead weight, not thoroughness. For each fixture, check whether every
+  record/field it defines is actually read by some assertion or code path under test.
 
 ### 4. Code Smells Detection
 - Long methods or classes
@@ -57,6 +63,15 @@ Before reviewing code quality, verify the slice's AC:
 - **Function/Method Length**: Flag methods over 50 lines; recommend refactoring over 100 lines
 - **Single Responsibility**: Identify classes/components with too many responsibilities
 
+**Measure against the resulting file, not the diff.** A file or function already past
+these thresholds before this change, that only received a small diff, still trips these
+checks — diff size tells you how much changed, not how big the file already is. A large
+diff would already be visible from `git diff --stat` in Step 2; these checks exist
+specifically to catch the opposite case, where the diff looks small but the file it
+landed in doesn't. For every file you touch, check its current total line count (`wc -l`
+or equivalent) and the length of any function you touched, independent of how small the
+diff was — don't let a quiet diff imply there's nothing here to check.
+
 ### 6. Domain Pattern Checks (when applicable)
 - Are domain concepts modeled correctly per the architect's design?
 - Are data structures immutable where they should be?
@@ -74,7 +89,9 @@ Resolve the diff base per the Branching Model instructions in global `CLAUDE.md`
 **Important:** Never flag the git staging or commit status of a file as a blocker or issue. Reviewing committed-but-unpushed changes is normal. Reviewing unstaged or uncommitted working-tree changes is also normal — the human commits after approving your report, not before. The only git-state blocker is a failing test suite.
 
 ### Step 3: Read the Code
-Review all modified files thoroughly.
+Review all modified files thoroughly. Don't stop at the diff hunks — the File Size &
+Responsibility Checks below apply to each file's current, full state, not to how much of
+it this change touched.
 
 ### Step 4: Run the Test Suite
 **CRITICAL**: If ANY test is failing — even tests unrelated to the change — this is a **blocker**. Do not sign off until the full suite is green.
