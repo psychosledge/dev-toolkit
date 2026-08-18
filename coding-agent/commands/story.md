@@ -17,6 +17,8 @@ $ARGUMENTS
 
 **Vertical slices.** A story represents a complete unit of user value, even if delivering it touches multiple codebases, repos, or teams. The fact that it spans repos is an engineering concern, not a story concern — don't split by repo.
 
+**Watch for epics disguised as stories.** A story delivers one user-facing outcome. If the input describes several outcomes that would each independently matter to a user even if the others never shipped, that's not one story with broad reach — it's several stories. Test: "would a user notice or care if only piece A shipped, and B and C never happened?" If yes for more than one piece, split into separate story cards. This is distinct from the "don't split by repo" guidance above — that guards against splitting one outcome that *needs* multiple repos to exist at all (an outcome nobody can observe until both halves ship); this guards against merging several outcomes that each stand alone just because they share a theme or touch related code.
+
 **PM-legible prose.** No HTTP status codes, file paths, code blocks, or step-by-step implementation lists in the description or acceptance criteria. The story should be readable by a PM or stakeholder without a technical background. Technical specifics belong only in the Notes section.
 
 **Outcome-level acceptance criteria.** Each criterion should be verifiable by a non-engineer. Frame as observable user outcomes: "A user who does X experiences Y." Not: "Endpoint returns 200" or "session cookie is set."
@@ -40,9 +42,10 @@ $ARGUMENTS
 ## Process
 
 1. Read the story idea from $ARGUMENTS or conversation context.
-2. If the input is ambiguous, ask focused clarifying questions before drafting — not a list.
-3. Draft the story using the structure above.
-4. Present the draft and ask what to adjust.
-5. Iterate until the human approves.
-6. When approved, present the final card cleanly. Do not create a ticket in any sprint tool — that is the human's next step.
-7. After approval, offer: "Ready to decompose this into technical slices? Run /plan with this story."
+2. Check the input against the epic test above. If it describes multiple independently-valuable outcomes, say so and propose splitting into N separate story cards instead of one. Draft each independently (full Story structure per card), present the set together, and let the human approve the split — don't default to bundling just because the input arrived as one request.
+3. If the input is ambiguous, ask focused clarifying questions before drafting — not a list.
+4. Draft the story using the structure above.
+5. Present the draft and ask what to adjust.
+6. Iterate until the human approves.
+7. When approved, present the final card(s) cleanly. Do not create a ticket in any sprint tool — that is the human's next step.
+8. After approval, offer: "Ready to decompose this into technical slices? Run /plan with this story." If the input was split into multiple cards, offer this per card, and let the human pick which one to start with rather than assuming an order.
