@@ -107,7 +107,9 @@ land there before it's ever committed.
 
 Also collect any still-unresolved "**Needs Architect:**" or "Open Assumptions Flagged
 for Approval" callouts, regardless of whether they were touched on the target date —
-these feed Open Questions below. **Check two places, not just `docs/stories/`:** every
+these feed the "In my way" bucket below, when they genuinely name an external party (see
+that section for the distinction between a real external dependency and the user's own
+undecided call). **Check two places, not just `docs/stories/`:** every
 currently active story's `plan.md`, and every topic doc's own "Open Questions" section
 (see below) — a pre-story investigation doc (e.g. a not-yet-storified bug writeup) can
 carry open questions of its own before anything graduates to `docs/stories/` at all.
@@ -204,7 +206,7 @@ and they sent a written update instead. The calendar API only reports whether th
 *responded* accepted, not whether they actually *showed up*; nothing in the raw data
 distinguishes the two. Once the day's events are classified, list them back to the
 user in one consolidated question (not the full one-at-a-time treatment Friction and
-Open Questions get below — this is a single lightweight check, not a per-item
+"In my way" get below — this is a single lightweight check, not a per-item
 interview) and ask if anything needs correcting: a meeting they didn't actually attend
 despite accepting, one where they gave an update async instead of showing up, or any
 other note worth folding in. Apply corrections before writing the section, not after.
@@ -229,11 +231,31 @@ a compression of what's below, not a new source of information):
   is unblocked"). Can be more than one bullet if there are genuinely several concrete
   next steps; don't force it down to one at the cost of dropping a real one. If nothing
   explicit exists, say so rather than inventing a plan.
-- **In my way:** the `[Needs: <name>]` tagged items from Open Questions Carried
-  Forward, plus — when it's still true that day — a one-line restatement of the
-  standing structural friction (e.g. "no acceptance criteria provided, self-scoping").
-  This is the one bucket most directly useful for the "we need a PM" case, so don't
-  soften or drop it just because it repeats daily.
+- **In my way:** genuine external dependencies only — something the user is actually
+  waiting on, from a person or system outside their own control, tagged
+  **[Needs: <name>]** (a named person outside this session). Plus, when it's still true
+  that day, a one-line restatement of the standing structural friction (e.g. "no
+  acceptance criteria provided, self-scoping"). This is the one bucket most directly
+  useful for the "we need a PM" case, so don't soften or drop it just because it repeats
+  daily. If nothing is genuinely blocked on an outside party on a given day, this part of
+  the bucket is empty — that's a good, valid outcome, not a sign something was missed.
+
+  **Keep this distinct from an open question (a decision nobody's made yet).** A design
+  decision the user will make themselves — even one they'll think through with help
+  before deciding — is not "blocked on" anything; it's their own next step, and belongs
+  in "Doing now / next" above or in Progress, not here. Don't invent a third party (e.g.
+  "the architect") who needs to weigh in before they can proceed — if no such external
+  party exists, that phrasing is a leak of internal tooling vocabulary into a document
+  meant for people who've never heard of it.
+
+  Each unresolved item from step 2's "Needs Architect"/"Open Assumptions" callouts that
+  genuinely names an external party, plus anything fresh that came up today, becomes a
+  bullet here. Only tag `[Needs: <name>]` when there's actual corroborating evidence the
+  dependency is real (e.g. that person is independently named elsewhere as owning
+  related work). Do **not** infer this from how a source document happens to phrase it —
+  phrasing like "needs someone with X access" is not proof of who "someone" is; it can
+  just as easily be the user's own follow-up in a different repo. When in doubt, ask
+  instead of tagging.
 
 **Compression must not inflate scope.** A detailed section can state real qualifiers
 (count of slices, "one path not all consumers," "started but not merged") that a
@@ -266,7 +288,7 @@ the user's own subjective account of what actually slowed them down or put them 
 awkward spot, not something artifacts can verify — so after asking the upfront prompts
 and drafting bullets from the answers, present each resulting bullet individually (not
 the whole section at once) and get a reaction before moving to the next. Scoped to this
-section and Open Questions specifically because both involve judgment/attribution that
+section and the "In my way" bucket specifically because both involve judgment/attribution that
 can't be cross-checked against a commit or a calendar entry — Progress, Untracked Work,
 and Calendar are grounded in verifiable artifacts and don't get this same one-at-a-time
 treatment by default.
@@ -289,36 +311,8 @@ manufacture a question just to have one — use the message as the description. 
 count of untracked items found for the day; the trend itself is a data point worth
 preserving (evidence of untriaged intake with no PM to route it).
 
-### Open Questions Carried Forward
-This section is for genuine external dependencies only — something the user is
-actually waiting on, from a person or system outside their own control. It is NOT a
-place for the user's own next steps, plans, or things they intend to do next, no
-matter how many of them there are or which repo/session they land in — those belong in
-the Standup Summary's "Doing now / next" bucket instead. If nothing here is genuinely
-blocked on an outside party on a given day, **this section should be empty** — that's a
-good, valid outcome, not a sign something was missed.
-
-Each unresolved item from step 2's "Needs Architect"/"Open Assumptions" callouts, plus
-anything fresh that came up today, gets **[Needs: <name>]** — a named person outside
-this session — and only that tag. Only use it when there's actual corroborating
-evidence the dependency is real (e.g. that person is independently named elsewhere as
-owning related work). Do **not** infer this from how a source document happens to
-phrase it — phrasing like "needs someone with X access" is not proof of who "someone"
-is; it can just as easily be the user's own follow-up in a different repo. When in
-doubt, ask instead of tagging.
-
-**Do not tag a pending technical decision as an open question or blocker just because
-it will be worked through collaboratively before the user decides.** A design decision
-the user will make themselves — even one they'll think through with help before
-deciding — is not "blocked on" anything; it's their own next step. Don't invent a
-third party (e.g. "the architect") who needs to weigh in before they can proceed — if
-no such external party exists, that phrasing is a leak of internal tooling vocabulary
-into a document meant for people who've never heard of it. Put items like this in
-Progress or the Standup Summary's "Doing now/next" instead, phrased as the user's own
-pending call.
-
 **Propose a calendar prep-reminder for any item tied to a specific future meeting.**
-When an Open Question, Progress item, or a "found during UAT"-style discovery names
+When an "In my way" item, Progress item, or a "found during UAT"-style discovery names
 something the user should raise with a specific person at a specific recurring
 meeting, don't just log it as a follow-up and hope they remember when that meeting
 comes around. If there's no reliable automated way to ping them right before a meeting
@@ -351,7 +345,7 @@ for these and rewrite in plain, outcome-oriented language:
   — "ADR" itself is a standard, explainable engineering term and fine to keep; the
   internal agent-role framing is not.
 - A pending decision "for the architect to make" → it's the user's own decision; see
-  the Open Questions note above. Never imply a third party called "the architect"
+  the "In my way" note above. Never imply a third party called "the architect"
   exists.
 - Meta-notes about this skill's own gaps, or about *other* skills' bugs discovered
   incidentally, do not belong in the leadership-facing recap at all — that's a note for
@@ -409,24 +403,24 @@ one exception is a source-level gap with nothing to ask about (e.g. "calendar no
 connected," "no plan.md found for an active repo") — there's no question to ask there,
 so name the gap plainly in the draft instead of silently omitting it.
 
-**Walk Open Questions Carried Forward one at a time before finalizing.** This section
-is uniquely error-prone — it's forward-looking claims about who owns what and who's
-actually blocking whom, which the underlying artifacts (commits, plan.md, calendar)
-can't fully verify on their own; misattributing the user's own assigned work as an
-external dependency, or overstating a nice-to-have as a blocker, are both easy mistakes
-to make here. After drafting the full recap, present every item in this section
-individually — one item, wait for a reaction, then the next — rather than presenting
-the whole section at once or folding this into the general "present, don't just save"
+**Walk the "In my way" bucket's `[Needs: <name>]` items one at a time before
+finalizing.** These are uniquely error-prone — forward-looking claims about who owns
+what and who's actually blocking whom, which the underlying artifacts (commits, plan.md,
+calendar) can't fully verify on their own; misattributing the user's own assigned work as
+an external dependency, or overstating a nice-to-have as a blocker, are both easy
+mistakes to make here. After drafting the full recap, present every such item
+individually — one item, wait for a reaction, then the next — rather than presenting the
+whole bucket at once or folding this into the general "present, don't just save"
 review. Apply corrections immediately (including to any other doc the correction
 touches, e.g. the week's README) before moving to the next item.
 
 Friction / Coordination Overhead gets the identical one-at-a-time treatment — see its
-own section above. **Scoped deliberately to these two sections, not every section.**
+own section above. **Scoped deliberately to these two, not every section.**
 Extending this to Progress, Untracked Work, and Calendar by default isn't the right
 call — those are grounded in verifiable artifacts (a commit exists or it doesn't, a
 calendar event has these attendees or it doesn't), so the error risk is lower and of a
 different kind (missing context, wrong emphasis) than the attribution/classification
-errors Open Questions and Friction are prone to. A daily per-item interactive
+errors "In my way" and Friction are prone to. A daily per-item interactive
 walkthrough across every section of every recap risks turning a lightweight daily
 ritual into a long interview, which could hurt adoption more than the accuracy gain
 helps. If Progress/Untracked Work/Calendar start producing wrong or misleading content
