@@ -233,12 +233,16 @@ a compression of what's below, not a new source of information):
   explicit exists, say so rather than inventing a plan.
 - **In my way:** genuine external dependencies only — something the user is actually
   waiting on, from a person or system outside their own control, tagged
-  **[Needs: <name>]** (a named person outside this session). Plus, when it's still true
-  that day, a one-line restatement of the standing structural friction (e.g. "no
-  acceptance criteria provided, self-scoping"). This is the one bucket most directly
-  useful for the "we need a PM" case, so don't soften or drop it just because it repeats
-  daily. If nothing is genuinely blocked on an outside party on a given day, this part of
-  the bucket is empty — that's a good, valid outcome, not a sign something was missed.
+  **[Needs: <name>]** (a named person outside this session). If nothing is genuinely
+  blocked on an outside party on a given day, this bucket is empty — that's a good,
+  valid outcome, not a sign something was missed.
+
+  **Don't restate a standing structural friction fact here.** Once a standing gap
+  (e.g. self-scoping due to no PM) is documented, treat it as established baseline
+  rather than daily content — this bucket is for active, named external dependencies
+  only. Distinct from the "don't dedupe recurring friction" principle below, which
+  covers evolving themes (a new instance, an escalation), not a single fully-settled
+  fact.
 
   **Keep this distinct from an open question (a decision nobody's made yet).** A design
   decision the user will make themselves — even one they'll think through with help
@@ -301,6 +305,12 @@ evidence leadership needs to gauge how the engagement is going. When a friction 
 involves specific people or org roles, check project memory (the org-roles memory from
 Current Engagement Config) for current facts rather than guessing or asserting from
 what a prior recap said — those facts change as people roll on/off the engagement.
+
+**When a standing item hasn't changed since the prior day, don't re-write it in full
+prose — write "Nothing new today" instead**, in both Friction and the "In my way"
+bucket. Only restate in full when something about it has actually changed (resolved,
+escalated, newly corroborated). A day-count of how long something's been a live
+friction is derivable from the recap files' own dates directly, if it's ever needed.
 
 ### Untracked Work
 Any git commit or calendar meeting (from steps 1/3) that doesn't map to a known story

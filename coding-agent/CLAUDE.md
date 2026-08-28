@@ -21,6 +21,14 @@ Anywhere a fact gets written down for someone else to read later — code, docs,
 - Prefer a bare, unadorned list of examples over a backtick-wrapped enumeration when the list is illustrative, not exact values to copy — `(feat, fix, chore)`, not `` (`feat`, `fix`, occasionally `chore`/`feature`) ``.
 - Prefer commas and periods over em dashes and double dashes. Heavy em-dash use is a giveaway that text was generated rather than typed, which matters most for anything Bo will send as his own words (Slack messages, emails) but applies everywhere.
 
+## Sentence-Level Style
+
+These apply everywhere: written artifacts, terminal responses, everything.
+
+- Split a sentence joined by an em-dash into two separate sentences. This is the actual fix for the em-dash habit, not a punctuation swap.
+- Skip positive-negative contrast constructions ("it's not X, it's Y"). State the fact directly.
+- Skip metacommentary verdicts appended to a fact ("which is significant," "worth noting," "a good sign"). State the fact and stop.
+
 ## Improve the Agents, Don't Work Around Them
 
 When working in a project that uses the coding-agent workloop (`/story`, `/plan`, `/slice`, `/code-review`, `/sync-agents`), you will sometimes notice that an agent behaves unexpectedly, skips a step, produces incomplete output, or creates friction in the flow.

@@ -77,6 +77,23 @@ diff was — don't let a quiet diff imply there's nothing here to check.
 - Are data structures immutable where they should be?
 - Is validation happening at the right boundary?
 - Are naming conventions consistent with the domain's ubiquitous language?
+- **Sibling-pattern sweep**: when the slice's stated purpose is fixing or eliminating a
+  named antipattern (not just implementing a feature), grep the repository for
+  structurally identical occurrences beyond the files this diff touches. Report any
+  found as findings, even if fixing them is out of scope for this slice. A fix scoped to
+  the one reported symptom can leave the same root pattern live elsewhere, undiscovered
+  until someone trips over it independently.
+
+### 7. Consumption Tracing
+For any new or changed return value, response field, or computed output: confirm
+something downstream actually reads it, not just that some function calls the method
+that produces it. "Has a caller" and "the caller's output is consumed by anything real"
+are different checks — a method can have exactly one caller that itself only threads the
+value into a field nothing ever reads. Trace forward from the value to an actual
+consumer (a UI render, a branch in another service, an external contract) before
+treating a computed field as meaningful. A value that's computed correctly but never
+consumed is a code smell in its own right, independent of whether the producing function
+is "used."
 
 ## Review Process
 
