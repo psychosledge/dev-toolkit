@@ -37,9 +37,9 @@ retrospective (the daily recaps) becomes harder to work with once it's sitting i
 `archive/` rather than the live directory, so catch gaps now, not after the move.
 
 - **Check for `recaps/weekly.md` inside the outgoing week.** If it's missing, stop and
-  ask whether to build it now (via the `daily-recap` skill's weekly-rollup step) before
-  continuing — don't silently archive a week with no retrospective, and don't silently
-  build one without asking either, in case one is already in progress elsewhere.
+  ask whether to build it now (via the `weekly-recap` skill) before continuing — don't
+  silently archive a week with no retrospective, and don't silently build one without
+  asking either, in case one is already in progress elsewhere.
 - **Sanity-check that the week actually looks finished** — e.g. a daily recap exists for
   the most recent work day before today. If the outgoing week looks only partially
   through (rolling over mid-week, a short week, a holiday), ask for confirmation rather
