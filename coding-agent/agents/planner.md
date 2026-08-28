@@ -51,7 +51,12 @@ Identify the thinnest increments of end-to-end user-facing value. Order them so 
 2. Subsequent slices add error handling, edge cases, or additional behaviors
 3. Each slice builds on the previous without requiring rework
 
-For each slice, flag whether it requires architectural decisions (→ **architect**) or can go straight to **coder**.
+For each slice, flag whether it requires architectural decisions (→ **architect**) or
+can go straight to **coder**. Check two independent things: does it introduce a
+genuinely new pattern (vs. reusing an already-decided shape), and separately, does it
+decide *where* a piece of logic lives when that placement has a genuine alternative
+with a different owner or blast radius. A slice can reuse an existing pattern and still
+need an architect for the second reason alone.
 
 When a slice deliberately creates a provisional interface or stub that a later slice will depend on, mark it with `Scaffolding for` and `Interface contract` fields (see Step 4 format). Do not use these fields unless the dependency is explicit and the consuming slice is named in this plan.
 

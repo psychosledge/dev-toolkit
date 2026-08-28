@@ -31,10 +31,20 @@ Before any work begins, orient the human to exactly what this slice covers.
 Do not proceed to Step 1 until the human confirms. If they flag a scope concern, surface it, revise the plan if needed, and re-present the updated recap before asking again.
 
 **Step 1 — Architect check**
-Does this slice require architectural decisions (new domain concepts, new external integrations, cross-cutting concerns, or anything warranting an ADR)?
+Two independent tests — a slice can pass one and fail the other, so check both:
+- **Pattern test:** does this introduce something genuinely new (new domain concepts,
+  new external integrations, cross-cutting concerns) rather than reusing an
+  already-decided shape or precedent?
+- **Ownership test:** does this decide *where* a piece of logic lives — which layer,
+  service, or repo owns it — and does that placement have a genuine alternative with a
+  different owner, lifecycle, or blast radius (e.g. API vs. UI ownership of a derived
+  value, sync vs. async, which service owns a cross-cutting concern)? Reusing an
+  existing code pattern to implement the decision does not answer this question.
 
-- If **yes**: invoke the **architect** subagent. Present the design output to the human and wait for explicit approval before continuing. If changes are requested, revise and re-present.
-- If **no**: proceed directly to Step 2.
+- If **either** test says yes: invoke the **architect** subagent. Present the design
+  output to the human and wait for explicit approval before continuing. If changes are
+  requested, revise and re-present.
+- If **no** to both: proceed directly to Step 2.
 
 **Step 2 — Implementation**
 Invoke the **coder** subagent to implement the slice using TDD (Red-Green-Refactor). The coder should work within the scope of this slice only.
