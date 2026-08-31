@@ -227,6 +227,24 @@ If the local branch is checked out, it will appear as the current branch (`*`) �
 
 From the `git branch -vv` output, any branch showing `[gone]` is a local branch whose remote was deleted. List these by name only.
 
+**3B-e. Local branch ownership**
+
+For every local branch except the resolved diff base itself (the diff base is shared trunk, not owned by anyone), determine whose work it is:
+
+```
+git -C <repo-path> log -1 --pretty=format:"%an|%ae" <branch>
+```
+
+Compare the email against:
+
+```
+git -C <repo-path> config user.email
+```
+
+A match is `mine`; anything else is `not mine`, owned by that commit's author name. This is a tip-commit check, not a "did I ever commit here" check — a branch you checked out to review someone else's PR carries their name, even if your name is attached to the repo elsewhere.
+
+Note the branch's sync state alongside ownership, from the `branch -vv` output already collected in 3B-c/3B-d: `in sync`, `behind N`, `gone`, or `local-only` (no upstream configured at all, e.g. a scratch branch made for a review).
+
 ## Step 4B — Present the remote-gap summary
 
 Use this format:
@@ -259,6 +277,10 @@ Use this format:
   • [branch-name]
   • ...
 
+**Local Branches** (ownership, all local branches except the diff base)
+  **[branch-name]** — [owner] · [in sync / behind N / gone / local-only]  [mine | not mine]
+  ...
+
 ---
 
 [repeat per repo]
@@ -266,7 +288,9 @@ Use this format:
 *All up to date: [repo], [repo]*
 ```
 
-Omit any section that has nothing to report, including **Release Pipeline** when no pipeline is declared for that repo. If every section is empty for a repo, include it in the "All up to date" line instead of showing an empty block. Sort repos with changes first; within a repo, sort tracked-branch entries by how far behind they are (most behind first).
+Omit any section that has nothing to report, including **Release Pipeline** when no pipeline is declared for that repo, and **Local Branches** when the only local branch in a repo is the diff base itself. If every section is empty for a repo, include it in the "All up to date" line instead of showing an empty block. Sort repos with changes first; within a repo, sort tracked-branch entries by how far behind they are (most behind first); within **Local Branches**, sort `not mine` before `mine`.
+
+In **Local Branches**, flag any `not mine` entry that is also `gone` or already covered by the merge check in Step 4B-post2 as a likely delete candidate — but do not delete it there; deletion of any branch, `mine` or `not mine`, only happens after explicit confirmation, per Step 4B-post2.
 
 If any unmerged remote branches appear old (4+ weeks with no recent commits), group them on one line rather than listing commits: `[branch], [branch] — old, likely squash-merged; will clear when remote is deleted.`
 
@@ -299,6 +323,38 @@ After syncing, output a single summary line:
 ```
 
 Omit the line entirely if nothing was synced and nothing needed skipping.
+
+Then continue to **Step 4B-post2**.
+
+## Step 4B-post2 — Suggest merged stale local branches for deletion (Mode B only)
+
+For every branch collected in Step 3B-d (local branch flagged `[gone]`), check whether its content is already incorporated into the resolved diff base, using patch-id equivalence rather than commit ancestry:
+
+```
+git -C <repo-path> cherry origin/<diff-base> <branch>
+```
+
+Do NOT use `git merge-base --is-ancestor` for this — a squash- or rebase-merge (the GitHub default) rewrites the commit hash, so the original commit is never literally an ancestor of the diff base even though its content landed. `git cherry` compares patch content instead, so it correctly detects squash- and rebase-merges.
+
+Empty output, or output where every line starts with `-` (patch-equivalent commit found upstream), means fully merged — it's a delete candidate.
+
+Any line starting with `+` (no patch-equivalent commit found upstream) means not fully merged — skip it, keep the branch, and report it as skipped (not merged) rather than silently dropping it from the summary.
+
+Never delete a branch in this step. Report the delete candidates and wait for explicit confirmation:
+
+```
+*Merged and safe to delete: repo/branch, repo/branch — confirm to delete.*
+```
+
+Omit the line entirely if there were no `[gone]` branches to process, or none were fully merged.
+
+Only on explicit confirmation from the human, delete the confirmed branches:
+
+```
+git -C <repo-path> branch -D <branch>
+```
+
+(`-D` here is safe specifically because the check above already verified the content against `origin/<diff-base>`, not because force-delete is being used carelessly.) Delete only the branches the human confirmed, not the full candidate list, if they narrow it down.
 
 Then continue to **Step 5**.
 

@@ -90,6 +90,12 @@ On confirmation, write directly into **that repo's own `CLAUDE.md`** under `## B
 
 When no naming convention is declared or detected, propose a bare `<slug>` — no `feature/` prefix, no ticket embedded — even when a ticket ID is on hand. Only add structure once it's actually known to be this repo's convention.
 
+## Session Hygiene
+
+If a conversation opens with a "continued from a previous conversation that ran out of context" summary, tell Bo immediately and suggest `/clear` before continuing, rather than building further on the compacted history. Hitting that limit once already means the session ran longer than it should have.
+
+This matters even for a session used to derive daily recaps: the recap skill reads git log, plan.md files, calendar, and that day's own session transcript file on disk, not live scrollback. `/clear` after `/daily-recap` loses nothing.
+
 ## Never Push Without Explicit Permission
 
 Do not run `git push` (or any variant: `--force`, `-u`, etc.) unless the human has explicitly asked for it in the current message.
