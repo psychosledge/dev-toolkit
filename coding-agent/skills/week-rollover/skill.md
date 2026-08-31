@@ -12,6 +12,16 @@ under a single `docs/weeks/<monday>/` directory. This skill is still being field
 treat its shape as a draft, same as `daily-recap`, and update it directly when a real
 run surfaces a gap.
 
+## Confirming Items With the User
+
+Several steps below ask the user to confirm a status or action on each of several
+items — stories to archive (Step 3), active items in the freshness walk (Step 7). In
+every such case: present one item, stop, and wait for the user's response before moving
+to the next. Never lay out several items as a table or list in one message for blanket
+approval — that shape invites breezing past something that actually changed, even when
+an item's status looks obviously unchanged. "Obviously fine" is a guess about an item's
+status, not a documented one.
+
 ## Current Engagement Config
 
 Generic, like `daily-recap` — don't hardcode a path here. Read the same project memory
@@ -61,10 +71,11 @@ For every story under `<stories root>/` (excluding `archive/`):
    "✅ done" means the implementation was finished in the coding workflow's own sense,
    not that it's merged — same distinction `daily-recap` already enforces for its own
    "shipped" language.
-2. **Present each genuinely-merged story found, and confirm before moving.** Don't
-   auto-archive silently — a story can be merged but still have an active, logged
-   follow-up (e.g. a "pick this up once X unblocks" note) that means it's not actually
-   done-done yet. Let the user make that call per story.
+2. **Present each genuinely-merged story found one at a time, per the confirmation rule
+   above, and confirm before moving.** Don't auto-archive silently — a story can be
+   merged but still have an active, logged follow-up (e.g. a "pick this up once X
+   unblocks" note) that means it's not actually done-done yet. Let the user make that
+   call per story.
 3. On confirmation: `mv <stories root>/<slug> <stories root>/archive/<slug>`.
 4. **Grep-fix every reference to the old path across `docs/weeks/**/*.md`** (both the
    live week and any archived weeks — these are simple path substitutions, not content
@@ -155,12 +166,6 @@ Walk the new README's Active items one at a time, presenting the currently-recor
 status and asking whether it's still accurate. Not a formality — stale status claims
 propagate silently otherwise.
 
-- **One item per message, no exceptions.** Present a single item's status, then stop
-  and wait for the user's response before moving to the next one. Never lay out several
-  items as a table or bullet list in one message for blanket approval — that's exactly
-  the shape that invites breezing past something that actually changed. This holds even
-  when an item's status looks obviously unchanged; "obviously fine" is a guess about an
-  item's status, not a documented one.
 - **Table order by default.** Walk items in the order they're already written, rather
   than reordering by assumed importance or recency. Deviate only when a specific item's
   correction has obvious, immediate bearing on another (e.g. two items share the same
