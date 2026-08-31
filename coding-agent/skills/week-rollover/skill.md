@@ -139,11 +139,15 @@ outgoing week's README (`# Week of <date>`, `## Priority order`, `## Active item
   consequence described in Step 4 above.
 
 **Present the drafted new README before writing it** — same "present, don't just save"
-principle `daily-recap` follows. Carrying forward the wrong items (something that was
-actually resolved in conversation but never marked closed in the doc, for instance)
-is exactly the kind of status-marker staleness `daily-recap` itself already watches for
-in this same file — don't propagate a stale status into a fresh week's file without a
-chance to catch it first.
+principle `daily-recap` follows. This presentation is a structural check only (does the
+carried-forward list and section shape look right), not a status check — don't read
+approval of the whole draft as confirmation that any individual item's status is
+correct. That confirmation only happens in the per-item walk in Step 7, which runs
+regardless of how this draft presentation goes. Carrying forward the wrong items
+(something that was actually resolved in conversation but never marked closed in the
+doc, for instance) is exactly the kind of status-marker staleness `daily-recap` itself
+already watches for in this same file — don't propagate a stale status into a fresh
+week's file without a chance to catch it first.
 
 ## Step 7 — Walk each active item for a freshness check
 
@@ -151,6 +155,12 @@ Walk the new README's Active items one at a time, presenting the currently-recor
 status and asking whether it's still accurate. Not a formality — stale status claims
 propagate silently otherwise.
 
+- **One item per message, no exceptions.** Present a single item's status, then stop
+  and wait for the user's response before moving to the next one. Never lay out several
+  items as a table or bullet list in one message for blanket approval — that's exactly
+  the shape that invites breezing past something that actually changed. This holds even
+  when an item's status looks obviously unchanged; "obviously fine" is a guess about an
+  item's status, not a documented one.
 - **Table order by default.** Walk items in the order they're already written, rather
   than reordering by assumed importance or recency. Deviate only when a specific item's
   correction has obvious, immediate bearing on another (e.g. two items share the same
