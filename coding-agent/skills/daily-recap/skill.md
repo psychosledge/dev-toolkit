@@ -276,6 +276,12 @@ same-day or adjacent. Include self-corrections and mistakes transparently — do
 curate them out, they're evidence of diligence, not something to hide. No
 time/effort quantification.
 
+**Surface positive feedback verbatim, don't paraphrase it away.** If the week's tracker
+doc, a PR review, or something the user tells you directly captures a specific compliment
+or positive quote about the work (a reviewer's own words, a stakeholder's approval), quote
+it directly next to the item it's about, attributed and dated. "Reviewed positively" loses
+exactly the texture this is for.
+
 ### Friction / Coordination Overhead
 Don't infer this purely from artifacts — ask the user directly, as an actual question,
 *before* drafting this section, not after. Useful prompts:

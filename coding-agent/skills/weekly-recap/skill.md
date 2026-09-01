@@ -128,6 +128,11 @@ week (see Step 4). Every specific claim must trace to something an actual daily 
 said or the user just told you directly — never invent a plausible-sounding detail to
 fill a narrative gap.
 
+**Actively pull forward any positive quotes already captured** in the week's tracker doc
+or a daily recap (a reviewer's own words, a stakeholder's praise) and use them directly —
+this is exactly the concrete texture this section wants, and re-describing the interaction
+generically defeats the point of having captured the actual words live.
+
 **Don't over-explain a structural fact the reader already has context for.** If a
 detail's significance depends on a standing situation (e.g. no PM to check a decision
 with in real time), state the concrete decision and let the significance sit there
