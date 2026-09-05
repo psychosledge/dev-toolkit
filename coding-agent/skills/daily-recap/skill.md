@@ -42,23 +42,24 @@ find <scan root> -maxdepth 3 -type d -name .git
 For each one, run:
 
 ```
-git log --all --author="Bo Ramsey" --since="<date> 00:00:00" --until="<next-date> 00:00:00" --pretty=format:"%H|%ad|%s" --date=iso
+git log --all --author="$(git config user.name)" --since="<date> 00:00:00" --until="<next-date> 00:00:00" --pretty=format:"%H|%ad|%s" --date=iso
 ```
 
 Collect everything found. Treat this as a cross-check and an untracked-work detector —
 not the primary source of what the day was about (see below for why).
 
 **Check whether every commit found is actually merged before saying so anywhere in the
-recap.** A commit existing is not evidence it shipped. Check with:
+recap.** A commit existing is not evidence it shipped. Resolve the diff base per the
+Branching Model instructions in global `CLAUDE.md`, then check with:
 
 ```
-git merge-base --is-ancestor <hash> origin/main && echo MERGED || echo NOT-MERGED
+git merge-base --is-ancestor <hash> origin/<diff-base> && echo MERGED || echo NOT-MERGED
 gh pr list --state all --search "<hash>"   # or --head <branch> — is there a PR, and what state
 ```
 
 Use this status ladder, and never round up to a higher rung than what's actually true:
-- **Merged** — the commit is an ancestor of `origin/main` (or the repo's actual default
-  branch). This is the *only* status that gets to use the words "shipped" or "done."
+- **Merged** — the commit is an ancestor of the resolved diff base. This is the *only*
+  status that gets to use the words "shipped" or "done."
 - **PR open** — a pull request exists but isn't merged yet. Say "PR open, awaiting
   review/merge," not "done."
 - **Implemented, not yet merged** — commits exist on a feature/local branch, no PR
