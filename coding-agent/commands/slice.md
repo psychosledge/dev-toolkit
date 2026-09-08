@@ -16,7 +16,7 @@ Follow this sequence exactly. Do not skip steps or approval gates.
 **Step 0 — Slice recap**
 Before any work begins, orient the human to exactly what this slice covers.
 
-1. Locate the plan file: list `docs/stories/` and identify the active story directory. If exactly one exists, use it. If multiple exist, match against the slice name or story context.
+1. Locate the plan file: list `docs/stories/` and identify the active story directory. If exactly one exists, use it. If multiple exist, match against the slice name or story context. If none exist or none match, tell the human and ask which story this slice belongs to before continuing.
 2. Read `docs/stories/<slug>/plan.md` and find the section for this slice (match by name or number from `$ARGUMENTS`).
 3. Present the recap to the human:
 
@@ -53,7 +53,7 @@ Invoke the **coder** subagent to implement the slice using TDD (Red-Green-Refact
 
 Read `coding-agent/commands/code-review.md` and follow all steps. It will run the verifier, walk through changes, handle fixes, and commit.
 
-**Phase 4b — Plan update**
+**Step 4 — Plan update**
 
 After the commit, update `docs/stories/<slug>/plan.md` for this slice:
 

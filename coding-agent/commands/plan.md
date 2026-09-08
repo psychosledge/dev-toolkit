@@ -11,7 +11,7 @@ After the planner produces the Slice Plan and UAT Checklist, determine the propo
 1. Resolve this repo's Branching Model per the instructions in global `CLAUDE.md` (the repo's own `CLAUDE.md` `## Branching` section, with the usual fallbacks). Note the diff base, whether feature branches are used, and the naming convention if declared.
 2. If `Feature branches: no`, skip branch setup entirely and note it in the presentation.
 3. Otherwise, construct the branch name:
-   - Scan `$ARGUMENTS` for a Jira ticket ID (pattern: `[A-Z]+-[0-9]+`) or a URL containing `/browse/`. If found, extract the ticket ID and derive a short human-readable slug from the story title (lowercase, hyphen-separated, ≤ 30 chars).
+   - Scan `$ARGUMENTS` for a ticket ID (pattern: `[A-Z]+-[0-9]+`, common to Jira, Azure Boards, and Linear) or a URL containing a ticket path segment (e.g. `/browse/` for Jira). If found, extract the ticket ID and derive a short human-readable slug from the story title (lowercase, hyphen-separated, ≤ 30 chars).
    - If no ticket is found, derive a short slug from the story title (lowercase, hyphen-separated, ≤ 40 chars).
    - If `Feature branch naming` is declared, substitute the ticket/slug into that pattern (e.g. `<TICKET>/<slug>` → `ABC-123/short-description`).
    - If nothing is declared, propose a bare `<slug>` — no `feature/` prefix, no ticket embedded, even when a ticket ID is on hand. Only add structure once it's actually known to be this repo's convention (`/catchup` is what detects and records it — this command only consumes the declaration).
@@ -28,7 +28,7 @@ For anything the human chooses to include, add it as its own slice (or fold into
 
 Present the Slice Plan, UAT Checklist, and proposed branch as a single package:
 
-> **Proposed branch:** `feature/ABC-123-short-description` _(will be created / already exists)_
+> **Proposed branch:** `<branch-name>` _(will be created / already exists)_
 
 Then ask: "Does this plan and branch look right? Approve to begin."
 

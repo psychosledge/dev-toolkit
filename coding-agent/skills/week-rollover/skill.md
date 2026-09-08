@@ -219,8 +219,8 @@ For every story under `<stories root>/` (excluding `archive/`): grep its `plan.m
 check whether subsequent events in the same file (or elsewhere) already overtook it —
 same discipline as Step 7: verify against what the file itself says happened since,
 don't just ask "is this still true" and accept a guess. Mark resolved-by-events ones
-explicitly (don't just delete the question — note what changed and when, matching how
-`TECH_DEBT.md` entries get resolved rather than silently dropped). A story with nothing
+explicitly (don't just delete the question — note what changed and when, so the plan.md
+retains a record of what was asked and how it was resolved). A story with nothing
 stale here is a fine, common outcome — don't force a finding.
 
 ## Step 9 — Confirm

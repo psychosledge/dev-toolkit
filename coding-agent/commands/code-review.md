@@ -10,7 +10,7 @@ Walk through the current code changes with the human before committing.
 
 Inspect `$ARGUMENTS` before doing anything else:
 
-- **Reviewer Mode**: `$ARGUMENTS` contains a GitHub PR URL or PR number (e.g. `#123`). You are reviewing someone else's code — you will propose comments, not make changes or commit.
+- **Reviewer Mode**: `$ARGUMENTS` contains a PR/MR reference — a URL from any platform (GitHub, Azure DevOps, GitLab) or a bare PR number (e.g. `#123`). You are reviewing someone else's code — you will propose comments, not make changes or commit.
 - **Owner Mode**: no PR reference in `$ARGUMENTS`. You are reviewing your own changes before committing.
 
 Record the mode. It governs the rest of the steps.
@@ -185,7 +185,7 @@ If not found, determine it directly — this is workspace-specific (single repo 
 - Check the current repo for a `docs/` directory, and check one level up for a multi-repo workspace (a `*.code-workspace` file, or a top-level `CLAUDE.md` referencing sibling repos) with its own `docs/` directory.
 - Present whatever candidates were found and ask the human to confirm one, or provide a different path. If nothing was found, ask directly.
 
-Once confirmed, offer to save it as the `code-review-config` project memory, then create `<destination>/<today's date> - Review - <short description of what was reviewed>/findings.md` (e.g. `2026-07-28 - Review - unified-shell-ui PR #88 (More Pendo Events)`) containing:
+Once confirmed, offer to save it as the `code-review-config` project memory, then create `<destination>/<today's date> - Review - <short description of what was reviewed>/findings.md` (e.g. `2026-01-15 - Review - payment-service PR #42 (retry logic)`) containing:
 - A metadata header: PR URL, author (if known), branch, date reviewed, HEAD hash reviewed
 - The verifier pre-flight (quality score, AC status, blockers)
 - Each group from Step 2 — what changed, why, findings, and disposition (posted / held / skipped, with a link to the comment if posted)
