@@ -133,6 +133,12 @@ If a conversation opens with a "continued from a previous conversation that ran 
 
 This matters even for a session used to derive daily recaps: the recap skill reads git log, plan.md files, calendar, and that day's own session transcript file on disk, not live scrollback. `/clear` after `/daily-recap` loses nothing.
 
+The same logic applies beyond daily recaps: whenever a piece of work is done — a commit landed,
+a PR opened — and the record of it lives in git/GitHub rather than in scrollback, suggest
+`/clear` before starting the next independent item instead of carrying the conversation forward.
+Working through a numbered priority list is the common case: pause between items, not just at
+the end of the whole list.
+
 ## Never Push Without Explicit Permission
 
 Do not run `git push` (or any variant: `--force`, `-u`, etc.) unless the human has explicitly asked for it in the current message.
