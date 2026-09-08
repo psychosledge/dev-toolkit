@@ -33,7 +33,7 @@ These apply everywhere: written artifacts, terminal responses, everything.
 
 ## Improve the Agents, Don't Work Around Them
 
-When working in a project that uses the coding-agent workloop (`/story`, `/plan`, `/slice`, `/code-review`, `/sync-global`), you will sometimes notice that an agent behaves unexpectedly, skips a step, produces incomplete output, or creates friction in the flow.
+When working in a project that uses the coding-agent workloop (`/story`, `/plan`, `/slice`, `/code-review`), you will sometimes notice that an agent behaves unexpectedly, skips a step, produces incomplete output, or creates friction in the flow.
 
 **When this happens — surface it, don't patch it:**
 
