@@ -12,6 +12,6 @@ Never treat these as the same file or apply one in place of the other.
 
 ## Working in this repo
 
-- Edit agent and command files in `coding-agent/` first. Run `/sync-agents` after to push changes live to `~/.claude/`.
+- Edit agent and command files in `coding-agent/` first. Run `/sync-global` after to push changes live to `~/.claude/`.
 - Never edit `~/.claude/` files directly when making a lasting change — the repo copy will overwrite them on the next sync.
 - After any set of changes to `coding-agent/`, commit to the repo and then sync. The repo is the record; `~/.claude/` is the runtime.

@@ -33,7 +33,7 @@ This directory mirrors `~/.claude/` and is its **source of truth**. Claude Code 
 
 ### Keeping in sync
 
-Use `/sync-agents` to detect and reconcile drift between `coding-agent/` and `~/.claude/`. It diffs every file pair, runs a workloop impact analysis, and requires explicit approval before writing anything. Always edit `coding-agent/` first — never edit `~/.claude/` directly when the intent is a lasting change.
+Use `/sync-global` to detect and reconcile drift between `coding-agent/` and `~/.claude/`. It diffs every file pair, runs a workloop impact analysis, and requires explicit approval before writing anything. Drift runs both ways: edit `coding-agent/` first for changes conceived here, or edit `~/.claude/` directly while working reactively in another project and reconcile back with `/sync-global` later.
 
 ### Agents
 
@@ -54,7 +54,7 @@ Use `/sync-agents` to detect and reconcile drift between `coding-agent/` and `~/
 | `/code-review` | Walk through changes, run the verifier, handle fixes, and commit |
 | `/brainstorm` | Exploratory design session with the architect |
 | `/catchup` | Show unpulled commits, new remote branches, and team activity |
-| `/sync-agents` | Detect and reconcile drift between `coding-agent/` and `~/.claude/` |
+| `/sync-global` | Detect and reconcile drift between `coding-agent/` and `~/.claude/` |
 
 ### Workloop
 

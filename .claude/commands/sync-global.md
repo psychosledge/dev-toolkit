@@ -1,5 +1,5 @@
 ---
-name: sync-agents
+name: sync-global
 description: Detect and reconcile drift between global (~/.claude/) and repo (coding-agent/) agent and command files. Analyzes each diff for workloop impact before recommending changes.
 argument-hint: "[optional: path to repo root, defaults to current directory]"
 ---
@@ -52,6 +52,8 @@ For each filename, run `diff` between the global and repo versions and classify 
 ## Step 3: Workloop Impact Analysis
 
 This is the critical step. For every non-identical file, evaluate the diff against the intended workloop. Be skeptical — question whether each change is genuinely better, genuinely worse, or just different.
+
+**Drift direction alone is not evidence of a mistake.** Global-ahead drift is routinely the expected result of the reactive half of the workflow — editing `~/.claude/` directly while working in another project, then syncing back here later. Report what changed and its workloop impact; don't speculate about how or why the drift happened unless the diff itself introduces a problem.
 
 **The intended workloop:**
 1. `/story` — author a story card in product-centric, PM-legible language; draft and iterate with the human; no planning begins until the human explicitly approves the card
