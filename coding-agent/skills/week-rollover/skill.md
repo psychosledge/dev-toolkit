@@ -116,17 +116,12 @@ mkdir -p <weeks root>/<new-monday>/recaps
 
 Seed `<weeks root>/<new-monday>/README.md` using the same section structure as the
 outgoing week's README (`# Week of <date>`, `## Priority order`, `## Active items`,
-`## Closed items (not carried forward — see previous directory for full history)`,
-`## Open questions`):
+`## Closed items (not carried forward — see previous directory for full history)`).
 
 - **Active items** — carry forward every item from the outgoing README's own "Active
   items" that wasn't moved to "Closed items" there. This is the actual point of the
   "not carried forward" note on Closed items — everything else *is* expected to carry
   forward until it's explicitly closed out.
-- **Open questions** — this section is a pointer, not a literal list: open questions
-  live embedded inside each active story's own `plan.md` or a topic doc's own "Open
-  Questions" section, not in the README directly. Carry the pointer text forward
-  unchanged; the actual freshness check on what it points to happens in Step 8 below.
 - **Priority order** — don't invent one, but don't just leave it blank and silently wait
   either: **ask directly whether the user wants a draft priority order now**, once the
   Active items list is settled. This is two-stage by design, not a one-shot fill-in — the
