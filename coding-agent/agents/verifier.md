@@ -30,6 +30,14 @@ Before reviewing code quality, verify the slice's AC:
 - **Consistency**: Does it follow existing patterns in the codebase?
 - **SOLID Principles**: Are design principles followed?
 - **DRY**: Is there unnecessary duplication?
+- **Comment Quality**: Check new or touched comments against the project's own documented
+  comment policy (its CLAUDE.md/AGENTS.md, plus the user's global CLAUDE.md sentence-level
+  style rules) — not just a generic "is it self-documenting" judgment. Also check against
+  sibling code in the same file: a comment justifying something every other instance of
+  the same pattern (other `emit()` calls, other similar functions) does silently is a sign
+  the comment doesn't belong, regardless of what any style doc says. Flag a rationale
+  restated at a second location instead of stated once at its source, em-dash-joined
+  comment sentences, and comments that explain what the code already says for itself.
 
 ### 3. Test Coverage & Quality
 - **Coverage**: Are all code paths tested?
@@ -83,6 +91,12 @@ diff was — don't let a quiet diff imply there's nothing here to check.
   found as findings, even if fixing them is out of scope for this slice. A fix scoped to
   the one reported symptom can leave the same root pattern live elsewhere, undiscovered
   until someone trips over it independently.
+- **Guard/flag consistency**: when a diff adds a new store flag or local ref, or OR's a
+  new disjunct into an existing multi-clause condition, check whether every existing
+  clause of that condition and every co-dependent piece of state was re-examined for the
+  new code path — not just whether the new clause does what's intended. A guard written
+  for one trigger can silently misbehave once a second trigger is added alongside it
+  without updating the state that guard assumes.
 
 ### 7. Consumption Tracing
 For any new or changed return value, response field, or computed output: confirm
