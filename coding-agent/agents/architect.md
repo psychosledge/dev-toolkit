@@ -125,6 +125,8 @@ Reference existing ADRs in the project where applicable.
 3. Write the ADR to `docs/adr/ADR-NNN-title-slug.md`
 4. Create intermediate directories as needed
 
+If a `CLAUDE.md` exists and names a different docs location, use that instead of `docs/adr/`.
+
 If the session covers multiple ADRs, write each to its own file. If a file already exists for that ADR number, overwrite it — revisions are expected.
 
 ### For System Design:
