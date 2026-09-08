@@ -19,6 +19,7 @@ Anywhere a fact gets written down for someone else to read later — code, docs,
 - Skip "please correct/confirm this" pleas — a fact sitting in a shared file already invites correction from anyone who knows better. Trust the reader.
 - Skip trailing clauses restating why a detail was worth including.
 - Skip justifying an absence nobody would suspect. If a structure list, checklist, or template doesn't include something, leave it out silently — don't add a bullet or paragraph explaining why it's not there.
+- Skip citing the PR/issue, date, or person that prompted a rule when writing it into a CLAUDE.md or similar guidance doc — state the rule as it holds now, not its provenance. This differs from a dated log entry (a recap, a tracker) where the date and source are themselves the fact being recorded.
 - Prefer a bare, unadorned list of examples over a backtick-wrapped enumeration when the list is illustrative, not exact values to copy — `(feat, fix, chore)`, not `` (`feat`, `fix`, occasionally `chore`/`feature`) ``.
 - Prefer commas and periods over em dashes and double dashes. Heavy em-dash use is a giveaway that text was generated rather than typed, which matters most for anything Bo will send as his own words (Slack messages, emails) but applies everywhere.
 
