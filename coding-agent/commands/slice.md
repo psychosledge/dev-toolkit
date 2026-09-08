@@ -70,4 +70,4 @@ Do not modify other slices' sections or the UAT checklist.
 If this is the last slice in the plan, after the commit is approved:
 
 1. Present the full UAT checklist from `docs/stories/<slug>/plan.md` and ask the human to confirm all items.
-2. Once UAT is confirmed, propose a PR title and description from the story's artifacts. Then check whether `gh` is available and the remote is GitHub (`git remote get-url origin` to confirm) — if so, offer to create the PR directly with `gh pr create`; otherwise, present the title and description for the human to paste into their platform (GitHub, Azure DevOps, etc.).
+2. Once UAT is confirmed, propose a PR title and description from the story's artifacts. Resolve this repo's PR Platform per the PR Platform instructions in global `CLAUDE.md`. If it resolves to GitHub with `gh` available, offer to create the PR directly with `gh pr create`; otherwise, present the title and description for the human to paste into their platform.

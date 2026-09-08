@@ -24,14 +24,12 @@ status, not a documented one.
 
 ## Current Engagement Config
 
-Generic, like `daily-recap` — don't hardcode a path here. Read the same project memory
-`daily-recap` uses for its output location (e.g. named `daily-recap-config`); the
-**weeks root** this skill operates on is that path's `docs/weeks/` directory (the parent
-of the `<monday-of-that-week>/recaps/<date>.md` output path documented there), and the
-**stories root** is that same engagement's `docs/stories/` directory (a sibling of the
-weeks root). If no such memory exists for the current project, ask the user directly for
-both, then offer to save them into the same config memory `daily-recap` reads, so all
-these skills stay pointed at one source of truth.
+Generic, like `daily-recap` — don't hardcode a path here. Resolve per the Project
+Config Memory instructions in global `CLAUDE.md`, reading the same `daily-recap-config`
+project memory `daily-recap` uses; the **weeks root** this skill operates on is that
+path's `docs/weeks/` directory (the parent of the `<monday-of-that-week>/recaps/<date>.md`
+output path documented there), and the **stories root** is that same engagement's
+`docs/stories/` directory (a sibling of the weeks root).
 
 ## Step 1 — Identify the current (outgoing) week
 

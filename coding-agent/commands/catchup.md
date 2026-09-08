@@ -83,15 +83,13 @@ Cap at 15 commits per branch. If there are more, note "and N more commits" at th
 
 **3A-e. Check for PR status (optional)**
 
-Only if both conditions hold: `gh` CLI is available (`which gh`) AND the repo has a GitHub remote (`git remote -v | grep github.com`).
-
-If both hold:
+Resolve this repo's PR Platform per the PR Platform instructions in global `CLAUDE.md`. Only if it resolves to GitHub with `gh` available:
 
 ```
 gh pr list --head <branch> --json number,title,state,isDraft,reviewDecision
 ```
 
-If `gh` is unavailable or the repo has no GitHub remote, skip silently — do not mention the absence.
+If the platform isn't GitHub, or `gh` is unavailable, skip silently — do not mention the absence.
 
 ## Step 4A — Present the time-window summary
 

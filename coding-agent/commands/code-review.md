@@ -19,6 +19,8 @@ Record the mode. It governs the rest of the steps.
 
 **Reviewer Mode — check out the PR branch first:**
 
+Resolve this repo's PR Platform per the PR Platform instructions in global `CLAUDE.md`. This mode's `gh` commands (checkout, posting comments) assume it resolves to GitHub with `gh` available — if it doesn't, tell the human and ask how to proceed instead of running them.
+
 Check for a dirty working tree:
 
 ```
@@ -176,12 +178,14 @@ The review is functionally complete once comments are posted. Separately, ask:
 
 If no: done — nothing further to do.
 
-If yes, determine where it should live. **Never assume a destination silently** — this is workspace-specific (single repo vs. a multi-repo workspace with a shared top-level `docs/`) and hardcoding a path here would be wrong for most projects this skill runs in:
+If yes, resolve the destination per the Project Config Memory instructions in global `CLAUDE.md`: look for a `code-review-config` project memory holding the review-doc destination. If found, use it without re-asking.
+
+If not found, determine it directly — this is workspace-specific (single repo vs. a multi-repo workspace with a shared top-level `docs/`), so don't assume it silently:
 
 - Check the current repo for a `docs/` directory, and check one level up for a multi-repo workspace (a `*.code-workspace` file, or a top-level `CLAUDE.md` referencing sibling repos) with its own `docs/` directory.
 - Present whatever candidates were found and ask the human to confirm one, or provide a different path. If nothing was found, ask directly.
 
-Once confirmed, create `<destination>/<today's date> - Review - <short description of what was reviewed>/findings.md` (e.g. `2026-07-28 - Review - unified-shell-ui PR #88 (More Pendo Events)`) containing:
+Once confirmed, offer to save it as the `code-review-config` project memory, then create `<destination>/<today's date> - Review - <short description of what was reviewed>/findings.md` (e.g. `2026-07-28 - Review - unified-shell-ui PR #88 (More Pendo Events)`) containing:
 - A metadata header: PR URL, author (if known), branch, date reviewed, HEAD hash reviewed
 - The verifier pre-flight (quality score, AC status, blockers)
 - Each group from Step 2 — what changed, why, findings, and disposition (posted / held / skipped, with a link to the comment if posted)

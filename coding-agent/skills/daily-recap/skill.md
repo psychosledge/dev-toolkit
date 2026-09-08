@@ -14,17 +14,14 @@ final, and prefer asking the user over guessing whenever a signal is ambiguous.
 
 This skill is generic — the facts it needs (scan root, calendar identity, output
 location, org roles) are specific to whichever engagement it's being run for, and none
-of them belong hardcoded here. At the start of a run, look for a project memory
-describing the current engagement's daily-recap config (e.g. named
-`daily-recap-config`, holding scan root / calendar identity / output location) plus one
-covering org roles (who's a PM, who's a client stakeholder, who owns what — these
-change as people roll on/off an engagement, so they belong in memory, not here).
+of them belong hardcoded here. Resolve them per the Project Config Memory instructions
+in global `CLAUDE.md`: a `daily-recap-config` project memory holding scan root /
+calendar identity / output location, plus a separate org-roles memory (who's a PM,
+who's a client stakeholder, who owns what — these change as people roll on/off an
+engagement, so they belong in memory, not here).
 
-If no such memory exists for the project this session is running in, ask the user
-directly for: scan root, calendar identity, and output location — then offer to save
-the answers as a project memory so future runs don't re-ask. Everything below refers
-back to those three values plus the org-roles memory; nothing else in this skill should
-hardcode a path, calendar name, or org fact directly.
+Everything below refers back to those three config values plus the org-roles memory;
+nothing else in this skill should hardcode a path, calendar name, or org fact directly.
 
 ## Setup
 

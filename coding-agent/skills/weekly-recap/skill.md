@@ -14,12 +14,11 @@ treat its shape as a draft and update it directly when a real run surfaces a gap
 
 ## Current Engagement Config
 
-Generic, like `daily-recap` and `week-rollover` — don't hardcode a path here. Read the
-same project memory `daily-recap` uses (e.g. named `daily-recap-config`) for the **weeks
-root** (the parent of `<monday-of-that-week>/recaps/<date>.md`). If no such memory
-exists for the current project, ask the user directly, then offer to save it into the
-same config memory the other two skills already read, so all three stay pointed at one
-source of truth.
+Generic, like `daily-recap` and `week-rollover` — don't hardcode a path here. Resolve
+per the Project Config Memory instructions in global `CLAUDE.md`, reading the same
+`daily-recap-config` project memory those two skills use, for the **weeks root** (the
+parent of `<monday-of-that-week>/recaps/<date>.md`) — one config memory shared across
+all three skills, not a separate copy per skill.
 
 ## Step 1 — Identify the target week
 

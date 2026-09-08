@@ -90,6 +90,41 @@ On confirmation, write directly into **that repo's own `CLAUDE.md`** under `## B
 
 When no naming convention is declared or detected, propose a bare `<slug>` — no `feature/` prefix, no ticket embedded — even when a ticket ID is on hand. Only add structure once it's actually known to be this repo's convention.
 
+## PR Platform
+
+Which PR platform a repo uses is a stable, repo-level fact, like Branching Model above — skills that touch PRs (`/catchup`, `/code-review`, `/slice`) resolve it once instead of re-deriving it from the remote URL on every run.
+
+### Declaration
+
+Check the repo's own `CLAUDE.md` for a `## PR Platform` section:
+
+```
+## PR Platform
+- Platform: GitHub | Azure DevOps | GitLab | other/manual
+```
+
+Treat a present declaration as authoritative and skip the detection below.
+
+### When undeclared
+
+Detect once: `git remote get-url origin` (or `git remote -v`) and match the host. On a `github.com` match, also check `which gh` for CLI availability — a separate, machine-local fact that doesn't get recorded, since it can change independently of the repo (a new machine, a reinstall). Ask whether to record `## PR Platform\n- Platform: GitHub` in the repo's own `CLAUDE.md`, the same way Branching Model detections get recorded. For any other host, or no PR-capable remote at all, note the platform found and ask before recording it the same way. `gh`-specific commands throughout this workflow apply only when Platform is GitHub.
+
+## Project Config Memory
+
+Some facts a skill needs are specific to the current workspace or engagement — a scan root, a calendar identity, an output directory, a review-doc destination — not a team-shared convention that belongs in a repo's own `CLAUDE.md` (see Branching Model and PR Platform above for that category). These are personal to how Bo works, so they belong in project memory instead.
+
+### Pattern
+
+At the start of a run needing such a fact: look for a project memory holding it (see Naming below). If found, use it without re-asking. If not found, ask the user directly for the needed fields, then offer to save them as a project memory so future runs don't re-ask.
+
+### Naming
+
+Name the memory `<domain>-config`, not `<skill>-config`, when the same facts serve more than one skill — e.g. `daily-recap-config` holds the scan root, calendar identity, and output location that `daily-recap`, `weekly-recap`, and `week-rollover` all read, rather than each skill keeping its own copy. A skill's own instructions should name which config memory it reads and which fields it needs from it, and defer to this section for the ask/save mechanics rather than restating them.
+
+### Distinguishing from Branching Model / PR Platform
+
+If the fact would be the same answer for any teammate cloning the repo (a branch name, a PR platform, a docs directory layout), it's team-shared — record it in the repo's own `CLAUDE.md`, not memory. If the fact is about Bo's own environment or workflow (which calendar, which local directory, where a personal record gets written), it's personal — project memory is correct.
+
 ## Session Hygiene
 
 If a conversation opens with a "continued from a previous conversation that ran out of context" summary, tell Bo immediately and suggest `/clear` before continuing, rather than building further on the compacted history. Hitting that limit once already means the session ran longer than it should have.
