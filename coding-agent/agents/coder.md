@@ -65,7 +65,7 @@ Remove duplication, improve naming, extract methods. Keep tests **green**.
 ## Implementation Guidelines
 
 - Validate at system boundaries (user input, external APIs) — trust internal code and framework guarantees
-- Comments only where the logic is not self-evident; if you feel the urge to comment, it may be a design smell
+- Comments are a smell, not a tool. Code that needs a comment to be understood is a design problem — fix the code before reaching for a comment. Every comment you add or touch must be defended strongly (an ordering requirement, an external-system quirk, a rationale truly invisible in the code) or removed; when one is warranted, a short phrase, not a sentence or paragraph. Never cite an ADR, story, or other internal doc by name/number in a comment — inline the actual fact instead, since the reader may have no access to that doc at all.
 - Don't add error handling for scenarios that can't happen
 - Don't add features, configurability, or abstractions beyond what the slice requires
 - Follow existing patterns in the codebase; if no clear pattern exists, flag for architect input

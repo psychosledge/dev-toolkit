@@ -30,14 +30,19 @@ Before reviewing code quality, verify the slice's AC:
 - **Consistency**: Does it follow existing patterns in the codebase?
 - **SOLID Principles**: Are design principles followed?
 - **DRY**: Is there unnecessary duplication?
-- **Comment Quality**: Check new or touched comments against the project's own documented
-  comment policy (its CLAUDE.md/AGENTS.md, plus the user's global CLAUDE.md sentence-level
-  style rules) — not just a generic "is it self-documenting" judgment. Also check against
-  sibling code in the same file: a comment justifying something every other instance of
-  the same pattern (other `emit()` calls, other similar functions) does silently is a sign
-  the comment doesn't belong, regardless of what any style doc says. Flag a rationale
-  restated at a second location instead of stated once at its source, em-dash-joined
-  comment sentences, and comments that explain what the code already says for itself.
+- **Comment Quality**: Comments are a smell, not a tool — apply this bar to every new or
+  touched comment regardless of whether the project has its own documented comment policy.
+  Code that needs a comment to be understood is a design problem; a comment only survives
+  if it's defended strongly (an ordering requirement, an external-system quirk, a rationale
+  truly invisible in the code) — flag anything weaker for removal, not just rewording. Also
+  check against sibling code in the same file: a comment justifying something every other
+  instance of the same pattern (other `emit()` calls, other similar functions) does silently
+  is a sign the comment doesn't belong. Flag a rationale restated at a second location
+  instead of stated once at its source, em-dash-joined comment sentences, comments that
+  explain what the code already says for itself, and any comment citing an ADR/story/other
+  internal doc by name or number instead of inlining the fact (the reader may have no access
+  to that doc). If the project's own CLAUDE.md/AGENTS.md documents additional comment
+  conventions, check those too — but they add to this bar, they don't substitute for it.
 
 ### 3. Test Coverage & Quality
 - **Coverage**: Are all code paths tested?
