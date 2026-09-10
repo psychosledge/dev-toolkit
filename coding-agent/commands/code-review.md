@@ -148,6 +148,17 @@ Before committing, reconcile every finding from this review against the durable 
 
 If there's nothing to defer and nothing to resolve, skip this step silently and proceed to commit.
 
+### Step 3c — Comment Audit (Owner Mode only)
+
+Before committing, audit every comment this change adds or touches — not just the ones the verifier happened to surface as findings in Step 2.
+
+1. Collect every comment line added or modified in the diff, including comments inside wholly new files (these won't appear as `+` lines against the diff base the way changes to existing files do — check new files directly).
+2. Apply the same bar `coder.md` and `verifier.md` already hold code to: a comment survives only if it states something the code can't say for itself (an ordering requirement, an external-system quirk, a rationale truly invisible in the code). Also flag a rationale restated at a second location instead of stated once at its source, and any comment citing an ADR/story/other internal doc by name or number instead of inlining the fact.
+3. Show the human **every comment found, in full** — defended ones included, not only ones being removed — each with a one-line verdict: `Defend: <reason>` or `Remove: <reason>`.
+4. Remove any that don't survive; leave defended ones untouched. If a removal needs a code change beyond deleting the comment itself, treat it like any other fix (targeted re-walk, confirm with the human).
+
+If the diff adds or touches no comments at all, say so and skip straight to commit.
+
 ### Reviewer Mode — Post Comments
 
 Show the human the complete list of approved comments before posting anything — one entry per line, formatted as: category, file:line (if inline), and comment text.
