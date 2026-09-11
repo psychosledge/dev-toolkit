@@ -151,6 +151,13 @@ If `recaps/weekly.md` already exists for this week, read it first and treat this
 revision, not a silent overwrite — the user may be iterating on a draft already in
 progress.
 
+**Record the cutoff.** Immediately after writing (or re-writing) `weekly.md`, get its
+actual creation/modification timestamp from the filesystem — don't estimate it — and
+add or update its row in the `## Recap Log` table in that week's README (the same table
+`daily-recap` maintains for the daily files; create the section if it doesn't exist yet).
+This is what lets the next weekly-recap run's Step 2 "tail end of the prior week" check
+resolve the cutoff precisely instead of guessing.
+
 **Present the full draft in the conversation before treating it as final**, the same
 "present, don't just save" principle `daily-recap` follows. Field-testing note: expect
 several rounds of correction on tone and framing before a draft is ready to finalize;

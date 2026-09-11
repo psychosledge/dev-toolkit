@@ -404,6 +404,13 @@ This skill is still being field-tested — show the drafted recap in the convers
 the user can react to it before treating it as final, in addition to writing it to the
 output path.
 
+**Record the cutoff.** Immediately after writing the recap file, get its actual creation
+timestamp from the filesystem — don't estimate it — and add a row for it to a
+`## Recap Log` table in that week's README (create the section, right after the header,
+if this is the first entry). This is what lets the *next* recap run know precisely how
+far a given day's recap already covers, without re-deriving it from scratch. Never write
+the current wall-clock time as a stand-in for the file's real creation time.
+
 **Ask before drafting, don't flag after.** For anything you'd otherwise guess at, infer
 without a source, or want to hedge/flag as "not confirmed" — stop and ask a direct,
 specific question about it *before* writing that part of the draft, rather than writing

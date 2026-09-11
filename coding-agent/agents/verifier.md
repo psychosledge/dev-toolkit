@@ -90,12 +90,17 @@ diff was — don't let a quiet diff imply there's nothing here to check.
 - Are data structures immutable where they should be?
 - Is validation happening at the right boundary?
 - Are naming conventions consistent with the domain's ubiquitous language?
-- **Sibling-pattern sweep**: when the slice's stated purpose is fixing or eliminating a
-  named antipattern (not just implementing a feature), grep the repository for
+- **Sibling-pattern sweep**: two separate triggers, not one. (1) When the slice's stated
+  purpose is fixing or eliminating a named antipattern (not just implementing a
+  feature). (2) Reactively: whenever *any* check in this review (Consumption Tracing,
+  Correctness, etc.) confirms a real bug that stems from a duplicated or copy-pasted
+  expression or call-site pattern, even on a feature-implementing slice that never
+  named the antipattern going in. Either trigger means: grep the repository for
   structurally identical occurrences beyond the files this diff touches. Report any
   found as findings, even if fixing them is out of scope for this slice. A fix scoped to
   the one reported symptom can leave the same root pattern live elsewhere, undiscovered
-  until someone trips over it independently.
+  until someone trips over it independently — this is exactly as true when the bug was
+  discovered mid-review as when the slice set out to fix it.
 - **Guard/flag consistency**: when a diff adds a new store flag or local ref, or OR's a
   new disjunct into an existing multi-clause condition, check whether every existing
   clause of that condition and every co-dependent piece of state was re-examined for the
