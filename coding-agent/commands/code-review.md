@@ -78,21 +78,33 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 4. Explain **why** — what problem this solves, what alternative was rejected, what constraint drove the structure. This is the most important part.
 5. Surface any verifier findings for this group's files — present as "Verifier flagged:" with their priority. For each finding, paste the relevant code verbatim in a code block so the human can see exactly what is being discussed. If none, skip.
 6. Note any additional quality issues you observe that the verifier didn't catch. Same rule: show the relevant code verbatim in a code block, never just describe it.
-7. For each finding surfaced in steps 5 and 6:
+7. **Audit comments in this group's files.** For every comment line added or touched by this group — including comments inside wholly new files, which won't show as `+` lines against the diff base the way changes to existing files do — apply the bar `coder.md` and `verifier.md` already hold code to: a comment survives only if it states something the code can't say for itself (an ordering requirement, an external-system quirk, a rationale truly invisible in the code). Flag a rationale restated at a second location instead of stated once at its source, and any comment citing an ADR/story/other internal doc by name or number instead of inlining the fact.
 
-   Before writing either of these, confirm the mode recorded in Mode Detection. `Fix now` / `defer` / `skip` belongs only to Owner Mode; `Proposed comment` belongs only to Reviewer Mode. If you're in Reviewer Mode and about to write "Fix now," you're in the wrong branch — write a proposed comment instead.
+   Before a `Keep` verdict, verify the comment's claim against the actual code — don't grant one just because the claim sounds like the kind of thing that's allowed to survive. If the comment describes something outside what's shown in this group (another file, an external system, a doc), check it: grep the sibling code, read the referenced file. A claim that doesn't hold is `Remove — wrong`, not `Keep`, no matter how load-bearing it sounds.
+
+   Show every comment found in this group, in full, with one of three verdicts:
+   - `Keep: <reason>` — the bar is met and the claim checks out.
+   - `Remove — wrong: <reason>` — the comment misdescribes the code (a correctness issue, not a style one).
+   - `Remove — weak: <reason>` — the comment doesn't meet the bar but isn't inaccurate (redundant, restates the code, weak rationale).
+
+   If no comments were added or touched in this group, skip.
+8. For each finding surfaced in steps 5–7:
+
+   Before writing any of these, confirm the mode recorded in Mode Detection. `Fix now` / `defer` / `skip` belongs only to Owner Mode; `Proposed comment` belongs only to Reviewer Mode. If you're in Reviewer Mode and about to write "Fix now," you're in the wrong branch — write a proposed comment instead.
 
    **Owner Mode** — give your recommendation on its own line:
    > **Recommendation:** Fix now — [one-sentence reason]
-   The label must be `fix now`, `defer`, or `skip`. Be direct: "Fix now — untested behavior in a TDD project is a blocker"; "Skip — cosmetic preference in a recovery-only path".
+   The label must be `fix now`, `defer`, or `skip`. Be direct: "Fix now — untested behavior in a TDD project is a blocker"; "Skip — cosmetic preference in a recovery-only path". Both `Remove — wrong` and `Remove — weak` comment-audit verdicts get `Fix now` — removing a comment is free, so there's no reason to defer or skip it. A `Keep` verdict needs no recommendation line; it's not a finding.
 
    **Reviewer Mode** — draft a proposed PR comment on its own line:
    > **Proposed comment ([Blocker | Suggestion | Question | Nit]):** [comment text] *(file:line if inline)*
    Frame the issue as a question, observation, or concern — do not prescribe a solution. Keep it to 1–2 sentences: state the concern and stop, no preamble or hedging (see Concise Comments in global `CLAUDE.md`, which covers PR review comments). Include the target file and line number when the finding is tied to a specific location. These are drafts: no comment is approved for posting per group — the single decision of what to post happens once, together, at the end (Step 2c).
 
-8. **Owner Mode:** If any findings were surfaced (steps 5–6): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If no findings: "Ready to move on?"
+   For comment-audit findings specifically, Reviewer Mode disposition depends on the verdict. `Remove — wrong` always becomes a proposed comment (Suggestion or Blocker depending on how misleading the claim is) — a false comment is a correctness risk for whoever maintains that code next, regardless of who wrote it. `Remove — weak` does not become a proposed comment by default: note it happened and move on, since raising a stranger's stylistic nit costs them a round-trip for something with no functional effect. Track weak-comment counts across the whole review; if the same weakness recurs three or more times, raise one bundled `Suggestion` in Step 2c's consolidation instead of one `Nit` per instance. `Keep` needs no comment at all.
 
-   **Reviewer Mode:** If any comments were proposed: ask "Do you agree with these, or any questions/concerns?" Use the answer to refine, merge, or drop drafts — this is not a posting decision, so don't frame it as one ("post", "approve", etc.). Findings may need rephrasing or grouping once later groups are in, so keep everything as drafts until Step 2c. If no findings: "Ready to move on?"
+9. **Owner Mode:** If any findings were surfaced (steps 5–7): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If the human pushes back on a `Keep` verdict specifically, that's not a fix request, it's a request to investigate: dig until the disposition resolves to one of removed, corrected, or identified tech debt (folds into Step 3b). This exploration is opt-in, triggered only by an explicit pushback — never run it automatically just because a comment was defended. If no findings: "Ready to move on?"
+
+   **Reviewer Mode:** If any comments were proposed: ask "Do you agree with these, or any questions/concerns?" Use the answer to refine, merge, or drop drafts — this is not a posting decision, so don't frame it as one ("post", "approve", etc.). Findings may need rephrasing or grouping once later groups are in, so keep everything as drafts until Step 2c. Pushback on a `Keep` verdict triggers the same investigation described above, resolving to removed, corrected, or noted as tech debt — Reviewer Mode has no `TECH_DEBT.md` to write to, so a tech-debt outcome here becomes a proposed comment or a note in the optional review doc from Step 4 instead. If no findings: "Ready to move on?"
 
 **Do not present the next group until the human replies.** One group per response is the rule — not a suggestion.
 
@@ -102,6 +114,7 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
   - **Blockers** (failing tests, unmet AC)
   - **Owner Mode:** Recommended fixes (quality issues, verifier refactoring suggestions, test coverage gaps) and optional improvements
   - **Reviewer Mode:** Any proposed comments not yet approved or skipped
+  - Comment audit tally: comments removed (wrong), removed (weak), kept. **Reviewer Mode:** plus any bundled `Suggestion` raised here for a weak-comment pattern that recurred three or more times across the review.
   - If nothing remains: "No outstanding issues — the implementation looks clean."
 
 **Owner Mode:** Ask: "Anything else to address before committing? Call out by number, or say 'commit' to proceed."
@@ -135,7 +148,7 @@ If **no**: proceed to Step 3b.
 
 Before committing, reconcile every finding from this review against the durable tech-debt record:
 
-1. **Collect deferred findings.** Gather every finding from Step 2 (and any surfaced during the Fix Loop) whose final disposition is `defer` — recommended defer and left unfixed, or explicitly deferred by the human. Skip anything disposed as `fix now` (already handled above) or `skip` (not real debt, no record needed).
+1. **Collect deferred findings.** Gather every finding from Step 2 (and any surfaced during the Fix Loop) whose final disposition is `defer` — recommended defer and left unfixed, or explicitly deferred by the human. Also include any comment-audit `Keep` verdict that, after pushback investigation (Step 2b), resolved to identified tech debt rather than removal or correction. Skip anything disposed as `fix now` (already handled above) or `skip` (not real debt, no record needed).
 2. **Record each one, twice:**
    - Append to this story's `docs/stories/<slug>/plan.md` under a `## Deferred tech debt` heading (create the heading if this is the first entry in this story).
    - Upsert into `TECH_DEBT.md` at the root of the repo the finding belongs to (create the file if it doesn't exist yet). Use this entry format:
@@ -150,17 +163,6 @@ Before committing, reconcile every finding from this review against the durable 
 4. **Show the human a short summary** of what's being added to and removed from `TECH_DEBT.md` (file names and one-line descriptions only) before proceeding to commit. No separate approval gate needed here — this rides along with the commit approval in Step 4.
 
 If there's nothing to defer and nothing to resolve, skip this step silently and proceed to commit.
-
-### Step 3c — Comment Audit (Owner Mode only)
-
-Before committing, audit every comment this change adds or touches — not just the ones the verifier happened to surface as findings in Step 2.
-
-1. Collect every comment line added or modified in the diff, including comments inside wholly new files (these won't appear as `+` lines against the diff base the way changes to existing files do — check new files directly).
-2. Apply the same bar `coder.md` and `verifier.md` already hold code to: a comment survives only if it states something the code can't say for itself (an ordering requirement, an external-system quirk, a rationale truly invisible in the code). Also flag a rationale restated at a second location instead of stated once at its source, and any comment citing an ADR/story/other internal doc by name or number instead of inlining the fact.
-3. Show the human **every comment found, in full** — defended ones included, not only ones being removed — each with a one-line verdict: `Defend: <reason>` or `Remove: <reason>`.
-4. Remove any that don't survive; leave defended ones untouched. If a removal needs a code change beyond deleting the comment itself, treat it like any other fix (targeted re-walk, confirm with the human).
-
-If the diff adds or touches no comments at all, say so and skip straight to commit.
 
 ### Reviewer Mode — Post Comments
 
