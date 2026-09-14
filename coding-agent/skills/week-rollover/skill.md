@@ -15,12 +15,12 @@ run surfaces a gap.
 ## Confirming Items With the User
 
 Several steps below ask the user to confirm a status or action on each of several
-items — stories to archive (Step 3), active items in the freshness walk (Step 7). In
-every such case: present one item, stop, and wait for the user's response before moving
-to the next. Never lay out several items as a table or list in one message for blanket
-approval — that shape invites breezing past something that actually changed, even when
-an item's status looks obviously unchanged. "Obviously fine" is a guess about an item's
-status, not a documented one.
+items — not-yet-demoed hits (Step 3), stories to archive (Step 4), active items in the
+freshness walk (Step 8). In every such case: present one item, stop, and wait for the
+user's response before moving to the next. Never lay out several items as a table or
+list in one message for blanket approval — that shape invites breezing past something
+that actually changed, even when an item's status looks obviously unchanged. "Obviously
+fine" is a guess about an item's status, not a documented one.
 
 ## Current Engagement Config
 
@@ -29,7 +29,9 @@ Config Memory instructions in global `CLAUDE.md`, reading the same `daily-recap-
 project memory `daily-recap` uses; the **weeks root** this skill operates on is that
 path's `docs/weeks/` directory (the parent of the `<monday-of-that-week>/recaps/<date>.md`
 output path documented there), and the **stories root** is that same engagement's
-`docs/stories/` directory (a sibling of the weeks root).
+`docs/stories/` directory (a sibling of the weeks root). The same memory's **demo
+cadence** fact (which recurring meeting counts as "the demo," and how often it runs) is
+what Step 3 below sweeps against.
 
 ## Step 1 — Identify the current (outgoing) week
 
@@ -53,7 +55,32 @@ retrospective (the daily recaps) becomes harder to work with once it's sitting i
   through (rolling over mid-week, a short week, a holiday), ask for confirmation rather
   than assuming "close the week" always means every work day already happened.
 
-## Step 3 — Archive completed stories
+## Step 3 — Sweep for not-yet-demoed work
+
+`daily-recap` tags same-day work completed after the configured demo event with
+`(not yet demoed)`. That tag can otherwise get lost at rollover — the item it's attached
+to may close out entirely (Step 4's archiving, or a plain "Closed items" move) before
+anyone checks whether it was ever actually shown.
+
+Grep every recap file under `<outgoing week>/recaps/*.md` for `(not yet demoed)`. For
+each hit:
+
+1. **Confirm with the user it's still accurate.** `daily-recap` only compares against
+   the week's own configured demo, so a hit could have been shown since at an ad hoc or
+   unscheduled session — don't assume the tag is still true just because it's there.
+2. **If still unshown, carry it forward** into the new week's `## Queued for next demo`
+   section (Step 7 creates the section; this step supplies its contents) — regardless of
+   whether the underlying item is fully done and otherwise headed for Closed items or
+   Step 4's archiving. Being finished and being demoed are independent facts; this
+   section tracks the second one specifically.
+3. **If confirmed already shown, no action** — the tag was accurate when written, it's
+   just past its shelf life now.
+
+No hits is a fine, common outcome — don't force a finding, and don't invent one from an
+item that merely finished late in the week without an actual demo separating it from
+whenever it gets shown.
+
+## Step 4 — Archive completed stories
 
 A story only moves to `docs/stories/archive/` at the next weekly kickoff, not
 immediately on completion — even a same-day merge stays in the live `docs/stories/`
@@ -68,7 +95,10 @@ For every story under `<stories root>/` (excluding `archive/`):
    for whatever commit the plan.md cites as the final one. A plan.md marking a slice
    "✅ done" means the implementation was finished in the coding workflow's own sense,
    not that it's merged — same distinction `daily-recap` already enforces for its own
-   "shipped" language.
+   "shipped" language. A rebase or squash before merge can rewrite the cited commit's
+   SHA entirely — if the cited hash isn't an ancestor, don't conclude "not merged" on
+   that alone; check the PR's actual state (`gh pr view`) and/or search
+   `git log origin/<diff-base>` by branch name or PR number before ruling it unmerged.
 2. **Present each genuinely-merged story found one at a time, per the confirmation rule
    above, and confirm before moving.** Don't auto-archive silently — a story can be
    merged but still have an active, logged follow-up (e.g. a "pick this up once X
@@ -81,7 +111,7 @@ For every story under `<stories root>/` (excluding `archive/`):
    check `docs/stories/**/*.md` for any sibling story referencing this one by path.
 5. If nothing is left to move, say so — don't force this step to find something.
 
-## Step 4 — Archive the week (the move)
+## Step 5 — Archive the week (the move)
 
 ```
 mv <weeks root>/<outgoing-monday> <weeks root>/archive/<outgoing-monday>
@@ -91,24 +121,24 @@ One move. Everything inside — the tracker README, meeting notes, topic docs, a
 `recaps/` subdirectory — travels together, which is the entire point of having merged
 the two trees into one.
 
-**Still-active topic docs that move forward (Step 6) can leave dangling cross-tree
+**Still-active topic docs that move forward (Step 7) can leave dangling cross-tree
 references behind in `docs/stories/**/*.md`.** A story's `plan.md` can cite a topic doc
 by a path that embeds the week it was written in — once that doc travels forward to the
-new week's directory in Step 6, the story's reference points at a location the file no
+new week's directory in Step 7, the story's reference points at a location the file no
 longer occupies. Grep every topic doc being moved forward (its bare filename is enough,
 no need to match the full path) against `docs/stories/**/*.md`, not just
 `docs/weeks/**/*.md`, and fix any hit to the new week's path. Same class of problem as
-Step 3 above — just the reverse direction (a story citing a topic doc, instead of a week
+Step 4 above — just the reverse direction (a story citing a topic doc, instead of a week
 citing a story).
 
-## Step 5 — Determine the new week
+## Step 6 — Determine the new week
 
 Default to the Monday immediately following the outgoing week's Monday (i.e., 7 days
 later) — this assumes back-to-back weeks with no gap. If today's date doesn't fall
 within that new week (e.g. this rollover is happening late, or after a gap), say so and
 ask which Monday to actually use rather than silently assuming continuity.
 
-## Step 6 — Scaffold the new week (the create)
+## Step 7 — Scaffold the new week (the create)
 
 ```
 mkdir -p <weeks root>/<new-monday>/recaps
@@ -116,12 +146,17 @@ mkdir -p <weeks root>/<new-monday>/recaps
 
 Seed `<weeks root>/<new-monday>/README.md` using the same section structure as the
 outgoing week's README (`# Week of <date>`, `## Priority order`, `## Active items`,
-`## Closed items (not carried forward — see previous directory for full history)`).
+`## Queued for next demo` (only if Step 3 found anything), `## Closed items (not carried
+forward — see previous directory for full history)`).
 
 - **Active items** — carry forward every item from the outgoing README's own "Active
   items" that wasn't moved to "Closed items" there. This is the actual point of the
   "not carried forward" note on Closed items — everything else *is* expected to carry
   forward until it's explicitly closed out.
+- **Queued for next demo** — populate directly from Step 3's confirmed-still-unshown
+  list. Include an item here even if it's also fully closed out below or archived in
+  Step 4 — this section tracks "has it been shown," a separate question from "is it
+  done." Omit the section entirely if Step 3 found nothing.
 - **Priority order** — don't invent one, but don't just leave it blank and silently wait
   either: **ask directly whether the user wants a draft priority order now**, once the
   Active items list is settled. This is two-stage by design, not a one-shot fill-in — the
@@ -131,6 +166,12 @@ outgoing week's README (`# Week of <date>`, `## Priority order`, `## Active item
   it blank and don't ask again unprompted this session. If they say yes, draft one from
   the carried-forward Active items, present it, and treat it as a draft until they
   explicitly finalize it (possibly in a later message, after their meeting happens).
+  Don't fold PR-review items awaiting the user's own response into this numbered list —
+  they surface too often and clear too quickly to hold a fixed rank; carry them forward
+  in Active items (or a dedicated callout, if the user has directed one to exist) with a
+  plain note that they take priority over the numbered list whenever one is actually
+  open, distinct from a PR review sitting in someone else's court (that's background,
+  not urgent).
 - **Closed items** — always starts empty in a new week's README.
 - **Physically move (not copy) every topic doc still referenced by a carried-forward
   Active item or heads-up** from the outgoing week's directory into the new one — a bare
@@ -138,22 +179,26 @@ outgoing week's README (`# Week of <date>`, `## Priority order`, `## Active item
   tied to a now-Closed item, or a dated record of one specific past meeting (which never
   continues to be updated), stays behind in the archive and gets cited by explicit
   "see the previous directory's `X.md`" phrasing instead of a bare link — don't move
-  those. After moving, verify every remaining link in the new README's rendered
-  markdown actually resolves to a file that exists, and check the cross-tree
-  consequence described in Step 4 above.
+  those. The same applies to a doc that's purely reference material with no active work
+  item attached to it, even if the topic it covers is still technically unscoped —
+  confirm with the user whether a given topic doc is meant to move or stay when it's
+  ambiguous, rather than defaulting to "still mentioned in Active items, so it moves."
+  After moving, verify every remaining link in the new README's rendered markdown
+  actually resolves to a file that exists, and check the cross-tree consequence
+  described in Step 5 above.
 
 **Present the drafted new README before writing it** — same "present, don't just save"
 principle `daily-recap` follows. This presentation is a structural check only (does the
 carried-forward list and section shape look right), not a status check — don't read
 approval of the whole draft as confirmation that any individual item's status is
-correct. That confirmation only happens in the per-item walk in Step 7, which runs
+correct. That confirmation only happens in the per-item walk in Step 8, which runs
 regardless of how this draft presentation goes. Carrying forward the wrong items
 (something that was actually resolved in conversation but never marked closed in the
 doc, for instance) is exactly the kind of status-marker staleness `daily-recap` itself
 already watches for in this same file — don't propagate a stale status into a fresh
 week's file without a chance to catch it first.
 
-## Step 7 — Walk each active item for a freshness check
+## Step 8 — Walk each active item for a freshness check
 
 Walk the new README's Active items one at a time, presenting the currently-recorded
 status and asking whether it's still accurate. Not a formality — stale status claims
@@ -176,7 +221,7 @@ propagate silently otherwise.
   artifacts first. Where a live check is actually possible to run directly (e.g. an
   unauthenticated endpoint, no session needed), just run it instead of relying on
   memory.
-- **A story reaching genuinely-closed status mid-walkthrough triggers Step 3.** Don't
+- **A story reaching genuinely-closed status mid-walkthrough triggers Step 4.** Don't
   wait for a second pass — if confirming an item's state reveals it's actually done and
   merged, archive it right then (with the user's confirmation), fix references, and
   continue the walkthrough from where it left off.
@@ -205,10 +250,10 @@ propagate silently otherwise.
   outright and write one plain restatement of the observed fact, with no inferred
   cause — don't try to merge or salvage the earlier, overcomplicated version.
 
-## Step 8 — Sweep embedded open questions in active stories
+## Step 9 — Sweep embedded open questions in active stories
 
 Distinct from `daily-recap`'s own open-questions walk (scoped to that day's recap, run
-daily since who's-blocking-whom changes daily) and from Step 7 above (walks whatever's
+daily since who's-blocking-whom changes daily) and from Step 8 above (walks whatever's
 already summarized into the README): **this step checks a source neither of those ever
 looks at** — a "Still open" or "Needs Architect: yes" callout sitting inside an active
 story's own `plan.md` that never got summarized into any README row at all, and so would
@@ -217,14 +262,14 @@ otherwise never surface again once the blocker it referred to has cleared.
 For every story under `<stories root>/` (excluding `archive/`): grep its `plan.md` for
 "Still open," "Needs Architect: yes," and any "## Open Questions" heading. For each hit,
 check whether subsequent events in the same file (or elsewhere) already overtook it —
-same discipline as Step 7: verify against what the file itself says happened since,
+same discipline as Step 8: verify against what the file itself says happened since,
 don't just ask "is this still true" and accept a guess. Mark resolved-by-events ones
 explicitly (don't just delete the question — note what changed and when, so the plan.md
 retains a record of what was asked and how it was resolved). A story with nothing
 stale here is a fine, common outcome — don't force a finding.
 
-## Step 9 — Confirm
+## Step 10 — Confirm
 
 Report what moved and what got created — old week's path → its new archive path, the
-new week's path, and any stories archived along the way — so it's easy to verify against
-the actual directory listing.
+new week's path, any stories archived along the way, and anything carried into
+`## Queued for next demo` — so it's easy to verify against the actual directory listing.

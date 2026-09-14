@@ -13,14 +13,15 @@ final, and prefer asking the user over guessing whenever a signal is ambiguous.
 ## Current Engagement Config
 
 This skill is generic — the facts it needs (scan root, calendar identity, output
-location, org roles) are specific to whichever engagement it's being run for, and none
-of them belong hardcoded here. Resolve them per the Project Config Memory instructions
-in global `CLAUDE.md`: a `daily-recap-config` project memory holding scan root /
-calendar identity / output location, plus a separate org-roles memory (who's a PM,
-who's a client stakeholder, who owns what — these change as people roll on/off an
+location, demo cadence, org roles) are specific to whichever engagement it's being run
+for, and none of them belong hardcoded here. Resolve them per the Project Config Memory
+instructions in global `CLAUDE.md`: a `daily-recap-config` project memory holding scan
+root / calendar identity / output location / demo cadence (which recurring meeting
+counts as "the demo," and how often it runs), plus a separate org-roles memory (who's a
+PM, who's a client stakeholder, who owns what — these change as people roll on/off an
 engagement, so they belong in memory, not here).
 
-Everything below refers back to those three config values plus the org-roles memory;
+Everything below refers back to those four config values plus the org-roles memory;
 nothing else in this skill should hardcode a path, calendar name, or org fact directly.
 
 ## Setup
@@ -197,6 +198,10 @@ both are present, don't require it.
   not part of the goal. Never include Zoom/meeting join links or dial-in passwords in
   the written recap, even though they're present in the raw event description.
 
+**If the target date's calendar includes the configured demo event** (see Current Engagement
+Config's demo cadence fact), record its end time — this feeds the Progress step's "not yet
+demoed" tagging below. A day with no demo event needs no such cutoff.
+
 **RSVP status is not proof of attendance — do a quick pass with the user before
 finalizing Calendar.** An event classified as attended (accepted, no decline) can
 still be one the user didn't actually attend — e.g. it overlapped their own OOO block
@@ -279,6 +284,12 @@ doc, a PR review, or something the user tells you directly captures a specific c
 or positive quote about the work (a reviewer's own words, a stakeholder's approval), quote
 it directly next to the item it's about, attributed and dated. "Reviewed positively" loses
 exactly the texture this is for.
+
+**Tag same-day work completed after the demo.** If step 3 recorded a demo end time for
+this date, check every item's actual completion (merge timestamp, not commit or PR-open
+time) against it. Anything completed after gets *"(not yet demoed)"* appended to its
+bullet — this is a same-day comparison only, not something to carry across days here;
+`week-rollover` is what sweeps these forward at the week boundary.
 
 ### Friction / Coordination Overhead
 Don't infer this purely from artifacts — ask the user directly, as an actual question,
