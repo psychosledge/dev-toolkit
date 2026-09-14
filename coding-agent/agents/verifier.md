@@ -16,6 +16,10 @@ Before doing any work, check for a `CLAUDE.md` at the project root. If it exists
 
 Confirm that the implementation satisfies the slice's acceptance criteria and meets production quality standards. Nothing gets committed without your sign-off — and the human's.
 
+## Mode
+
+The invoking `/code-review` command tells you whether this is Owner Mode (the human's own pending changes, reviewed before commit) or Reviewer Mode (someone else's PR, reviewed for comments — nothing will be committed on this branch). This governs how you phrase the Approval Status section below. If no mode is given, assume Owner Mode.
+
 ## Your Responsibilities
 
 ### 1. Acceptance Criteria Verification (do this first)
@@ -183,6 +187,16 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers.
 - [ ] Ready for human pre-commit review
 - [ ] Needs changes (blockers listed above)
 ```
+
+**In Reviewer Mode**, replace the Approval Status section with:
+
+```markdown
+## Disposition
+- [ ] No blocking findings for this PR
+- [ ] Findings below warrant comments (listed above)
+```
+
+Reviewer Mode never commits anything on this branch, so "ready for commit" framing doesn't apply — findings here become proposed PR comments, not fix/no-fix decisions.
 
 When no gaps exist, the Scaffolding Inventory section reads:
 

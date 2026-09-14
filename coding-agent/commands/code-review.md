@@ -51,7 +51,7 @@ Otherwise, run `git diff --stat $(git merge-base <diff-base> HEAD)` and `git dif
 
 Run `git rev-parse HEAD` and record the hash as the **verifier baseline HEAD**. This is used later to avoid redundant re-invocations.
 
-Invoke the **verifier** subagent to review code quality and verify correctness.
+Invoke the **verifier** subagent to review code quality and verify correctness. Tell it which mode this is (Owner or Reviewer) — it phrases its Approval Status section differently depending on which.
 
 - If acceptance criteria are available (passed as `$ARGUMENTS`, or findable in `docs/stories/<slug>/plan.md`), verify each criterion.
 - If no AC exists, skip the AC check and proceed to quality assessment only.
@@ -71,6 +71,7 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 **a) Group the changed files by concern** — not alphabetically, but by what problem they solve together. Small changes may have only one group.
 
 **b) For each group — present ONE group per response, then stop and wait:**
+0. Open the response with a one-line mode header: `**Reviewing PR #<number>**` (Reviewer Mode) or `**Reviewing local changes**` (Owner Mode). Keep the mode anchored every turn rather than relying on the mode recorded once at the start.
 1. Name the group and its purpose in one sentence
 2. Read the relevant files and paste the meaningful changed code **verbatim in a code block** (typically 10–40 lines — actual file contents, not raw diff syntax). The human cannot see file contents unless you paste them; never describe or reference code without showing it.
 3. Explain **what changed** — specifically and concisely
@@ -79,13 +80,15 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 6. Note any additional quality issues you observe that the verifier didn't catch. Same rule: show the relevant code verbatim in a code block, never just describe it.
 7. For each finding surfaced in steps 5 and 6:
 
+   Before writing either of these, confirm the mode recorded in Mode Detection. `Fix now` / `defer` / `skip` belongs only to Owner Mode; `Proposed comment` belongs only to Reviewer Mode. If you're in Reviewer Mode and about to write "Fix now," you're in the wrong branch — write a proposed comment instead.
+
    **Owner Mode** — give your recommendation on its own line:
    > **Recommendation:** Fix now — [one-sentence reason]
    The label must be `fix now`, `defer`, or `skip`. Be direct: "Fix now — untested behavior in a TDD project is a blocker"; "Skip — cosmetic preference in a recovery-only path".
 
    **Reviewer Mode** — draft a proposed PR comment on its own line:
    > **Proposed comment ([Blocker | Suggestion | Question | Nit]):** [comment text] *(file:line if inline)*
-   Frame the issue as a question, observation, or concern — do not prescribe a solution. Include the target file and line number when the finding is tied to a specific location. These are drafts: no comment is approved for posting per group — the single decision of what to post happens once, together, at the end (Step 2c).
+   Frame the issue as a question, observation, or concern — do not prescribe a solution. Keep it to 1–2 sentences: state the concern and stop, no preamble or hedging (see Concise Comments in global `CLAUDE.md`, which covers PR review comments). Include the target file and line number when the finding is tied to a specific location. These are drafts: no comment is approved for posting per group — the single decision of what to post happens once, together, at the end (Step 2c).
 
 8. **Owner Mode:** If any findings were surfaced (steps 5–6): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If no findings: "Ready to move on?"
 
