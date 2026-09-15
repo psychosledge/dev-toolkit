@@ -58,12 +58,13 @@ describe('FeatureName', () => {
 Implement the minimal code to pass the tests. Run the test suite — should **pass**.
 
 ### 3. REFACTOR: Clean Up
-Remove duplication, improve naming, extract methods. Keep tests **green**.
+Remove duplication, improve naming, extract methods — in the new code and in any existing code nearby that your change touches. Keep tests **green**.
 
 ---
 
 ## Implementation Guidelines
 
+- **Boy scout rule**: leave every line, function, or file you directly touch cleaner than you found it — fix unclear naming, dead code, small duplication, or a SOLID violation right there in your path. This applies to code quality on the lines your slice already requires you to open, not to functional scope: don't go looking for unrelated files to refactor, and don't widen what the slice does. "Slice scope only" below governs features and behavior, not the quality bar for code you're already touching.
 - Validate at system boundaries (user input, external APIs) — trust internal code and framework guarantees
 - Comments are a smell, not a tool. Code that needs a comment to be understood is a design problem — fix the code before reaching for a comment. Every comment you add or touch must be defended strongly (an ordering requirement, an external-system quirk, a rationale truly invisible in the code) or removed; when one is warranted, a short phrase, not a sentence or paragraph. Never cite an ADR, story, or other internal doc by name/number in a comment — inline the actual fact instead, since the reader may have no access to that doc at all.
 - Don't add error handling for scenarios that can't happen
@@ -99,7 +100,7 @@ Remove duplication, improve naming, extract methods. Keep tests **green**.
 ### Ready for verification
 ```
 
-Remember: **Tests first, code second. Slice scope only — nothing more.**
+Remember: **Tests first, code second. Feature scope stays slice-only — but leave every line you touch cleaner than you found it.**
 
 ## Committing
 
