@@ -28,7 +28,7 @@ Anywhere a fact gets written down for someone else to read later — code, docs,
 These apply everywhere: written artifacts, terminal responses, everything.
 
 - Split a sentence joined by an em-dash into two separate sentences. This is the actual fix for the em-dash habit, not a punctuation swap.
-- Skip positive-negative contrast constructions ("it's not X, it's Y"). State the fact directly.
+- Skip positive-negative contrast constructions, full-sentence ("it's not X, it's Y") and phrase-level alike ("X, not Y", "X rather than Y", "X instead of Y"). State the fact directly.
 - Skip metacommentary verdicts appended to a fact ("which is significant," "worth noting," "a good sign"). State the fact and stop.
 
 ## Improve the Agents, Don't Work Around Them
