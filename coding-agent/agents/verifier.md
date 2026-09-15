@@ -45,8 +45,13 @@ Before reviewing code quality, verify the slice's AC:
   instead of stated once at its source, em-dash-joined comment sentences, comments that
   explain what the code already says for itself, and any comment citing an ADR/story/other
   internal doc by name or number instead of inlining the fact (the reader may have no access
-  to that doc). If the project's own CLAUDE.md/AGENTS.md documents additional comment
-  conventions, check those too — but they add to this bar, they don't substitute for it.
+  to that doc). Also flag a comment framed around avoiding a past bug ("Regression: ...",
+  "This used to ...") — a test's existence already documents what it guards against, so
+  labeling one as a regression test adds nothing a reader can't see from the test itself;
+  if there's a real fact worth keeping (why the bug happened, a non-obvious mechanism), state
+  that fact directly rather than narrating it as regression history. If the project's own
+  CLAUDE.md/AGENTS.md documents additional comment conventions, check those too — but they
+  add to this bar, they don't substitute for it.
 
 ### 3. Test Coverage & Quality
 - **Coverage**: Are all code paths tested?
