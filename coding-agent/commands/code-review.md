@@ -186,25 +186,6 @@ Once the human is satisfied, ask for explicit commit approval:
 
 Commit on approval with a clear commit message describing the change.
 
-### Reviewer Mode — Save Review Doc (optional)
+### Reviewer Mode — Done
 
-The review is functionally complete once comments are posted. Separately, ask:
-
-> "Save a review doc for this?"
-
-If no: done — nothing further to do.
-
-If yes, resolve the destination per the Project Config Memory instructions in global `CLAUDE.md`: look for a `code-review-config` project memory holding the review-doc destination. If found, use it without re-asking.
-
-If not found, determine it directly — this is workspace-specific (single repo vs. a multi-repo workspace with a shared top-level `docs/`), so don't assume it silently:
-
-- Check the current repo for a `docs/` directory, and check one level up for a multi-repo workspace (a `*.code-workspace` file, or a top-level `CLAUDE.md` referencing sibling repos) with its own `docs/` directory.
-- Present whatever candidates were found and ask the human to confirm one, or provide a different path. If nothing was found, ask directly.
-
-Once confirmed, offer to save it as the `code-review-config` project memory, then create `<destination>/<today's date> - Review - <short description of what was reviewed>/findings.md` (e.g. `2026-01-15 - Review - payment-service PR #42 (retry logic)`) containing:
-- A metadata header: PR URL, author (if known), branch, date reviewed, HEAD hash reviewed
-- The verifier pre-flight (quality score, AC status, blockers)
-- Each group from Step 2 — what changed, why, findings, and disposition (posted / held / skipped, with a link to the comment if posted)
-- The closing summary from Step 2c, plus a table of comments actually posted
-
-This is a durable record of the review itself — what was examined and found — for the reviewer's own documentation, not for the PR author. Keep it concise; it should read like a findings log, not a transcript dump.
+The review is complete once comments are posted. Note the outcome (posted / held / resolved outside this flow) in the weekly tracker per the project's own conventions, if one is in use.
