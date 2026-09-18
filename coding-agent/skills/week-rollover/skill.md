@@ -149,30 +149,47 @@ outgoing week's README (`# Week of <date>`, `## Priority order`, `## Active item
 `## Queued for next demo` (only if Step 3 found anything), `## Closed items (not carried
 forward — see previous directory for full history)`).
 
-- **Active items** — carry forward every item from the outgoing README's own "Active
-  items" that wasn't moved to "Closed items" there. This is the actual point of the
-  "not carried forward" note on Closed items — everything else *is* expected to carry
-  forward until it's explicitly closed out.
+- **Active items** — before drafting anything, split the outgoing README's own "Active
+  items" (everything not already moved to "Closed items" there — that's the actual
+  point of the "not carried forward" note) into two buckets:
+  1. **Genuinely open** — its own "Next step" cell describes real remaining work (not
+     "None"/"Done"). Draft these directly into the new Active items table; they need
+     real attention in Step 8 regardless.
+  2. **Looks fully resolved** — Status already reads Done/merged and there's no real
+     next step left. Do **not** draft these into the table at all. Hold them as a
+     separate list to run through Step 8's confirmation first — most of these will turn
+     out to just move to Closed or disappear, and writing them into the file only to
+     edit them back out again is wasted motion (see Step 8's batching note).
+  Bucket 2 still gets the same one-at-a-time confirmation discipline as bucket 1 — this
+  split is about when something touches the file, not about skipping scrutiny.
 - **Queued for next demo** — populate directly from Step 3's confirmed-still-unshown
   list. Include an item here even if it's also fully closed out below or archived in
   Step 4 — this section tracks "has it been shown," a separate question from "is it
   done." Omit the section entirely if Step 3 found nothing.
-- **Priority order** — don't invent one, but don't just leave it blank and silently wait
-  either: **ask directly whether the user wants a draft priority order now**, once the
-  Active items list is settled. This is two-stage by design, not a one-shot fill-in — the
-  point is to hand the user something to walk into the week's own planning meeting with
-  (this rollover is meant to run before that meeting, as prep), then finalize/adjust it
-  together afterward once real input from that meeting exists. If they say not yet, leave
-  it blank and don't ask again unprompted this session. If they say yes, draft one from
-  the carried-forward Active items, present it, and treat it as a draft until they
-  explicitly finalize it (possibly in a later message, after their meeting happens).
+- **Priority order** — always draft one from the carried-forward Active items once that
+  list is settled, don't ask whether to. This is two-stage by design, not a one-shot
+  fill-in — the point is to hand the user something to walk into the week's own planning
+  meeting with (this rollover is meant to run before that meeting, as prep), then
+  finalize/adjust it together afterward once real input from that meeting exists. Present
+  the draft and treat it as a draft until the user explicitly finalizes it (possibly in a
+  later message, after their meeting happens).
   Don't fold PR-review items awaiting the user's own response into this numbered list —
   they surface too often and clear too quickly to hold a fixed rank; carry them forward
   in Active items (or a dedicated callout, if the user has directed one to exist) with a
   plain note that they take priority over the numbered list whenever one is actually
   open, distinct from a PR review sitting in someone else's court (that's background,
   not urgent).
-- **Closed items** — always starts empty in a new week's README.
+- **Closed items** — always starts empty in a new week's README, and stays empty at
+  scaffold time — Step 8 is what may add to it, not this step. When Step 8 confirms an
+  item is genuinely finished, it belongs here only if something else *in this same new
+  README* still needs a live pointer to it — in practice, almost always because it's
+  also referenced from `## Queued for next demo` (which necessarily outlives the item's
+  own row once that row is gone). Having an archived story behind it (Step 4) is not by
+  itself a reason to add an entry — most archived stories need no further mention here
+  at all once their work is done, because nothing else in the new README depends on
+  pointing back to them. A finished item that nothing else here still points to just
+  disappears from the new README entirely; the previous archived directory already has
+  the full record.
 - **Physically move (not copy) every topic doc still referenced by a carried-forward
   Active item or heads-up** from the outgoing week's directory into the new one — a bare
   relative link (`[foo.md](foo.md)`) only resolves if the file is actually there. A doc
@@ -188,22 +205,33 @@ forward — see previous directory for full history)`).
   described in Step 5 above.
 
 **Present the drafted new README before writing it** — same "present, don't just save"
-principle `daily-recap` follows. This presentation is a structural check only (does the
-carried-forward list and section shape look right), not a status check — don't read
-approval of the whole draft as confirmation that any individual item's status is
-correct. That confirmation only happens in the per-item walk in Step 8, which runs
-regardless of how this draft presentation goes. Carrying forward the wrong items
-(something that was actually resolved in conversation but never marked closed in the
-doc, for instance) is exactly the kind of status-marker staleness `daily-recap` itself
-already watches for in this same file — don't propagate a stale status into a fresh
-week's file without a chance to catch it first.
+principle `daily-recap` follows. At this point the file only contains bucket 1 (genuinely
+open items) plus whatever else Step 3/6 already settled; bucket 2 hasn't been written
+anywhere yet. This presentation is a structural check only (does the carried-forward list
+and section shape look right), not a status check — don't read approval of the whole
+draft as confirmation that any individual item's status is correct. That confirmation
+happens in the per-item walk in Step 8 (covering both buckets), which runs regardless of
+how this draft presentation goes. Carrying forward the wrong items (something that was
+actually resolved in conversation but never marked closed in the doc, for instance) is
+exactly the kind of status-marker staleness `daily-recap` itself already watches for in
+this same file — don't propagate a stale status into a fresh week's file without a chance
+to catch it first.
 
 ## Step 8 — Walk each active item for a freshness check
 
-Walk the new README's Active items one at a time, presenting the currently-recorded
-status and asking whether it's still accurate. Not a formality — stale status claims
-propagate silently otherwise.
+Walk bucket 1 (already in the drafted README) and bucket 2 (held back from Step 7, not
+yet written anywhere) one item at a time, presenting the currently-recorded status and
+asking whether it's still accurate. Not a formality — stale status claims propagate
+silently otherwise.
 
+- **Batch the file edits, not the confirmations.** Confirming an item in chat doesn't
+  require touching the live README for that single row right away. Accumulate each
+  item's resolved disposition (stays active as drafted / needs corrected text / moves to
+  Closed / drops entirely) as the walk proceeds, then apply them in one consolidated
+  edit per file (README, plan.md, topic doc) at the end of the walk rather than one edit
+  per row per confirmation. The one-at-a-time discipline governs the conversation; it
+  says nothing about write cadence, and writing-then-immediately-rewriting the same row
+  is pure overhead.
 - **Table order by default.** Walk items in the order they're already written, rather
   than reordering by assumed importance or recency. Deviate only when a specific item's
   correction has obvious, immediate bearing on another (e.g. two items share the same
