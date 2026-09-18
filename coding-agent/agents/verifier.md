@@ -49,8 +49,12 @@ Before reviewing code quality, verify the slice's AC:
   "This used to ...") — a test's existence already documents what it guards against, so
   labeling one as a regression test adds nothing a reader can't see from the test itself;
   if there's a real fact worth keeping (why the bug happened, a non-obvious mechanism), state
-  that fact directly rather than narrating it as regression history. If the project's own
-  CLAUDE.md/AGENTS.md documents additional comment conventions, check those too — but they
+  that fact directly rather than narrating it as regression history. Flag `// Arrange` /
+  `// Act` / `// Assert` comments in any touched test the same way, even when an existing
+  precedent in the file already uses them — the blank lines between phases already show the
+  structure, so the label adds nothing; don't wave it through just because it matches
+  surrounding code. If the project's own CLAUDE.md/AGENTS.md documents additional comment
+  conventions, check those too — but they
   add to this bar, they don't substitute for it.
 
 ### 3. Test Coverage & Quality
