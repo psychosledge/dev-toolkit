@@ -13,16 +13,20 @@ final, and prefer asking the user over guessing whenever a signal is ambiguous.
 ## Current Engagement Config
 
 This skill is generic — the facts it needs (scan root, calendar identity, output
-location, demo cadence, org roles) are specific to whichever engagement it's being run
-for, and none of them belong hardcoded here. Resolve them per the Project Config Memory
-instructions in global `CLAUDE.md`: a `daily-recap-config` project memory holding scan
-root / calendar identity / output location / demo cadence (which recurring meeting
-counts as "the demo," and how often it runs), plus a separate org-roles memory (who's a
-PM, who's a client stakeholder, who owns what — these change as people roll on/off an
-engagement, so they belong in memory, not here).
+location, demo cadence, git identities, org roles) are specific to whichever engagement
+it's being run for, and none of them belong hardcoded here. Resolve them per the Project
+Config Memory instructions in global `CLAUDE.md`: a `daily-recap-config` project memory
+holding scan root / calendar identity / output location / demo cadence (which recurring
+meeting counts as "the demo," and how often it runs) / git identities (a list of
+`{name, email}` pairs, either field optional, covering every account the user commits
+under on this engagement — e.g. an agency account and a client account with different
+display names), plus a separate org-roles memory (who's a PM, who's a client
+stakeholder, who owns what — these change as people roll on/off an engagement, so they
+belong in memory, not here).
 
-Everything below refers back to those four config values plus the org-roles memory;
-nothing else in this skill should hardcode a path, calendar name, or org fact directly.
+Everything below refers back to those five config values plus the org-roles memory;
+nothing else in this skill should hardcode a path, calendar name, git identity, or org
+fact directly.
 
 ## Setup
 
@@ -37,11 +41,19 @@ Enumerate git repos under the scan root (see Current Engagement Config above):
 find <scan root> -maxdepth 3 -type d -name .git
 ```
 
-For each one, run:
+For each one, run one `git log` per configured git identity (see Current Engagement
+Config) and merge the results, deduping by commit hash:
 
 ```
-git log --all --author="$(git config user.name)" --since="<date> 00:00:00" --until="<next-date> 00:00:00" --pretty=format:"%H|%ad|%s" --date=iso
+git log --all --author="<name or email>" --since="<date> 00:00:00" --until="<next-date> 00:00:00" --pretty=format:"%H|%ad|%s" --date=iso
 ```
+
+**Never filter by a single name.** The same person can commit under more than one
+account on the same engagement (e.g. an agency identity and a client identity with a
+different display name) — matching only `git config user.name` silently misses every
+commit made under the other identity. If no git identities are configured yet, ask for
+them per Current Engagement Config rather than falling back to `git config user.name`
+silently; a fallback here just reproduces the miss this section exists to prevent.
 
 Collect everything found. Treat this as a cross-check and an untracked-work detector —
 not the primary source of what the day was about (see below for why).
