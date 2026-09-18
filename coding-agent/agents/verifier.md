@@ -34,12 +34,32 @@ Before reviewing code quality, verify the slice's AC:
 - **Consistency**: Does it follow existing patterns in the codebase?
 - **SOLID Principles**: Are design principles followed?
 - **DRY**: Is there unnecessary duplication?
-- **Comment Quality**: Comments are a smell, not a tool — apply this bar to every new or
-  touched comment regardless of whether the project has its own documented comment policy.
-  Code that needs a comment to be understood is a design problem; a comment only survives
-  if it's defended strongly (an ordering requirement, an external-system quirk, a rationale
-  truly invisible in the code) — flag anything weaker for removal, not just rewording. Also
-  check against sibling code in the same file: a comment justifying something every other
+- **Comment Quality**: Comments are a smell, not a tool. Apply this bar to every comment
+  regardless of whether the project has its own documented comment policy. Code that needs a
+  comment to be understood is a design problem; a comment only survives if it's defended
+  strongly (an ordering requirement, an external-system quirk, a rationale truly invisible in
+  the code) — flag anything weaker for removal, not just rewording.
+
+  **Scope.** The audit isn't limited to comment lines the diff itself added or edited. Any
+  comment describing a line, function, or block the diff touches is in scope, even when the
+  comment's own text is untouched — a diff can change what's true about the code around a
+  comment without touching the comment's own lines.
+
+  **Decompose before judging.** Split a comment with more than one clause or sentence into its
+  individual factual claims, and test each claim independently against the bar rather than
+  rendering one holistic verdict on the comment as a whole. A comment can read as earned because
+  one clause sounds substantive while the others are dead weight. Keep only the clauses that
+  independently survive: trim to just the strong clause if one is buried among weak ones, and
+  remove the whole comment if none survive.
+
+  **Ownership.** Flag a comment that describes behavior whose actual mechanism lives in a
+  different file, module, or component, even when the description is accurate and appears
+  nowhere else. This is distinct from the restated-rationale check below, which catches the same
+  explanation written twice — this one catches an explanation written only at a location that
+  doesn't own the behavior it describes. Point the reader to the source instead of narrating it
+  secondhand at the call site.
+
+  Also check against sibling code in the same file: a comment justifying something every other
   instance of the same pattern (other `emit()` calls, other similar functions) does silently
   is a sign the comment doesn't belong. Flag a rationale restated at a second location
   instead of stated once at its source, em-dash-joined comment sentences, comments that
