@@ -82,6 +82,10 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 
    Before a `Keep` verdict, verify the comment's claim against the actual code — don't grant one just because the claim sounds like the kind of thing that's allowed to survive. If the comment describes something outside what's shown in this group (another file, an external system, a doc), check it: grep the sibling code, read the referenced file. A claim that doesn't hold is `Remove — wrong`, not `Keep`, no matter how load-bearing it sounds.
 
+   Accuracy isn't the bar, only the floor. A claim checking out only means it isn't `Remove — wrong` — it still has to separately clear the bar in step 7, and still fails as `Remove — weak` if it restates an effect already visible from the surrounding code, weighs the chosen approach against a rejected alternative, or matches a pattern every uncommented sibling instance in the file does silently. Run this check again on whatever clause survives decomposition, even one you just trimmed down to — a surviving clause isn't automatically exempt from the checks that eliminated the others.
+
+   On the fence, drop it. If genuine doubt remains after the checks above, default to `Remove — weak`, not `Keep` — a wrongly-removed comment is one line, sitting in git history, trivial to reinstate; a wrongly-kept one persists and invites more like it. `Keep` is for a comment that clearly clears the bar, not one that merely fails to clearly fail it.
+
    Show every comment found in this group, in full, with one of three verdicts:
    - `Keep: <reason>` — the bar is met and the claim checks out.
    - `Remove — wrong: <reason>` — the comment misdescribes the code (a correctness issue, not a style one).

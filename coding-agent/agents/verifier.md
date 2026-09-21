@@ -40,6 +40,21 @@ Before reviewing code quality, verify the slice's AC:
   strongly (an ordering requirement, an external-system quirk, a rationale truly invisible in
   the code) — flag anything weaker for removal, not just rewording.
 
+  **Accuracy isn't the bar.** Never grant `Keep` just because a comment's claim checks out
+  against the code — that only clears the floor. An accurate comment still fails if it restates
+  an effect already visible from the surrounding code (a `v-if`/template gate, a name that
+  already says it), weighs the chosen approach against a rejected alternative, or matches a
+  pattern every sibling instance in the file leaves uncommented. Verifying accuracy answers "is
+  this true," not "does this earn its place" — always ask the second question separately, even
+  for a clause that survives the first, and even for a clause you already trimmed down to
+  because the rest of the comment was weak.
+
+  **On the fence, drop it.** If the checks above leave genuine doubt whether a comment earns its
+  place, the default is removal, not `Keep`. The asymmetry favors dropping: a wrongly-removed
+  comment is one line, sitting in git history, trivial to reinstate if it turns out to matter. A
+  wrongly-kept one persists, invites the next person to pattern-match on it, and compounds. `Keep`
+  is for a comment that clearly clears the bar, not one that merely fails to clearly fail it.
+
   **Scope.** The audit isn't limited to comment lines the diff itself added or edited. Any
   comment describing a line, function, or block the diff touches is in scope, even when the
   comment's own text is untouched — a diff can change what's true about the code around a
