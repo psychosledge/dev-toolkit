@@ -77,7 +77,7 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 3. Explain **what changed** — specifically and concisely
 4. Explain **why** — what problem this solves, what alternative was rejected, what constraint drove the structure. This is the most important part.
 5. Surface any verifier findings for this group's files — present as "Verifier flagged:" with their priority. For each finding, paste the relevant code verbatim in a code block so the human can see exactly what is being discussed. If none, skip.
-6. Note any additional quality issues you observe that the verifier didn't catch. Same rule: show the relevant code verbatim in a code block, never just describe it.
+6. Note any additional quality issues you observe that the verifier didn't catch. Same rule: show the relevant code verbatim in a code block, never just describe it. These get the same fix-now/defer/skip treatment as verifier findings — self-observed issues aren't exempt from step 8's default.
 7. **Audit comments in this group's files.** Scope is every comment describing a line, function, or block this group touches, not just comment lines the diff itself added or edited — a diff can change what's true about the code around a comment without touching the comment's own text. This includes comments inside wholly new files, which won't show as `+` lines against the diff base the way changes to existing files do. Apply the bar `coder.md` and `verifier.md` already hold code to: a comment survives only if it states something the code can't say for itself (an ordering requirement, an external-system quirk, a rationale truly invisible in the code). For a comment with more than one clause or sentence, decompose it into its individual claims and judge each independently rather than rendering one holistic verdict — keep only the clauses that survive, trim to a single strong clause if the rest are weak, and remove the whole comment if none survive. Flag a rationale restated at a second location instead of stated once at its source, a comment describing behavior actually owned and implemented elsewhere (a different file, module, or component) even when accurate, and any comment citing an ADR/story/other internal doc by name or number instead of inlining the fact.
 
    Before a `Keep` verdict, verify the comment's claim against the actual code — don't grant one just because the claim sounds like the kind of thing that's allowed to survive. If the comment describes something outside what's shown in this group (another file, an external system, a doc), check it: grep the sibling code, read the referenced file. A claim that doesn't hold is `Remove — wrong`, not `Keep`, no matter how load-bearing it sounds.
@@ -95,6 +95,8 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
    **Owner Mode** — give your recommendation on its own line:
    > **Recommendation:** Fix now — [one-sentence reason]
    The label must be `fix now`, `defer`, or `skip`. Be direct: "Fix now — untested behavior in a TDD project is a blocker"; "Skip — cosmetic preference in a recovery-only path". Both `Remove — wrong` and `Remove — weak` comment-audit verdicts get `Fix now` — removing a comment is free, so there's no reason to defer or skip it. A `Keep` verdict needs no recommendation line; it's not a finding.
+
+   Default to `fix now` for any finding on a line, function, or file this slice's diff already touches — the marginal cost is near zero, and work that gets deferred rarely gets picked up later on its own priority. `Defer` requires a concrete reason the fix is unsafe or disproportionate right now: a blast radius wider than this slice, a design decision that needs its own discussion, or a file this diff doesn't otherwise touch. "Not part of this ticket" alone doesn't qualify as a defer reason.
 
    **Reviewer Mode** — draft a proposed PR comment on its own line:
    > **Proposed comment ([Blocker | Suggestion | Question | Nit]):** [comment text] *(file:line if inline)*
@@ -146,7 +148,9 @@ If **no**: proceed to Step 3b.
 
 ### Step 3b — Reconcile Tech Debt (Owner Mode only)
 
-Before committing, reconcile every finding from this review against the durable tech-debt record:
+Before committing, reconcile every finding from this review against the durable tech-debt record.
+
+Check project memory for this repo's debt-tracking file(s) beyond `TECH_DEBT.md`. Some repos split per-slice debt (`TECH_DEBT.md`, this command writes to it directly) from a separate systemic/curated list owned by another team — memory names that file and its write policy when one exists. Treat any such file as read-only cross-reference: never upsert into it automatically, even for a finding that reads as squarely systemic (true across the codebase, not particular to this slice) — surface it as a candidate for that file in the summary (step 4) and let the human decide whether and how to add it.
 
 1. **Collect deferred findings.** Gather every finding from Step 2 (and any surfaced during the Fix Loop) whose final disposition is `defer` — recommended defer and left unfixed, or explicitly deferred by the human. Also include any comment-audit `Keep` verdict that, after pushback investigation (Step 2b), resolved to identified tech debt rather than removal or correction. Skip anything disposed as `fix now` (already handled above) or `skip` (not real debt, no record needed).
 2. **Record each one, twice:**
@@ -156,11 +160,11 @@ Before committing, reconcile every finding from this review against the durable 
      ## <file path>
      - **Line(s):** <line numbers or range>
      - **Issue:** <one-line description>
-     - **Why deferred:** <the reviewer's rationale for not fixing now>
+     - **Why deferred:** <the concrete reason it's unsafe or disproportionate to fix now — blast radius wider than this slice, a design decision needing its own discussion, or a file outside this diff; not "not part of this ticket">
      - **Surfaced in:** <story slug>, Slice <N>
      ```
 3. **Resolve entries this slice fixed.** Separately — if any fix made *during this slice* resolves a finding that already has an entry in `TECH_DEBT.md` (matched by file and description), remove that entry entirely. `TECH_DEBT.md` is a record of currently-known debt, not a historical log — entries don't accumulate once addressed. If removing an entry leaves the file with no remaining entries, delete the file.
-4. **Show the human a short summary** of what's being added to and removed from `TECH_DEBT.md` (file names and one-line descriptions only) before proceeding to commit. No separate approval gate needed here — this rides along with the commit approval in Step 4.
+4. **Show the human a short summary** of what's being added to and removed from `TECH_DEBT.md` (file names and one-line descriptions only), plus any candidates surfaced for another repo's curated debt file, before proceeding to commit. No separate approval gate needed for the `TECH_DEBT.md` changes — those ride along with the commit approval in Step 4. A candidate for another file is a separate ask, not folded into that approval.
 
 If there's nothing to defer and nothing to resolve, skip this step silently and proceed to commit.
 
