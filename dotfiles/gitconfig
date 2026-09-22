@@ -1,6 +1,5 @@
 [user]
 	name = Bo Ramsey
-	email = psychosledge@gmail.com
 [alias]
 	lg = !git log --graph --decorate --all -n 20 && git status
 	lgs = !git log --graph --decorate -n 20 $@ && git status
@@ -22,11 +21,14 @@
 	feta = fetch --all --prune
 	b = branch
 	rd = push -d origin
-	rbi = "!f() { git rebase -i \"${1:-$(git merge-base HEAD origin/$(git remote show origin | awk '/HEAD branch/ {print $NF}'))}\"; }; f"
-	rbo = "!b=$(git rev-parse --abbrev-ref HEAD) && set -- $(git rev-list --left-right --count $b...origin/$b) && if [ \"$2\" = \"0\" ]; then git rebase origin/HEAD; else echo 'You have commits to pull from origin/'$b; fi"
+	rbi = "!f() { git fetch origin && git rebase -i \"${1:-$(git merge-base HEAD origin/HEAD)}\"; }; f"
+	rbo = "!git fetch --prune origin && b=$(git symbolic-ref --short HEAD) && if up=$(git rev-parse --abbrev-ref --symbolic-full-name \"$b@{u}\" 2>/dev/null); then behind=$(git rev-list --count \"$b..$up\") && if [ \"$behind\" = \"0\" ]; then git rebase --autostash origin/HEAD; else echo 'You have commits to pull from '\"$up\"; fi; else git rebase --autostash origin/HEAD; fi"
 	dpb = branch -D @{-1}
 [format]
 	#example: xxxxxxxx  30 minutes ago  Bo Ramsey  (HEAD -> master, origin/master, origin/HEAD)  did some stuff
 	pretty = format:%C(auto,yellow)%h  %C(auto,cyan)%as  %C(auto,green)%aN%C(auto)% gd% d  %C(auto,reset)%s
 [core]
 	editor = code --wait
+	pager = "command -v hunk >/dev/null 2>&1 && hunk pager || { echo 'hunk not found -- install with: npm install -g hunkdiff' >&2; less; }"
+[url "git@github.com:"]
+	insteadOf = https://github.com/
