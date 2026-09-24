@@ -49,6 +49,27 @@ Before reviewing code quality, verify the slice's AC:
   for a clause that survives the first, and even for a clause you already trimmed down to
   because the rest of the comment was weak.
 
+  **Two concrete tests, per surviving clause.** (1) Would a competent reader actually try to "fix"
+  this without the comment? If the code's intent is already legible on its face — explicit
+  arithmetic, a named computed property, a type union, a well-chosen name — a comment answering a
+  question nobody would ask fails this test no matter how true or well-written it is. Reserve
+  `Keep` for a comment protecting against a *plausible* misreading (a value that looks simplifiable
+  but silently breaks something if it is), not a hypothetical one. (2) Is this fact already
+  dictated somewhere else — a project convention, a type declaration, an accessibility/design-system
+  rule the repo already enforces, a policy documented anywhere reachable? If a reader who wondered
+  "why is it done this way" could find the answer by consulting that authority, restating it here
+  is redundant; if the repo's own rules already make the decision, a comment defending that decision
+  adds nothing. Both must fail — genuinely non-obvious need, not recorded elsewhere — for a clause
+  to survive.
+
+  **Prefer rewriting the code over keeping the comment.** Before `Keep` on a clause that passes
+  both tests above, ask whether a rename, an extracted constant, or a restructured conditional
+  (e.g. replacing a fragile multi-class combination with one explicit computed variant) would make
+  the fact self-evident and remove the need entirely. Propose that instead of defending the
+  comment — it's the preferred outcome, not a fallback. Only keep a comment when no reasonable
+  rewrite removes the need, and even then it must compress to a short fragment (a few words), never
+  a full sentence or clauses joined by em-dashes/"and."
+
   **On the fence, drop it.** If the checks above leave genuine doubt whether a comment earns its
   place, the default is removal, not `Keep`. The asymmetry favors dropping: a wrongly-removed
   comment is one line, sitting in git history, trivial to reinstate if it turns out to matter. A
