@@ -185,10 +185,11 @@ under it until the first recap runs.
 - **Priority order** — always draft one from the carried-forward Active items once that
   list is settled, don't ask whether to. This is two-stage by design, not a one-shot
   fill-in — the point is to hand the user something to walk into the week's own planning
-  meeting with (this rollover is meant to run before that meeting, as prep), then
-  finalize/adjust it together afterward once real input from that meeting exists. Present
-  the draft and treat it as a draft until the user explicitly finalizes it (possibly in a
-  later message, after their meeting happens).
+  meeting with (this rollover is meant to run before that meeting, as prep), then adjust
+  it together afterward once real input from that meeting exists. It's the real priority
+  list from the moment it's written, not a placeholder — updates from the planning
+  meeting or over the course of the week are normal drift, the same as any other Active
+  item, not a special unfinalized state that needs calling out in the doc itself.
   Don't fold PR-review items awaiting the user's own response into this numbered list —
   they surface too often and clear too quickly to hold a fixed rank; carry them forward
   in Active items (or a dedicated callout, if the user has directed one to exist) with a
