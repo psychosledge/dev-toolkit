@@ -147,9 +147,23 @@ mkdir -p <weeks root>/<new-monday>/recaps
 ```
 
 Seed `<weeks root>/<new-monday>/README.md` using the same section structure as the
-outgoing week's README (`# Week of <date>`, `## Priority order`, `## Active items`,
-`## Queued for next demo` (only if Step 3 found anything), `## Closed items (not carried
-forward — see previous directory for full history)`).
+outgoing week's README:
+
+- `# Week of <date>`
+- **Continues from** — immediately after the H1, as its own paragraph, before any
+  heading: `**Continues from:** `<outgoing week's archived path>`, which now serves as
+  historical reference only, not updated further. This directory carries forward only
+  the still-active items, self-contained (no need to open the previous week to follow
+  anything below).` Same wording every time; only the linked path changes.
+- `## Priority order`
+- `## Active items`
+- `## Queued for next demo` (only if Step 3 found anything)
+- `## Closed items (not carried forward — see previous directory for full history)`
+
+**Don't pre-seed an empty `## Recap Log` section.** That table is `weekly-recap`'s own
+output (see that skill's own Step 6) — it creates the section on its first write for
+the week, not here. Seeding an empty one now would just leave a heading with nothing
+under it until the first recap runs.
 
 - **Active items** — before drafting anything, split the outgoing README's own "Active
   items" (everything not already moved to "Closed items" there — that's the actual

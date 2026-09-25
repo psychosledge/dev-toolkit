@@ -155,9 +155,29 @@ progress.
 
 **Record the cutoff.** Immediately after writing (or re-writing) `weekly.md`, get its
 actual creation/modification timestamp from the filesystem — don't estimate it — and
-add or update its row in the `## Recap Log` table in that week's README (create the
-section if it doesn't exist yet). This is what lets the next weekly-recap run's Step 2
-"tail end of the prior week" check resolve the cutoff precisely instead of guessing.
+add or update its row in the `## Recap Log` table in that week's README. This is what
+lets the next weekly-recap run's Step 2 "tail end of the prior week" check resolve the
+cutoff precisely instead of guessing.
+
+If the section doesn't exist yet, create it right after the README's Continues-from
+paragraph (see `week-rollover`'s Step 7), with this exact shape:
+
+```
+## Recap Log
+
+Creation time of each recap file (local machine time, with timezone), for the next
+recap run to use as its cutoff — work after a given timestamp is not yet reflected in
+that recap.
+
+| File | Created |
+|---|---|
+| `recaps/weekly.md` | 2026-09-08 17:33 EDT |
+```
+
+One row per week — this skill only ever writes one file (`recaps/weekly.md`) per week,
+so there's exactly one row to add or update, not one per day. If `weekly.md` is
+rewritten later the same day, append `(updated HH:MM <tz>)` to the existing row's
+`Created` cell rather than adding a second row for the same file.
 
 **Present the full draft in the conversation before treating it as final** — don't just
 save it and move on. Field-testing note: expect several rounds of correction on tone and
