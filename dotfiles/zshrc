@@ -17,3 +17,4 @@ alias tf=terraform
 export EDITOR="code --wait"
 export VISUAL="$EDITOR"
 export GPG_TTY=$TTY
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local

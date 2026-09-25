@@ -178,9 +178,9 @@ If there's nothing to defer and nothing to resolve, skip this step silently and 
 
 ### Reviewer Mode — Post Comments
 
-Show the human the complete list of approved comments before posting anything — one entry per line, formatted as: category, file:line (if inline), and comment text.
+Before posting anything, walk the human through every comment queued for posting one at a time, each in its own message: category, file:line (if inline), and the complete literal comment text exactly as it would post, as a blockquote. Never compress into a summary table or a one-line-per-entry list — the human needs to proofread the exact text landing on someone else's PR, not a paraphrase, and wants to do it per-comment, not skim a batch. Get an explicit go/edit/drop on each before moving to the next.
 
-Ask: "Ready to post these?"
+Once every comment has been confirmed individually, ask: "Ready to post these?"
 
 On approval, post each comment:
 - **Inline comment** (file and line known): `gh api repos/{owner}/{repo}/pulls/{number}/comments` with `body`, `commit_id` (from `git rev-parse HEAD`), `path`, and `line`
