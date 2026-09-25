@@ -1,24 +1,22 @@
 ---
 name: weekly-recap
-description: Builds a weekly recap (Things We Worked On / Things We Plan to Work on Next / an internal-only mood note) from the week's own daily recaps and tracked work. Use when asked to build the weekly recap, or to prep for a weekly status update.
+description: Builds a weekly recap (Things We Worked On / Things We Plan to Work on Next / an internal-only mood note) from the week's own activity log and tracked work. Use when asked to build the weekly recap, or to prep for a weekly status update.
 ---
 
 # Weekly Recap
 
-Builds a weekly rollup from a week's already-built daily recaps (see the `daily-recap`
-skill) plus that week's tracked story/topic-doc activity. Keep it a plain,
-self-contained engineering recap — the artifact's own placement inside that week's
-`recaps/` directory, alongside the daily recaps it was built from, already establishes
-what it covers and why. This skill is still being field-tested, same as `daily-recap`;
+Builds a weekly rollup from that week's own activity log (see the `activity-log` skill)
+plus that week's tracked story/topic-doc activity. Keep it a plain, self-contained
+engineering recap — the artifact's own placement inside that week's `recaps/` directory
+already establishes what it covers and why. This skill is still being field-tested;
 treat its shape as a draft and update it directly when a real run surfaces a gap.
 
 ## Current Engagement Config
 
-Generic, like `daily-recap` and `week-rollover` — don't hardcode a path here. Resolve
-per the Project Config Memory instructions in global `CLAUDE.md`, reading the same
-`daily-recap-config` project memory those two skills use, for the **weeks root** (the
-parent of `<monday-of-that-week>/recaps/<date>.md`) — one config memory shared across
-all three skills, not a separate copy per skill.
+Generic — don't hardcode a path here. Resolve per the Project Config Memory instructions
+in global `CLAUDE.md`, reading the `daily-recap-config` project memory, for the **weeks
+root** (the parent of `<monday-of-that-week>/log/<date>.md`) — one config memory shared
+across every skill that needs it, not a separate copy per skill.
 
 ## Step 1 — Identify the target week
 
@@ -28,25 +26,28 @@ entry, the current live week. Use that.
 
 ## Step 2 — Gather source material
 
-**Primary: that week's own daily recaps.** Read every file in
-`<weeks root>/<monday>/recaps/*.md` except `weekly.md` itself, in full. Don't re-derive
-git/calendar/story status from scratch — the daily recaps already did that verification
-(merge-status ladder, AC checks, etc.) on their own day. Trust what they say happened,
-the same way this skill's own reader would.
+**Primary: that week's own activity log.** Read every file in `<weeks root>/<monday>/log/*.md`
+(see the `activity-log` skill for format/location), in full, in chronological order. Each
+entry's tag (a domain, a `PR review - <domain>` prefix, or `meeting`) tells building work from
+review work from meeting content.
 
-**Secondary, for context:** that week's `README.md` (priority order, active items) and
-any topic docs it links to — useful for knowing what's officially tracked/prioritized
-so a bullet can be phrased against that framing, not just invented fresh.
+**Log entries are raw, live capture, not independently verified.** A log entry saying
+"implemented X" carries no merge-status check. Before describing anything as
+merged/shipped/done in this skill's own output, verify it directly: resolve the diff
+base per the Branching Model instructions in global `CLAUDE.md`, then
+`git merge-base --is-ancestor <commit> origin/<diff-base>` (or `gh pr list`/`gh pr view`
+for a PR's actual state). If it isn't merged, say "PR open, awaiting review" or
+"implemented, not yet merged," not "done" — this verification is this skill's own job.
 
-**Light freshness check only.** Something reported mid-week as "PR open, awaiting
-review" may have merged since. Spot-check anything a Worked-On or Next bullet would
-otherwise get wrong (a quick merge-status check is enough), don't re-run a full
-day-by-day verification pass — that's already been done once per day this skill is
-built from.
+**Secondary, for context:** that week's `README.md` (priority order, Active/Closed items,
+and each item's own `Demoed` status, a column on Active items or an inline note on
+Closed items) and any topic docs it links to. This is also the best source for a week
+the log itself is thin or empty — the log is new, expect real gaps for a while — since
+the README's own Active/Closed items already carry dated, status-checked history.
 
-**Note which days have no daily recap** (a day off, a day nobody ran `/daily-recap`).
-Don't guess why; if it matters for framing (e.g. explaining a lighter week), ask the
-user rather than assuming.
+**Note gaps in the activity log** (a day with nothing logged at all). Don't guess why;
+if it matters for framing (e.g. explaining a lighter week), ask the user rather than
+assuming.
 
 **Check the tail end of the prior week's last covered day, not just "is this new since
 last week's recap."** The prior weekly recap was built at some point in the day it was
@@ -57,8 +58,9 @@ rather than assuming a whole day was already covered.
 
 ## Step 3 — Build "Things We Worked On" and "Things We Plan to Work on Next"
 
-Single-sentence bullets, not paragraphs. Draw from the daily recaps' own Progress
-sections and Standup Summaries, compressed further, not re-derived from raw commits.
+Single-sentence bullets, not paragraphs. Draw from the activity log's own entries and the
+README's Active/Closed items, compressed further, not re-derived from raw commits from
+scratch.
 
 - **"Worked on" vs. "next":** something counts as worked-on only if real progress
   happened this week, even if unfinished (e.g. a fix planned to land same-day still
@@ -118,17 +120,17 @@ exists yet, skip this question silently — there's nothing to call back to.
 Internal-only, one paragraph, about collaboration with the client, not technical
 content — keep specific bugs/endpoints out of it, that's what the bullets above are
 for. This is the one section that doesn't need to be diplomatic or softened; say real
-friction plainly, using the same honest framing the daily recaps it's drawn from
-already used. Concrete moments worth reaching for: being included in conversations
+friction plainly, in the same honest framing the activity log and README entries it's
+drawn from already use. Concrete moments worth reaching for: being included in conversations
 beyond the usual lane, a flagged dependency actually getting picked up and resolved on
 the client side, responsiveness on both sides of PR review, a stakeholder being decisive
 when checked in with, a deliberate move made *because* of something raised the prior
-week (see Step 4). Every specific claim must trace to something an actual daily recap
-said or the user just told you directly — never invent a plausible-sounding detail to
-fill a narrative gap.
+week (see Step 4). Every specific claim must trace to something the activity log, the README, or the user
+just told you directly — never invent a plausible-sounding detail to fill a narrative
+gap.
 
 **Actively pull forward any positive quotes already captured** in the week's tracker doc
-or a daily recap (a reviewer's own words, a stakeholder's praise) and use them directly —
+or the activity log (a reviewer's own words, a stakeholder's praise) and use them directly —
 this is exactly the concrete texture this section wants, and re-describing the interaction
 generically defeats the point of having captured the actual words live.
 
@@ -136,14 +138,14 @@ generically defeats the point of having captured the actual words live.
 detail's significance depends on a standing situation (e.g. no PM to check a decision
 with in real time), state the concrete decision and let the significance sit there
 implicitly, rather than spelling out the structural reason in the same sentence — the
-target reader already has that context, and a daily recap already carries the more
-literal accounting if it's ever needed.
+target reader already has that context, and the activity log/README already carry the
+more literal accounting if it's ever needed.
 
 ## Step 6 — Persist and present
 
 Write to `<weeks root>/<monday>/recaps/weekly.md`, no title beyond a bare `# Weekly
-Recap`, no "covers <date range>" line — the file's own path, alongside that week's daily
-recaps, already establishes what it covers. No per-section role header
+Recap`, no "covers <date range>" line — the file's own path, alongside that week's
+activity log, already establishes what it covers. No per-section role header
 (`**Engineering:**` or similar) either — this skill produces one person's own weekly
 recap, not a merged multi-section document.
 
@@ -153,15 +155,14 @@ progress.
 
 **Record the cutoff.** Immediately after writing (or re-writing) `weekly.md`, get its
 actual creation/modification timestamp from the filesystem — don't estimate it — and
-add or update its row in the `## Recap Log` table in that week's README (the same table
-`daily-recap` maintains for the daily files; create the section if it doesn't exist yet).
-This is what lets the next weekly-recap run's Step 2 "tail end of the prior week" check
-resolve the cutoff precisely instead of guessing.
+add or update its row in the `## Recap Log` table in that week's README (create the
+section if it doesn't exist yet). This is what lets the next weekly-recap run's Step 2
+"tail end of the prior week" check resolve the cutoff precisely instead of guessing.
 
-**Present the full draft in the conversation before treating it as final**, the same
-"present, don't just save" principle `daily-recap` follows. Field-testing note: expect
-several rounds of correction on tone and framing before a draft is ready to finalize;
-that's the normal shape of using this skill, not a sign something's wrong with it.
+**Present the full draft in the conversation before treating it as final** — don't just
+save it and move on. Field-testing note: expect several rounds of correction on tone and
+framing before a draft is ready to finalize; that's the normal shape of using this skill,
+not a sign something's wrong with it.
 
 ## Step 7 (optional, if the draft is later shared or published elsewhere)
 

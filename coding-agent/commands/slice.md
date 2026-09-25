@@ -71,3 +71,4 @@ If this is the last slice in the plan, after the commit is approved:
 
 1. Present the full UAT checklist from `docs/stories/<slug>/plan.md` and ask the human to confirm all items.
 2. Once UAT is confirmed, propose a PR title and description from the story's artifacts. Resolve this repo's PR Platform per the PR Platform instructions in global `CLAUDE.md`. If it resolves to GitHub with `gh` available, offer to create the PR directly with `gh pr create`; otherwise, present the title and description for the human to paste into their platform.
+3. If a PR was actually opened: check for a `daily-recap-config` project memory (see the `activity-log` skill) — if none exists for this engagement, skip logging silently. If it exists, append one activity-log entry noting the PR was opened, domain-tagged, referencing the PR link and the story.

@@ -45,7 +45,9 @@ Check for a story plan at `docs/stories/*/plan.md`. If found, note the story nam
 
 Resolve the diff base per the Branching Model instructions in global `CLAUDE.md` — the nearest known ancestor among the repo's declared diff base and any release-pipeline branches, not a hardcoded `main`. **Before using it, check whether HEAD itself is one of those declared branches** (trunk, integration branch, or any pipeline branch) rather than a feature branch cut from one — if so, this is likely a promotion or release audit, not a feature review. Say so and ask how to proceed instead of walking what could be a large, multi-PR diff as if it were one slice.
 
-Otherwise, run `git diff --stat $(git merge-base <diff-base> HEAD)` and `git diff --name-only $(git merge-base <diff-base> HEAD)` to understand the scope of changes.
+Run `git fetch origin <diff-base>` before computing the merge-base — a stale local ref silently pulls already-merged upstream commits into what looks like this PR's/slice's own diff.
+
+Otherwise, run `git diff --stat $(git merge-base origin/<diff-base> HEAD)` and `git diff --name-only $(git merge-base origin/<diff-base> HEAD)` to understand the scope of changes.
 
 ## Step 1 — Verify
 
@@ -198,6 +200,10 @@ Once the human is satisfied, ask for explicit commit approval:
 
 Commit on approval with a clear commit message describing the change.
 
+**Log it, if this engagement tracks one.** Check for a `daily-recap-config` project memory (see the `activity-log` skill for format/location) — if none exists for this engagement, skip this silently. If it exists, append one activity-log entry per repo touched (domain inferred from the changed files, asking only if genuinely ambiguous), describing what was committed in one line, referencing the story's `plan.md` if one was found earlier.
+
 ### Reviewer Mode — Done
 
 The review is complete once comments are posted. Note the outcome (posted / held / resolved outside this flow) in the weekly tracker per the project's own conventions, if one is in use.
+
+**Log it, if this engagement tracks one.** Check for a `daily-recap-config` project memory (see the `activity-log` skill for format/location) — if none exists for this engagement, skip this silently. If it exists, append one `PR review - <domain>`-tagged activity-log entry (domain inferred from what was reviewed, asking only if genuinely ambiguous), describing the review's outcome in one line, referencing the PR link.

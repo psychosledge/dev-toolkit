@@ -6,11 +6,9 @@ description: Closes out the current week's tracker/recaps directory (archives it
 # Week Rollover
 
 Archives a finished week's directory and creates the next one, as a single combined
-action — this is the week-boundary equivalent of the `daily-recap` skill's daily
-cadence. A week's tracker docs, meeting notes, and recaps all live and move together
+action. A week's tracker docs, meeting notes, and recaps all live and move together
 under a single `docs/weeks/<monday>/` directory. This skill is still being field-tested;
-treat its shape as a draft, same as `daily-recap`, and update it directly when a real
-run surfaces a gap.
+treat its shape as a draft, and update it directly when a real run surfaces a gap.
 
 ## Confirming Items With the User
 
@@ -24,14 +22,12 @@ fine" is a guess about an item's status, not a documented one.
 
 ## Current Engagement Config
 
-Generic, like `daily-recap` — don't hardcode a path here. Resolve per the Project
-Config Memory instructions in global `CLAUDE.md`, reading the same `daily-recap-config`
-project memory `daily-recap` uses; the **weeks root** this skill operates on is that
-path's `docs/weeks/` directory (the parent of the `<monday-of-that-week>/recaps/<date>.md`
-output path documented there), and the **stories root** is that same engagement's
-`docs/stories/` directory (a sibling of the weeks root). The same memory's **demo
-cadence** fact (which recurring meeting counts as "the demo," and how often it runs) is
-what Step 3 below sweeps against.
+Generic — don't hardcode a path here. Resolve per the Project Config Memory instructions
+in global `CLAUDE.md`, reading the `daily-recap-config` project memory; the **weeks
+root** this skill operates on is that path's `docs/weeks/` directory (the parent of the
+`<monday-of-that-week>/recaps/<date>.md` output path documented there), and the
+**stories root** is that same engagement's `docs/stories/` directory (a sibling of the
+weeks root).
 
 ## Step 1 — Identify the current (outgoing) week
 
@@ -43,42 +39,49 @@ one is actually meant to close, rather than guessing.
 ## Step 2 — Pre-close checks
 
 Don't archive a week that isn't actually ready to close — the source material for its
-retrospective (the daily recaps) becomes harder to work with once it's sitting in
-`archive/` rather than the live directory, so catch gaps now, not after the move.
+retrospective becomes harder to work with once it's sitting in `archive/` rather than
+the live directory, so catch gaps now, not after the move.
 
 - **Check for `recaps/weekly.md` inside the outgoing week.** If it's missing, stop and
   ask whether to build it now (via the `weekly-recap` skill) before continuing — don't
   silently archive a week with no retrospective, and don't silently build one without
   asking either, in case one is already in progress elsewhere.
-- **Sanity-check that the week actually looks finished** — e.g. a daily recap exists for
-  the most recent work day before today. If the outgoing week looks only partially
-  through (rolling over mid-week, a short week, a holiday), ask for confirmation rather
-  than assuming "close the week" always means every work day already happened.
+- **Sanity-check that the week actually looks finished** — e.g. the activity log has
+  entries through the most recent work day before today. If the outgoing week looks only
+  partially through (rolling over mid-week, a short week, a holiday), ask for
+  confirmation rather than assuming "close the week" always means every work day already
+  happened.
 
-## Step 3 — Sweep for not-yet-demoed work
+## Step 3 — Check for not-yet-demoed work
 
-`daily-recap` tags same-day work completed after the configured demo event with
-`(not yet demoed)`. That tag can otherwise get lost at rollover — the item it's attached
-to may close out entirely (Step 4's archiving, or a plain "Closed items" move) before
-anyone checks whether it was ever actually shown.
+`Demoed` is a field directly on each Active/Closed item's own row or bullet in the
+*outgoing* week's own README, not a separate file. An archived week's directory already
+survives intact, so this status doesn't need a home outside the week to avoid being
+lost — it just needs to be carried forward correctly when the item itself isn't done
+being tracked yet.
 
-Grep every recap file under `<outgoing week>/recaps/*.md` for `(not yet demoed)`. For
-each hit:
+**Ask first, don't assume blank means unshown.** Before walking the outgoing README's
+items, ask directly: "Anything get demoed or otherwise shown to a stakeholder this week
+that isn't marked yet?" Apply anything the user reports before the per-item walk below.
 
-1. **Confirm with the user it's still accurate.** `daily-recap` only compares against
-   the week's own configured demo, so a hit could have been shown since at an ad hoc or
-   unscheduled session — don't assume the tag is still true just because it's there.
-2. **If still unshown, carry it forward** into the new week's `## Queued for next demo`
-   section (Step 7 creates the section; this step supplies its contents) — regardless of
-   whether the underlying item is fully done and otherwise headed for Closed items or
-   Step 4's archiving. Being finished and being demoed are independent facts; this
-   section tracks the second one specifically.
-3. **If confirmed already shown, no action** — the tag was accurate when written, it's
-   just past its shelf life now.
+Then walk every Active item row and every Closed item bullet in the outgoing README for a
+`Demoed` field that's blank. For each hit:
+
+1. **Confirm with the user it's still accurate.** The upfront question above may not have
+   surfaced every case — don't assume `Demoed` is genuinely still blank just because the
+   row says so.
+2. **If still unshown, note it** for Step 7 to carry into the new week's
+   `## Queued for next demo` section — regardless of whether the underlying item is fully
+   done and otherwise headed for Closed items or Step 4's archiving. Being finished and
+   being demoed are independent facts; an item that would otherwise just disappear from
+   the new README (a normal closed item) still needs this explicit carry-forward if it
+   hasn't been shown yet.
+3. **If confirmed shown, fill in the `Demoed` date on that row now**, in the outgoing
+   README, before it archives.
 
 No hits is a fine, common outcome — don't force a finding, and don't invent one from an
-item that merely finished late in the week without an actual demo separating it from
-whenever it gets shown.
+item that merely finished late in the week without an actual demo — in a meeting,
+async, or any other form — separating it from whenever it gets shown.
 
 ## Step 4 — Archive completed stories
 
@@ -94,8 +97,7 @@ For every story under `<stories root>/` (excluding `archive/`):
    default branch), then run `git merge-base --is-ancestor <commit> origin/<diff-base>`
    for whatever commit the plan.md cites as the final one. A plan.md marking a slice
    "✅ done" means the implementation was finished in the coding workflow's own sense,
-   not that it's merged — same distinction `daily-recap` already enforces for its own
-   "shipped" language. A rebase or squash before merge can rewrite the cited commit's
+   not that it's merged. A rebase or squash before merge can rewrite the cited commit's
    SHA entirely — if the cited hash isn't an ancestor, don't conclude "not merged" on
    that alone; check the PR's actual state (`gh pr view`) and/or search
    `git log origin/<diff-base>` by branch name or PR number before ruling it unmerged.
@@ -163,7 +165,7 @@ forward — see previous directory for full history)`).
   Bucket 2 still gets the same one-at-a-time confirmation discipline as bucket 1 — this
   split is about when something touches the file, not about skipping scrutiny.
 - **Queued for next demo** — populate directly from Step 3's confirmed-still-unshown
-  list. Include an item here even if it's also fully closed out below or archived in
+  items. Include an item here even if it's also fully closed out below or archived in
   Step 4 — this section tracks "has it been shown," a separate question from "is it
   done." Omit the section entirely if Step 3 found nothing.
 - **Priority order** — always draft one from the carried-forward Active items once that
@@ -204,18 +206,17 @@ forward — see previous directory for full history)`).
   actually resolves to a file that exists, and check the cross-tree consequence
   described in Step 5 above.
 
-**Present the drafted new README before writing it** — same "present, don't just save"
-principle `daily-recap` follows. At this point the file only contains bucket 1 (genuinely
-open items) plus whatever else Step 3/6 already settled; bucket 2 hasn't been written
-anywhere yet. This presentation is a structural check only (does the carried-forward list
-and section shape look right), not a status check — don't read approval of the whole
-draft as confirmation that any individual item's status is correct. That confirmation
-happens in the per-item walk in Step 8 (covering both buckets), which runs regardless of
-how this draft presentation goes. Carrying forward the wrong items (something that was
-actually resolved in conversation but never marked closed in the doc, for instance) is
-exactly the kind of status-marker staleness `daily-recap` itself already watches for in
-this same file — don't propagate a stale status into a fresh week's file without a chance
-to catch it first.
+**Present the drafted new README before writing it.** At this point the file only
+contains bucket 1 (genuinely open items) plus whatever else Step 3/6 already settled;
+bucket 2 hasn't been written anywhere yet. This presentation is a structural check only
+(does the carried-forward list and section shape look right), not a status check —
+don't read approval of the whole draft as confirmation that any individual item's status
+is correct. That confirmation happens in the per-item walk in Step 8 (covering both
+buckets), which runs regardless of how this draft presentation goes. Carrying forward
+the wrong items (something that was actually resolved in conversation but never marked
+closed in the doc, for instance) is exactly the kind of status-marker staleness worth
+catching before it propagates — don't propagate a stale status into a fresh week's file
+without a chance to catch it first.
 
 ## Step 8 — Walk each active item for a freshness check
 
@@ -277,15 +278,25 @@ silently otherwise.
   several inferred sub-issues that turn out wrong, delete the speculative version
   outright and write one plain restatement of the observed fact, with no inferred
   cause — don't try to merge or salvage the earlier, overcomplicated version.
+- **Section-level shape check.** The per-item walk above only ever looks at
+  Active-items rows — it won't catch a whole *section* that's degraded into freeform
+  prose. Separately from the per-item walk, look at each top-level section of the
+  drafted new README and ask whether it's shaped as terse, scannable rows/bullets (fine,
+  however many there are) or as a paragraph that has to be read start to finish to get
+  the point (a sign it belongs in its own topic doc, or a link to an existing
+  authoritative source like a story's `plan.md` or an ADR). This is a shape check, not a
+  length check — a long Priority order list is fine; a short narrative paragraph is not.
+  Flag a violation for a judgment call rather than automatically rewriting it — some
+  short, one-off status notes are legitimately narrative and don't need their own topic
+  doc.
 
 ## Step 9 — Sweep embedded open questions in active stories
 
-Distinct from `daily-recap`'s own open-questions walk (scoped to that day's recap, run
-daily since who's-blocking-whom changes daily) and from Step 8 above (walks whatever's
-already summarized into the README): **this step checks a source neither of those ever
-looks at** — a "Still open" or "Needs Architect: yes" callout sitting inside an active
-story's own `plan.md` that never got summarized into any README row at all, and so would
-otherwise never surface again once the blocker it referred to has cleared.
+Distinct from Step 8 above (which only walks whatever's already summarized into the
+README): this step checks a source Step 8 never looks at — a "Still open" or "Needs
+Architect: yes" callout sitting inside an active story's own `plan.md` that never got
+summarized into any README row at all, and so would otherwise never surface again once
+the blocker it referred to has cleared.
 
 For every story under `<stories root>/` (excluding `archive/`): grep its `plan.md` for
 "Still open," "Needs Architect: yes," and any "## Open Questions" heading. For each hit,
