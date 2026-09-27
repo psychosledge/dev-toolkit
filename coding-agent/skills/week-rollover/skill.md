@@ -92,8 +92,8 @@ list until this step runs.
 For every story under `<stories root>/` (excluding `archive/`):
 
 1. **Verify merge status directly against git — don't trust the plan.md's own "done" or
-   "merged" claim.** Resolve the repo's diff base per the Branching Model instructions
-   in global `CLAUDE.md` (its declared integration branch, or trunk — not an assumed
+   "merged" claim.** Resolve the repo's diff base per the `branching-model` skill
+   (its declared integration branch, or trunk — not an assumed
    default branch), then run `git merge-base --is-ancestor <commit> origin/<diff-base>`
    for whatever commit the plan.md cites as the final one. A plan.md marking a slice
    "✅ done" means the implementation was finished in the coding workflow's own sense,

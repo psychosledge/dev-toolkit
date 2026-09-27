@@ -49,7 +49,7 @@ git -C <repo-path> fetch --all --prune
 
 **3A-a2. Resolve diff base**
 
-Resolve this repo's diff base per the Branching Model instructions in global `CLAUDE.md` (repo's own `CLAUDE.md` `## Branching` declaration → `git -C <repo-path> config workloop.integrationBranch` → remote default branch). Use the resolved branch everywhere below instead of assuming `main`/`master`.
+Resolve this repo's diff base per the `branching-model` skill (repo's own `CLAUDE.md` `## Branching` declaration → `git -C <repo-path> config workloop.integrationBranch` → remote default branch). Use the resolved branch everywhere below instead of assuming `main`/`master`.
 
 **3A-b. Find active branches**
 
@@ -83,7 +83,7 @@ Cap at 15 commits per branch. If there are more, note "and N more commits" at th
 
 **3A-e. Check for PR status (optional)**
 
-Resolve this repo's PR Platform per the PR Platform instructions in global `CLAUDE.md`. Only if it resolves to GitHub with `gh` available:
+Resolve this repo's PR platform per the `pr-platform` skill. Only if it resolves to GitHub with `gh` available:
 
 ```
 gh pr list --head <branch> --json number,title,state,isDraft,reviewDecision
@@ -141,7 +141,7 @@ The prune removes stale remote-tracking refs and is what surfaces the "gone" sta
 
 **3B-a2. Resolve this repo's branching model**
 
-Resolve per the Branching Model instructions in global `CLAUDE.md`:
+Resolve per the `branching-model` skill:
 - **Diff base** — used for merge/staleness checks below.
 - **Release pipeline** — ordered list of long-lived deploy branches, if declared. Trunk-based repos have none.
 
@@ -166,7 +166,7 @@ If `origin/dev` exists but is NOT merged in, that's a concrete signal per the gl
 
 > "`origin/dev` has unmerged commits relative to `origin/<diff-base>` — is `dev` actually this repo's integration branch? I can record that in this repo's `CLAUDE.md` if so."
 
-On confirmation, write the `## Branching` section into that repo's `CLAUDE.md` as described in the global instructions.
+On confirmation, write the `## Branching` section into that repo's `CLAUDE.md` as described in the `branching-model` skill.
 
 > **Batch these queries:** Steps 3B-b, 3B-c, and 3B-d all read local branch state. After the fetch wave completes, fire `branch -r`, `branch -vv`, and `branch -r --merged origin/<diff-base>` for all repos simultaneously in a single parallel batch before processing any results.
 
@@ -371,7 +371,7 @@ Then wait. Do not read diffs proactively.
 When asked to summarize a branch:
 
 1. If the branch exists in multiple repos, ask which one before proceeding.
-2. Find the merge base against the resolved diff base (nearest known ancestor among the diff base and any declared release-pipeline branches — reuse the resolution from Step 3A-a2/3B-a2 if this is the same session, otherwise re-resolve per the Branching Model instructions in global `CLAUDE.md`):
+2. Find the merge base against the resolved diff base (nearest known ancestor among the diff base and any declared release-pipeline branches — reuse the resolution from Step 3A-a2/3B-a2 if this is the same session, otherwise re-resolve per the `branching-model` skill):
    ```
    git merge-base origin/<diff-base> origin/<branch>
    ```

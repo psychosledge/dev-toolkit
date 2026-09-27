@@ -100,6 +100,7 @@ This is the critical step for Claude config files. For every non-identical file 
 - `catchup` — keeps the human's view of remote/team state current, which `/plan` and `/slice` both assume is accurate
 - `pr-description` — writes the artifact the human reviews at the commit/PR step of `/slice` and `/bug`
 - `comment-quality` — the comment bar the coder and verifier preload and `/code-review` applies
+- `branching-model` / `pr-platform` — resolve a repo's base branch and PR platform for every git- or PR-touching command and the verifier
 - `weekly-recap` / `week-rollover` / `weekly-tracking` / `activity-log` / `meeting-notes` / `whats-next` — turn the workloop's own output (commits, plan docs, live-captured log entries) into status the human acts on
 
 **For each non-identical file, work through these questions.** Not every question applies to every file — a support skill has no "TDD discipline" to degrade — but answer the ones that do rather than skipping the file because none of the core-workloop language fits literally:

@@ -5,7 +5,7 @@ description: Writes pull request descriptions. Use when creating a PR, writing a
 
 When writing a PR description:
 
-1. Resolve the diff base per the Branching Model instructions in global `CLAUDE.md` — the nearest known ancestor among the repo's declared diff base and any release-pipeline branches, not a hardcoded `main`. Run `git diff <diff-base>...HEAD` to see all changes on this branch.
+1. Resolve the diff base per the `branching-model` skill — the nearest known ancestor among the repo's declared diff base and any release-pipeline branches, not a hardcoded `main`. Run `git diff <diff-base>...HEAD` to see all changes on this branch.
 2. Write a description following this format:
 
 ## What

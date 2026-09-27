@@ -34,7 +34,7 @@ log: the README below becomes the primary source.
 **Log entries are raw, live capture, not independently verified.** A log entry saying
 "implemented X" carries no merge-status check. Before describing anything as
 merged/shipped/done in this skill's own output, verify it directly: resolve the diff
-base per the Branching Model instructions in global `CLAUDE.md`, then
+base per the `branching-model` skill, then
 `git merge-base --is-ancestor <commit> origin/<diff-base>` (or `gh pr list`/`gh pr view`
 for a PR's actual state). If it isn't merged, say "PR open, awaiting review" or
 "implemented, not yet merged," not "done" — this verification is this skill's own job.

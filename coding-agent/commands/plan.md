@@ -8,7 +8,7 @@ Invoke the **planner** subagent to decompose the following user story into seque
 
 After the planner produces the Slice Plan and UAT Checklist, determine the proposed feature branch before presenting anything to the human:
 
-1. Resolve this repo's Branching Model per the instructions in global `CLAUDE.md` (the repo's own `CLAUDE.md` `## Branching` section, with the usual fallbacks). Note the diff base, whether feature branches are used, and the naming convention if declared.
+1. Resolve this repo's branching model per the `branching-model` skill (the repo's own `CLAUDE.md` `## Branching` section, with the usual fallbacks). Note the diff base, whether feature branches are used, and the naming convention if declared.
 2. If `Feature branches: no`, skip branch setup entirely and note it in the presentation.
 3. Otherwise, construct the branch name:
    - Scan `$ARGUMENTS` for a ticket ID (pattern: `[A-Z]+-[0-9]+`, common to Jira, Azure Boards, and Linear) or a URL containing a ticket path segment (e.g. `/browse/` for Jira). If found, extract the ticket ID and derive a short human-readable slug from the story title (lowercase, hyphen-separated, ≤ 30 chars).
