@@ -50,3 +50,7 @@ the source of truth for that. If the priority order looks stale (references some
 closed, or a merge status has changed since it was drafted), say so rather than reciting it as-is,
 but a full freshness pass belongs to a dedicated rollover step, not this skill — flag it, don't
 re-litigate the whole tracker here.
+
+For each Active item whose status is `PR open`, check whether the PR has merged (`gh pr view
+<link> --json state` when the `pr-platform` skill resolves GitHub with `gh` available). If it
+has, offer to move the item to Closed items per the `weekly-tracking` skill.

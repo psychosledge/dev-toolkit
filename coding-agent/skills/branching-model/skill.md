@@ -1,6 +1,6 @@
 ---
 name: branching-model
-description: How to resolve a repo's branching model, diff base, release pipeline, and branch naming from its own CLAUDE.md, with fallbacks and when to ask. Use before diffing, reviewing, or creating a branch, whenever the base branch matters.
+description: How to resolve a repo's branching model, diff base, release pipeline, branch naming, and how finished work ships (PR or a repo-local release skill) from its own CLAUDE.md, with fallbacks and when to ask. Use before diffing, reviewing, or creating a branch, whenever the base branch matters.
 ---
 
 # Branching Model
@@ -19,6 +19,7 @@ Check the *repo's own* `CLAUDE.md` (not the global one) for a `## Branching` sec
 - Release pipeline: <branch> → <branch> → ...  (release-branching only, optional)
 - Feature branches: yes | short-lived | no
 - Feature branch naming: <pattern>, e.g. `<TICKET>/<slug>` — or "no consistent convention"
+- Release: pull request | skill <name>
 ```
 
 Any field may be absent — partial declarations are the normal case, not an error state. Treat present fields as authoritative and don't re-derive them. Treat absent fields as genuinely unknown; use the fallback and detection rules below rather than assuming a default silently.
@@ -32,6 +33,15 @@ Any field may be absent — partial declarations are the normal case, not an err
 ## Resolving release/deploy branches (to classify, not diff against)
 
 Read `Release pipeline` if declared, in order. Trunk-based repos have none by definition — don't go looking for one.
+
+## Resolving how finished work ships
+
+`Release` names the step that ships a finished story:
+
+- `pull request`: the story ships as a PR, resolved through the `pr-platform` skill. This is the default when the field is absent and the repo has a PR-capable remote.
+- `skill <name>`: a repo-local skill (for example `ship`) owns the release mechanics, such as tagging, publishing, and pushing. The workloop hands off to it and records the ref it released.
+
+When undeclared, look for a repo-local skill named `ship` or `release` (`.claude/skills/` or `.claude/commands/` in the repo). If one exists, or the repo has no PR-capable remote, ask which applies and record the answer under `## Branching` as described below.
 
 ## HEAD on a pipeline branch itself
 

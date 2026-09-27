@@ -47,5 +47,5 @@ $ARGUMENTS
 4. Draft the story using the structure above.
 5. Present the draft and ask what to adjust.
 6. Iterate until the human approves.
-7. When approved, present the final card(s) cleanly. Do not create a ticket in any sprint tool — that is the human's next step.
+7. When approved, present the final card(s) cleanly. Do not create a ticket in any sprint tool — that is the human's next step. If a `weekly-tracking-config` project memory exists, add each approved card to the current week's README per the `weekly-tracking` skill's workloop checkpoints.
 8. After approval, offer: "Ready to decompose this into technical slices? Run /plan with this story." If the input was split into multiple cards, offer this per card, and let the human pick which one to start with rather than assuming an order.

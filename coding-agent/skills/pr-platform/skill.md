@@ -13,8 +13,10 @@ Check the repo's own `CLAUDE.md` for a `## PR Platform` section:
 
 ```
 ## PR Platform
-- Platform: GitHub | Azure DevOps | GitLab | other/manual
+- Platform: GitHub | Azure DevOps | GitLab | other/manual | none
 ```
+
+`none` means the repo has no PRs. How it ships is the `Release` field in `## Branching` (see the `branching-model` skill).
 
 Treat a present declaration as authoritative and skip the detection below.
 

@@ -1,6 +1,6 @@
 ---
 name: weekly-tracking
-description: Reference for the weekly-tracking-config project memory and the weekly README layout that week-rollover, weekly-recap, meeting-notes, and whats-next read and write. Not normally invoked directly.
+description: Reference for the weekly-tracking-config project memory, the weekly README layout, and the workloop checkpoints that update it. Read and written by week-rollover, weekly-recap, meeting-notes, whats-next, /story, /plan, /slice, and /code-review. Not normally invoked directly.
 ---
 
 # Weekly Tracking
@@ -40,6 +40,30 @@ Sections, in this order:
 7. `## Closed items (not carried forward — see previous directory for full history)`, a list.
    When demo tracking is enabled, each bullet carries an inline `Demoed <YYYY-MM-DD>` note once
    shown.
+
+### Active items
+
+Columns: `Item`, `Status`, `Next step`, plus `Demoed` when demo tracking is enabled. `Item` is a
+short name with links to whatever tracks it (the story's `plan.md`, the PR, a topic doc).
+
+### Workloop checkpoints
+
+When a `weekly-tracking-config` memory exists, the workloop commands keep the current week's
+README in step with the work, independent of the `Activity log` setting. At each checkpoint,
+update the item's row, or add one if no row matches. Match by story slug, PR link, or plain name.
+
+| Checkpoint | Status | Next step |
+|---|---|---|
+| `/story` approved | `story drafted` | `/plan` |
+| `/plan` approved | `planned, 0/N slices` | first slice |
+| `/slice` committed | `k/N slices done` | next slice, or UAT |
+| PR opened | `PR open` (link in `Item`) | review/merge |
+| Released by the repo's release skill | `released <ref>` | none |
+| `/code-review` of someone else's PR | review outcome (posted / held / resolved outside this flow) | whose court it's in |
+
+A `released <ref>` item is finished, so it moves from Active items to Closed items instead of
+staying as a row. A PR item moves to Closed once its merge is confirmed, which happens in
+`week-rollover`'s freshness walk or when `whats-next` notices it.
 
 ### `Demoed`
 

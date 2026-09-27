@@ -225,6 +225,10 @@ yet written anywhere) one item at a time, presenting the currently-recorded stat
 asking whether it's still accurate. Not a formality — stale status claims propagate
 silently otherwise.
 
+For an item whose status is `PR open`, check the PR's actual state first (`gh pr view <link>
+--json state,mergedAt` when the `pr-platform` skill resolves GitHub with `gh` available) and
+present that alongside the recorded status. A merged PR is proposed as finished.
+
 - **Batch the file edits, not the confirmations.** Confirming an item in chat doesn't
   require touching the live README for that single row right away. Accumulate each
   item's resolved disposition (stays active as drafted / needs corrected text / moves to

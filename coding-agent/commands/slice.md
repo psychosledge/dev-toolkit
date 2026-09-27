@@ -66,9 +66,15 @@ After the commit, update `docs/stories/<slug>/plan.md` for this slice:
 
 Do not modify other slices' sections or the UAT checklist.
 
+If a `weekly-tracking-config` project memory exists, update this story's row in the current week's README per the `weekly-tracking` skill's workloop checkpoints.
+
 **Step 5 — UAT checklist and PR prep (final slice only)**
 If this is the last slice in the plan, after the commit is approved:
 
 1. Present the full UAT checklist from `docs/stories/<slug>/plan.md` and ask the human to confirm all items.
-2. Once UAT is confirmed, propose a PR title and description from the story's artifacts. Invoke the `pr-platform` skill and resolve this repo's PR platform by its rules. State the result on one line: `PR platform: <platform> (<declared | detected>), gh <available | unavailable>`. If it resolves to GitHub with `gh` available, offer to create the PR directly with `gh pr create`; otherwise, present the title and description for the human to paste into their platform.
-3. If a PR was actually opened and a `weekly-tracking-config` project memory exists with `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill) noting the PR was opened, domain-tagged, referencing the PR link and the story.
+2. Once UAT is confirmed, invoke the `branching-model` skill and resolve this repo's `Release` field. State it on one line: `Release: <pull request | skill <name>> (<declared | detected | default>)`.
+3. **`Release: skill <name>`:** ask "Run `/<name>` now?" On a yes, invoke that skill and let it handle the release. The yes is the human's explicit approval for whatever that skill does, including any push. Skip the PR steps. Take the released ref (version or tag) from the skill's output, then from `git tag --points-at HEAD`, and otherwise ask the human.
+4. **`Release: pull request`:** propose a PR title and description from the story's artifacts. Invoke the `pr-platform` skill and resolve this repo's PR platform by its rules. State the result on one line: `PR platform: <platform> (<declared | detected>), gh <available | unavailable>`. If it resolves to GitHub with `gh` available, offer to create the PR directly with `gh pr create`; otherwise, present the title and description for the human to paste into their platform.
+5. If a release actually happened or a PR was actually opened, and a `weekly-tracking-config` project memory exists:
+   - Update this story's row in the current week's README per the `weekly-tracking` skill's workloop checkpoints.
+   - If `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill), domain-tagged, noting the release with its ref or the PR opened with its link, and referencing the story.
