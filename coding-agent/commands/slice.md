@@ -70,5 +70,5 @@ Do not modify other slices' sections or the UAT checklist.
 If this is the last slice in the plan, after the commit is approved:
 
 1. Present the full UAT checklist from `docs/stories/<slug>/plan.md` and ask the human to confirm all items.
-2. Once UAT is confirmed, propose a PR title and description from the story's artifacts. Resolve this repo's PR platform per the `pr-platform` skill. If it resolves to GitHub with `gh` available, offer to create the PR directly with `gh pr create`; otherwise, present the title and description for the human to paste into their platform.
+2. Once UAT is confirmed, propose a PR title and description from the story's artifacts. Invoke the `pr-platform` skill and resolve this repo's PR platform by its rules. State the result on one line: `PR platform: <platform> (<declared | detected>), gh <available | unavailable>`. If it resolves to GitHub with `gh` available, offer to create the PR directly with `gh pr create`; otherwise, present the title and description for the human to paste into their platform.
 3. If a PR was actually opened and a `weekly-tracking-config` project memory exists with `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill) noting the PR was opened, domain-tagged, referencing the PR link and the story.

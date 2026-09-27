@@ -92,7 +92,7 @@ list until this step runs.
 For every story under `<stories root>/` (excluding `archive/`):
 
 1. **Verify merge status directly against git — don't trust the plan.md's own "done" or
-   "merged" claim.** Resolve the repo's diff base per the `branching-model` skill
+   "merged" claim.** Invoke the `branching-model` skill and resolve the repo's diff base by its rules
    (its declared integration branch, or trunk — not an assumed
    default branch), then run `git merge-base --is-ancestor <commit> origin/<diff-base>`
    for whatever commit the plan.md cites as the final one. A plan.md marking a slice

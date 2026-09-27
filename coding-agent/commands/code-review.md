@@ -19,7 +19,7 @@ Record the mode. It governs the rest of the steps.
 
 **Reviewer Mode — check out the PR branch first:**
 
-Resolve this repo's PR platform per the `pr-platform` skill. This mode's `gh` commands (checkout, posting comments) assume it resolves to GitHub with `gh` available — if it doesn't, tell the human and ask how to proceed instead of running them.
+Invoke the `pr-platform` skill and resolve this repo's PR platform by its rules. State the result on one line: `PR platform: <platform> (<declared | detected>), gh <available | unavailable>`. This mode's `gh` commands (checkout, posting comments) assume it resolves to GitHub with `gh` available — if it doesn't, tell the human and ask how to proceed instead of running them.
 
 Check for a dirty working tree:
 
@@ -43,7 +43,7 @@ Check for a `CLAUDE.md` at the project root. Read it and apply project-specific 
 
 Check for a story plan at `docs/stories/*/plan.md`. If found, note the story name and its one-line summary — you'll surface it at the top of the review so the human has product context before the technical walk-through begins.
 
-Resolve the diff base per the `branching-model` skill — the nearest known ancestor among the repo's declared diff base and any release-pipeline branches, not a hardcoded `main`. **Before using it, check whether HEAD itself is one of those declared branches** (trunk, integration branch, or any pipeline branch) rather than a feature branch cut from one — if so, this is likely a promotion or release audit, not a feature review. Say so and ask how to proceed instead of walking what could be a large, multi-PR diff as if it were one slice.
+Invoke the `branching-model` skill and resolve the diff base by its rules — the nearest known ancestor among the repo's declared diff base and any release-pipeline branches, not a hardcoded `main`. State the result on one line before using it: `Diff base: <branch> (<source>)`, where the source is the repo's `CLAUDE.md`, the `workloop.integrationBranch` override, or the remote default. **Before using it, check whether HEAD itself is one of those declared branches** (trunk, integration branch, or any pipeline branch) rather than a feature branch cut from one — if so, this is likely a promotion or release audit, not a feature review. Say so and ask how to proceed instead of walking what could be a large, multi-PR diff as if it were one slice.
 
 Run `git fetch origin <diff-base>` before computing the merge-base — a stale local ref silently pulls already-merged upstream commits into what looks like this PR's/slice's own diff.
 

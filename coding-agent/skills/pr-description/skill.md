@@ -5,7 +5,7 @@ description: Writes pull request descriptions. Use when creating a PR, writing a
 
 When writing a PR description:
 
-1. Resolve the diff base per the `branching-model` skill — the nearest known ancestor among the repo's declared diff base and any release-pipeline branches, not a hardcoded `main`. Run `git diff <diff-base>...HEAD` to see all changes on this branch.
+1. Invoke the `branching-model` skill and resolve the diff base by its rules — the nearest known ancestor among the repo's declared diff base and any release-pipeline branches, not a hardcoded `main`. State the result on one line before using it: `Diff base: <branch> (<source>)`, where the source is the repo's `CLAUDE.md`, the `workloop.integrationBranch` override, or the remote default. Run `git diff <diff-base>...HEAD` to see all changes on this branch.
 2. Write a description following this format:
 
 ## What

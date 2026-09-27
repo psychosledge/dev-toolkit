@@ -49,7 +49,7 @@ git -C <repo-path> fetch --all --prune
 
 **3A-a2. Resolve diff base**
 
-Resolve this repo's diff base per the `branching-model` skill (repo's own `CLAUDE.md` `## Branching` declaration → `git -C <repo-path> config workloop.integrationBranch` → remote default branch). Use the resolved branch everywhere below instead of assuming `main`/`master`.
+Invoke the `branching-model` skill and resolve this repo's diff base by its rules (repo's own `CLAUDE.md` `## Branching` declaration → `git -C <repo-path> config workloop.integrationBranch` → remote default branch). State the result on one line before using it: `Diff base: <branch> (<source>)`, where the source is the repo's `CLAUDE.md`, the `workloop.integrationBranch` override, or the remote default. Use the resolved branch everywhere below instead of assuming `main`/`master`.
 
 **3A-b. Find active branches**
 
@@ -83,7 +83,7 @@ Cap at 15 commits per branch. If there are more, note "and N more commits" at th
 
 **3A-e. Check for PR status (optional)**
 
-Resolve this repo's PR platform per the `pr-platform` skill. Only if it resolves to GitHub with `gh` available:
+Invoke the `pr-platform` skill and resolve this repo's PR platform by its rules. State the result on one line: `PR platform: <platform> (<declared | detected>), gh <available | unavailable>`. Only if it resolves to GitHub with `gh` available:
 
 ```
 gh pr list --head <branch> --json number,title,state,isDraft,reviewDecision
@@ -141,7 +141,7 @@ The prune removes stale remote-tracking refs and is what surfaces the "gone" sta
 
 **3B-a2. Resolve this repo's branching model**
 
-Resolve per the `branching-model` skill:
+Invoke the `branching-model` skill and resolve by its rules. State the result on one line before using it: `Diff base: <branch> (<source>)`, plus the release pipeline if one is declared.
 - **Diff base** — used for merge/staleness checks below.
 - **Release pipeline** — ordered list of long-lived deploy branches, if declared. Trunk-based repos have none.
 
@@ -162,7 +162,7 @@ git -C <repo-path> branch -r | grep origin/dev
 git -C <repo-path> branch -r --merged origin/<diff-base> | grep origin/dev
 ```
 
-If `origin/dev` exists but is NOT merged in, that's a concrete signal per the global detection protocol — ask directly rather than emitting a static tip:
+If `origin/dev` exists but is NOT merged in, that's a concrete signal per the `branching-model` skill's detection rules — ask directly rather than emitting a static tip:
 
 > "`origin/dev` has unmerged commits relative to `origin/<diff-base>` — is `dev` actually this repo's integration branch? I can record that in this repo's `CLAUDE.md` if so."
 
@@ -371,7 +371,7 @@ Then wait. Do not read diffs proactively.
 When asked to summarize a branch:
 
 1. If the branch exists in multiple repos, ask which one before proceeding.
-2. Find the merge base against the resolved diff base (nearest known ancestor among the diff base and any declared release-pipeline branches — reuse the resolution from Step 3A-a2/3B-a2 if this is the same session, otherwise re-resolve per the `branching-model` skill):
+2. Find the merge base against the resolved diff base (nearest known ancestor among the diff base and any declared release-pipeline branches — reuse the resolution from Step 3A-a2/3B-a2 if this is the same session, otherwise invoke the `branching-model` skill and re-resolve by its rules):
    ```
    git merge-base origin/<diff-base> origin/<branch>
    ```
