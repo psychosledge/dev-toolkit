@@ -62,8 +62,7 @@ update the item's row, or add one if no row matches. Match by story slug, PR lin
 | `/code-review` of someone else's PR | review outcome (posted / held / resolved outside this flow) | whose court it's in |
 
 A `released <ref>` item is finished, so it moves from Active items to Closed items instead of
-staying as a row. A PR item moves to Closed once its merge is confirmed, which happens in
-`week-rollover`'s freshness walk or when `whats-next` notices it.
+staying as a row. A PR item moves to Closed once its merge is confirmed.
 
 ### `Demoed`
 
