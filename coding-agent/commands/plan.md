@@ -39,7 +39,7 @@ After approval:
 - If it already exists: `git switch <branch-name>`.
 - Confirm the active branch, then proceed with slice work.
 
-**Log the plan, if this engagement tracks one.** Check for a `daily-recap-config` project memory (see the `activity-log` skill for format/location) — if none exists for this engagement, skip this silently, this is opt-in infrastructure, not something every project has. If it exists, append one activity-log entry per repo this story's slices touch (domain inferred from the repo/story content, asking only if genuinely ambiguous), describing the plan in one line, referencing the story's `plan.md`.
+**Log the plan, if this project keeps an activity log.** If a `weekly-tracking-config` project memory exists with `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill for format/location) per repo this story's slices touch (domain inferred from the repo/story content, asking only if genuinely ambiguous), describing the plan in one line, referencing the story's `plan.md`.
 
 User story:
 $ARGUMENTS

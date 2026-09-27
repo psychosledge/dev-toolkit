@@ -11,10 +11,12 @@ tracker.
 
 ## Current Engagement Config
 
-Resolve the calendar identity and weeks root from the `daily-recap-config` project memory. Log
-format/location come from the `activity-log` skill.
+Resolve the weeks root, `Activity log`, and `Calendar` fields from the `weekly-tracking-config`
+project memory (fields defined in the `weekly-tracking` skill). Log format/location come from the `activity-log` skill.
 
 ## Step 1 — Fallback calendar check
+
+Skip this step silently unless `Calendar` is set and `Activity log` is `enabled`.
 
 List today's calendar events up through now (`list_events` on the configured calendar identity,
 today's date, events that have already started). For each one, check whether today's activity log

@@ -8,13 +8,12 @@ description: Builds a weekly recap (Things We Worked On / Things We Plan to Work
 Builds a weekly rollup from that week's own activity log (see the `activity-log` skill)
 plus that week's tracked story/topic-doc activity. Keep it a plain, self-contained
 engineering recap — the artifact's own placement inside that week's `recaps/` directory
-already establishes what it covers and why. This skill is still being field-tested;
-treat its shape as a draft and update it directly when a real run surfaces a gap.
+already establishes what it covers and why.
 
 ## Current Engagement Config
 
 Generic — don't hardcode a path here. Resolve per the Project Config Memory instructions
-in global `CLAUDE.md`, reading the `daily-recap-config` project memory, for the **weeks
+in global `CLAUDE.md`, reading the `weekly-tracking-config` project memory (fields defined in the `weekly-tracking` skill), for the **weeks
 root** (the parent of `<monday-of-that-week>/log/<date>.md`) — one config memory shared
 across every skill that needs it, not a separate copy per skill.
 
@@ -29,7 +28,8 @@ entry, the current live week. Use that.
 **Primary: that week's own activity log.** Read every file in `<weeks root>/<monday>/log/*.md`
 (see the `activity-log` skill for format/location), in full, in chronological order. Each
 entry's tag (a domain, a `PR review - <domain>` prefix, or `meeting`) tells building work from
-review work from meeting content.
+review work from meeting content. If the config has `Activity log: disabled`, there is no
+log: the README below becomes the primary source.
 
 **Log entries are raw, live capture, not independently verified.** A log entry saying
 "implemented X" carries no merge-status check. Before describing anything as
@@ -42,7 +42,7 @@ for a PR's actual state). If it isn't merged, say "PR open, awaiting review" or
 **Secondary, for context:** that week's `README.md` (priority order, Active/Closed items,
 and each item's own `Demoed` status, a column on Active items or an inline note on
 Closed items) and any topic docs it links to. This is also the best source for a week
-the log itself is thin or empty — the log is new, expect real gaps for a while — since
+the log itself is thin or empty, since
 the README's own Active/Closed items already carry dated, status-checked history.
 
 **Note gaps in the activity log** (a day with nothing logged at all). Don't guess why;
@@ -80,22 +80,22 @@ scratch.
   approved" this week, "build it" next week) is a different fact, not a restatement.
 - **Don't name who specifically something got handed off to** — say "prepped for hand
   off," not the person's name.
-- **Trim redundant "client"-qualifier phrasing** — this whole artifact is client-facing
-  work by construction, so "a client-raised request" reads redundant; drop the
-  qualifier. Keep it when it's identifying an actual client-owned thing the sentence
-  needs to name (e.g. "the client's new VPN"), not when it's just framing whose idea
+- **Trim redundant stakeholder-qualifier phrasing** — this whole artifact is shareable
+  work by construction, so "a stakeholder-raised request" reads redundant; drop the
+  qualifier. Keep it when it's identifying an actual stakeholder-owned thing the sentence
+  needs to name (e.g. "the stakeholder's new VPN"), not when it's just framing whose idea
   something was.
-- **Rephrase "UAT" specifically for this artifact.** What gets called "UAT" internally
-  on this engagement is usually the user's own local/pre-flight testing, not a
-  stakeholder-involved acceptance pass — use "testing," "local testing," or "pre-flight"
-  here instead, since an outside reader would assume the more formal meaning.
+- **Rephrase "UAT" specifically for this artifact.** In the workloop, UAT means local
+  testing where the user plays the role of the end user, not a stakeholder-involved
+  acceptance pass. Use "testing," "local testing," or "pre-flight" here instead, since an
+  outside reader would assume the more formal meaning.
 - **Verify claims that span the whole week before generalizing them** (e.g. "review
   moved fast in both directions" needs to actually be true across separate instances
   that week, not one instance stretched to sound like a pattern).
 - **Don't round timeframes generously** — prefer the precise phrasing when it's just as
   short to write.
 - **Check organization-name capitalization** stays consistent throughout (e.g. the
-  client's name spelled correctly and consistently, not just however a source doc
+  stakeholder organization's name spelled correctly and consistently, not just however a source doc
   happened to write it).
 - **No internal tooling jargon** — this project's internal workloop (`/plan`/`/slice`/
   `/code-review`, "architect"/"verifier," "Reviewer Mode," "workloop" itself, an internal
@@ -117,13 +117,13 @@ exists yet, skip this question silently — there's nothing to call back to.
 
 ## Step 5 — Build the mood paragraph
 
-Internal-only, one paragraph, about collaboration with the client, not technical
+Internal-only, one paragraph, about collaboration with stakeholders, not technical
 content — keep specific bugs/endpoints out of it, that's what the bullets above are
 for. This is the one section that doesn't need to be diplomatic or softened; say real
 friction plainly, in the same honest framing the activity log and README entries it's
 drawn from already use. Concrete moments worth reaching for: being included in conversations
 beyond the usual lane, a flagged dependency actually getting picked up and resolved on
-the client side, responsiveness on both sides of PR review, a stakeholder being decisive
+the stakeholder side, responsiveness on both sides of PR review, a stakeholder being decisive
 when checked in with, a deliberate move made *because* of something raised the prior
 week (see Step 4). Every specific claim must trace to something the activity log, the README, or the user
 just told you directly — never invent a plausible-sounding detail to fill a narrative
@@ -159,37 +159,8 @@ add or update its row in the `## Recap Log` table in that week's README. This is
 lets the next weekly-recap run's Step 2 "tail end of the prior week" check resolve the
 cutoff precisely instead of guessing.
 
-If the section doesn't exist yet, create it right after the README's Continues-from
-paragraph (see `week-rollover`'s Step 7), with this exact shape:
-
-```
-## Recap Log
-
-Creation time of each recap file (local machine time, with timezone), for the next
-recap run to use as its cutoff — work after a given timestamp is not yet reflected in
-that recap.
-
-| File | Created |
-|---|---|
-| `recaps/weekly.md` | 2026-09-08 17:33 EDT |
-```
-
-One row per week — this skill only ever writes one file (`recaps/weekly.md`) per week,
-so there's exactly one row to add or update, not one per day. If `weekly.md` is
-rewritten later the same day, append `(updated HH:MM <tz>)` to the existing row's
-`Created` cell rather than adding a second row for the same file.
+If the section doesn't exist yet, create it in the position and shape the `weekly-tracking` skill
+defines for the README. This skill writes one file per week, so there's exactly one row.
 
 **Present the full draft in the conversation before treating it as final** — don't just
-save it and move on. Field-testing note: expect several rounds of correction on tone and
-framing before a draft is ready to finalize; that's the normal shape of using this skill,
-not a sign something's wrong with it.
-
-## Step 7 (optional, if the draft is later shared or published elsewhere)
-
-If the user asks to check this draft against what actually went out: read the final
-version and compare it line by line against the saved `weekly.md` draft — what survived
-as-is, what got reworded, what got cut, what got added that wasn't in the draft at all.
-Record the delta as a dated finding in whatever project memory tracks this project's
-weekly-recap process, the same way other field-tested corrections are recorded. Goal:
-converge this skill's own voice/scope/level-of-detail toward what actually survives
-into whatever the user ends up doing with it.
+save it and move on.

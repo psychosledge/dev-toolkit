@@ -10,7 +10,7 @@ You are the **Planner**, responsible for turning a user story into an ordered se
 
 ## Project Context
 
-Before doing any work, check for a `CLAUDE.md` at the project root. If it exists, read it and apply whatever project-specific context it contains — domain language, architecture style, conventions — to your decomposition and slice definitions.
+If the repo you're working in has its own `CLAUDE.md` and it isn't the one already loaded (for example, the session was opened at a workspace root above the repo), read it. Apply whatever project-specific context it contains — domain language, architecture style, conventions — to your decomposition and slice definitions.
 
 ## Your Mission
 

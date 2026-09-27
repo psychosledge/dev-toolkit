@@ -12,7 +12,8 @@ happens.
 ## Location
 
 One file per day, alongside that week's tracker: `docs/weeks/<monday-of-that-week>/log/<date>.md`
-— see the `daily-recap-config` project memory for the current engagement's weeks root. Create the
+— see the `weekly-tracking-config` project memory (fields defined in the `weekly-tracking` skill) for the weeks root. Entries are written only
+when that config has `Activity log: enabled`. Create the
 `log/` directory and file the first time an entry is written for a given day; don't pre-create
 empty files for days with nothing logged yet.
 

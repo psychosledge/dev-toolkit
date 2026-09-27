@@ -7,8 +7,7 @@ description: Closes out the current week's tracker/recaps directory (archives it
 
 Archives a finished week's directory and creates the next one, as a single combined
 action. A week's tracker docs, meeting notes, and recaps all live and move together
-under a single `docs/weeks/<monday>/` directory. This skill is still being field-tested;
-treat its shape as a draft, and update it directly when a real run surfaces a gap.
+under a single `docs/weeks/<monday>/` directory.
 
 ## Confirming Items With the User
 
@@ -23,11 +22,9 @@ fine" is a guess about an item's status, not a documented one.
 ## Current Engagement Config
 
 Generic — don't hardcode a path here. Resolve per the Project Config Memory instructions
-in global `CLAUDE.md`, reading the `daily-recap-config` project memory; the **weeks
-root** this skill operates on is that path's `docs/weeks/` directory (the parent of the
-`<monday-of-that-week>/recaps/<date>.md` output path documented there), and the
-**stories root** is that same engagement's `docs/stories/` directory (a sibling of the
-weeks root).
+in global `CLAUDE.md`, reading the `weekly-tracking-config` project memory (fields defined in the `weekly-tracking` skill) for the **weeks root** (the directory
+holding one `<monday-of-that-week>/` directory per week) and the `Activity log` and
+`Demo tracking` fields. The **stories root** is the `stories/` directory alongside it.
 
 ## Step 1 — Identify the current (outgoing) week
 
@@ -46,13 +43,16 @@ the live directory, so catch gaps now, not after the move.
   ask whether to build it now (via the `weekly-recap` skill) before continuing — don't
   silently archive a week with no retrospective, and don't silently build one without
   asking either, in case one is already in progress elsewhere.
-- **Sanity-check that the week actually looks finished** — e.g. the activity log has
-  entries through the most recent work day before today. If the outgoing week looks only
+- **Sanity-check that the week actually looks finished** — e.g. the activity log (if
+  enabled) has entries through the most recent work day before today. If the outgoing week looks only
   partially through (rolling over mid-week, a short week, a holiday), ask for
   confirmation rather than assuming "close the week" always means every work day already
   happened.
 
 ## Step 3 — Check for not-yet-demoed work
+
+Skip this step if `Demo tracking` is `disabled`. The new week's README then has no
+`Demoed` field and no `## Queued for next demo` section.
 
 `Demoed` is a field directly on each Active/Closed item's own row or bullet in the
 *outgoing* week's own README, not a separate file. An archived week's directory already
@@ -120,8 +120,7 @@ mv <weeks root>/<outgoing-monday> <weeks root>/archive/<outgoing-monday>
 ```
 
 One move. Everything inside — the tracker README, meeting notes, topic docs, and the
-`recaps/` subdirectory — travels together, which is the entire point of having merged
-the two trees into one.
+`recaps/` subdirectory — travels together.
 
 **Still-active topic docs that move forward (Step 7) can leave dangling cross-tree
 references behind in `docs/stories/**/*.md`.** A story's `plan.md` can cite a topic doc
@@ -146,24 +145,10 @@ ask which Monday to actually use rather than silently assuming continuity.
 mkdir -p <weeks root>/<new-monday>/recaps
 ```
 
-Seed `<weeks root>/<new-monday>/README.md` using the same section structure as the
-outgoing week's README:
+Seed `<weeks root>/<new-monday>/README.md` with the README layout from the `weekly-tracking`
+skill, with the outgoing week's archived path in the Continues-from paragraph.
 
-- `# Week of <date>`
-- **Continues from** — immediately after the H1, as its own paragraph, before any
-  heading: `**Continues from:** `<outgoing week's archived path>`, which now serves as
-  historical reference only, not updated further. This directory carries forward only
-  the still-active items, self-contained (no need to open the previous week to follow
-  anything below).` Same wording every time; only the linked path changes.
-- `## Priority order`
-- `## Active items`
-- `## Queued for next demo` (only if Step 3 found anything)
-- `## Closed items (not carried forward — see previous directory for full history)`
-
-**Don't pre-seed an empty `## Recap Log` section.** That table is `weekly-recap`'s own
-output (see that skill's own Step 6) — it creates the section on its first write for
-the week, not here. Seeding an empty one now would just leave a heading with nothing
-under it until the first recap runs.
+Don't carry the outgoing README's `## Recap Log` section forward, and don't seed an empty one.
 
 - **Active items** — before drafting anything, split the outgoing README's own "Active
   items" (everything not already moved to "Closed items" there — that's the actual

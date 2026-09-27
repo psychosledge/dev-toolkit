@@ -16,6 +16,8 @@ You are performing a drift audit between this repo's source-of-truth files and w
 - `~/.claude/commands/` — slash command skills
 - `~/.claude/skills/` — skills (each a subdirectory containing `skill.md`, possibly plus supporting files)
 
+`~/.claude/skills/synced/` is managed by the Claude Code harness, not this repo. Exclude it from discovery entirely.
+
 **Repo (source of truth):**
 - `coding-agent/CLAUDE.md` — global instructions
 - `coding-agent/agents/` — subagent definitions
@@ -26,13 +28,20 @@ You are performing a drift audit between this repo's source-of-truth files and w
 
 Coding-environment setup outside of Claude — shell config, tool config, git identity. Unlike Claude config (discovered by scanning directories), dotfiles are an explicit, declared list of pairs. A file living in `dotfiles/` with no pairing below isn't in scope until a pairing is added here.
 
-| Repo (source of truth) | Live (what the shell/tools actually read) |
-|---|---|
-| `dotfiles/zprofile` | `~/.zprofile` |
-| `dotfiles/zshrc` | `~/.zshrc` |
-| `dotfiles/gitconfig` | `~/.gitconfig` |
+| Repo (source of truth) | Live (what the shell/tools actually read) | Platform |
+|---|---|---|
+| `dotfiles/zprofile` | `~/.zprofile` | macOS |
+| `dotfiles/zshrc` | `~/.zshrc` | macOS |
+| `dotfiles/gitconfig` | `~/.gitconfig` | all |
+| `dotfiles/powershell_profile.ps1` | PowerShell 7's `$PROFILE` (resolve with `pwsh -NoProfile -Command '$PROFILE'`) | Windows |
 
 When adding a new dotfile to this sync, add its pair here first.
+
+**Platform.** Detect the OS with `uname -s` (`Darwin` is macOS; `MINGW*`, `MSYS*`, or `CYGWIN*` is Windows; `Linux` is Linux). Skip every pair whose Platform doesn't match, and list it in the report as "Skipped (other platform)".
+
+**Per-machine git settings — `~/.gitconfig.local`.** The repo `gitconfig` ends with `[include] path = ~/.gitconfig.local`, which holds settings that only apply to one machine (an SSH `insteadOf` rewrite, an editor path). That file is never synced or diffed. When the live `~/.gitconfig` has a line the repo version doesn't, before overwriting it ask whether that line is machine-specific: if so, offer to move it into `~/.gitconfig.local` (creating the file if needed) rather than dropping it.
+
+**Editor check.** After syncing `gitconfig`, check that `code` resolves on the PATH. If it doesn't, tell the human the fix for this OS: on macOS, run "Shell Command: Install 'code' command in PATH" from the VS Code command palette; on Windows, reinstall VS Code with "Add to PATH" checked or add its `bin` directory to the user PATH.
 
 **Exclusion — `gitconfig`'s `[user] email`:** never diff or copy this line in either direction. It's per-machine identity, not portable config — the repo template omits it on purpose. If the live `~/.gitconfig` is missing `[user] email` entirely (a genuinely new machine), check the `git-identity-config` project memory for this machine's default; if no memory exists, ask the human and offer to save one. A client-specific repo overriding email via its own local (uncommitted) `user.email` is a separate, already-handled case — don't touch it.
 
@@ -90,7 +99,8 @@ This is the critical step for Claude config files. For every non-identical file 
 - `brainstorm` — feeds ideation into `/story` before a card is drafted
 - `catchup` — keeps the human's view of remote/team state current, which `/plan` and `/slice` both assume is accurate
 - `pr-description` — writes the artifact the human reviews at the commit/PR step of `/slice` and `/bug`
-- `weekly-recap` / `week-rollover` / `activity-log` / `meeting-notes` / `whats-next` — turn the workloop's own output (commits, plan docs, live-captured log entries) into status the human acts on
+- `comment-quality` — the comment bar the coder and verifier preload and `/code-review` applies
+- `weekly-recap` / `week-rollover` / `weekly-tracking` / `activity-log` / `meeting-notes` / `whats-next` — turn the workloop's own output (commits, plan docs, live-captured log entries) into status the human acts on
 
 **For each non-identical file, work through these questions.** Not every question applies to every file — a support skill has no "TDD discipline" to degrade — but answer the ones that do rather than skipping the file because none of the core-workloop language fits literally:
 
@@ -200,4 +210,4 @@ For each approved action:
 
 After all copies are complete, re-run `diff` on every changed pair to confirm no remaining drift on the synced files.
 
-Dotfile copies to `~/.zshrc` or `~/.zprofile` don't take effect in already-open shells — mention that a new terminal (or `source`) is needed, but don't run it yourself.
+Dotfile copies to `~/.zshrc`, `~/.zprofile`, or the PowerShell profile don't take effect in already-open shells — mention that a new terminal (or `source`) is needed, but don't run it yourself.

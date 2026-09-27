@@ -11,14 +11,14 @@ reconstruction cost, not a polished document.
 
 ## Current Engagement Config
 
-Resolve the calendar identity, weeks root, and demo cadence fact from the `daily-recap-config`
-project memory per the Project Config Memory instructions in global CLAUDE.md. Entry format and
-location for the activity log come from the `activity-log` skill.
+Resolve the weeks root, `Activity log`, `Calendar`, and `Demo tracking` fields from the
+`weekly-tracking-config` project memory (fields defined in the `weekly-tracking` skill) per the Project Config Memory instructions in global
+CLAUDE.md. Entry format and location for the activity log come from the `activity-log` skill.
 
 ## Step 1 — Identify the meeting
 
-If the user names the meeting, use that. Otherwise, check the calendar (`list_events` on the
-configured calendar identity) for whichever event is happening now or ended within roughly the
+If the user names the meeting, use that. If `Calendar` is `disabled`, ask which meeting this is.
+Otherwise, check the calendar (`list_events` on the configured calendar identity) for whichever event is happening now or ended within roughly the
 last hour — don't ask "which meeting" if there's only one plausible candidate. If more than one
 plausible candidate exists (back-to-back meetings, or it's been a while since the last one
 ended), ask which one this is for.
@@ -49,6 +49,8 @@ being interrupted), append to it rather than overwriting.
 
 ## Step 4 — Log it
 
+Skip this step if `Activity log` is `disabled`.
+
 Append one `meeting`-tagged entry to today's activity log (see the `activity-log` skill for
 format and location) at the same time the notes doc is written — a one-line summary of what the
 meeting was about, with a `ref` pointing at the notes doc. This is the checkpoint that gets the
@@ -60,13 +62,13 @@ to mark "seen, not yet resolved," which is now resolved.
 
 ## Step 4b — If this is the demo meeting, update Demoed status
 
-Check the `daily-recap-config` memory's demo cadence fact. If the meeting just captured matches
-it, update `Demoed` status directly.
+Skip this step if `Demo tracking` is `disabled`. Otherwise, if the meeting just captured matches
+the configured demo meeting, update `Demoed` status directly.
 
 Look at the current week's README `## Active items` table and `## Closed items` list for
 rows/bullets with `Demoed` blank, and ask directly: "Which of these got shown or discussed
 in this demo?" For each one confirmed: fill in today's date on that row/bullet directly
-(matching the `Demoed 2026-09-25`-style note already used in Closed items, or the table
+(in the `Demoed` format the `weekly-tracking` skill defines for Closed items, or the table
 column for Active items). Don't ask about rows that already have a `Demoed` date — only
 the open ones.
 

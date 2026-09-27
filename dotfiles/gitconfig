@@ -30,5 +30,5 @@
 [core]
 	editor = code --wait
 	pager = "command -v hunk >/dev/null 2>&1 && hunk pager || { echo 'hunk not found -- install with: npm install -g hunkdiff' >&2; less; }"
-[url "git@github.com:"]
-	insteadOf = https://github.com/
+[include]
+	path = ~/.gitconfig.local

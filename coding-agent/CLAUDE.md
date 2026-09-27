@@ -118,11 +118,18 @@ Some facts a skill needs are specific to the current workspace or engagement —
 
 ### Pattern
 
-At the start of a run needing such a fact: look for a project memory holding it (see Naming below). If found, use it without re-asking. If not found, ask the user directly for the needed fields, then offer to save them as a project memory so future runs don't re-ask.
+At the start of a run needing such a fact: look for a project memory holding it (see Naming below). If found, use it without re-asking.
+
+If not found, the response depends on how the skill was reached:
+
+- **Invoked directly by the user**, for a skill whose whole job depends on the config: first look through the project's memories for one covering similar facts, such as an older config under a different name, and offer to pre-fill from it. Ask for any remaining fields, then offer to save them as a project memory so future runs don't re-ask. If an older memory was used as the source, offer once to delete it. Never delete it without asking.
+- **Reached as a side step of another workflow**, such as a logging step inside `/plan`, `/slice`, or `/code-review`: a missing config means the project doesn't use that feature. Skip silently and never start setup from there.
+
+A field may hold `disabled`. That's a deliberate answer: skip whatever depends on it silently and don't ask about it again.
 
 ### Naming
 
-Name the memory `<domain>-config`, not `<skill>-config`, when the same facts serve more than one skill — e.g. `daily-recap-config` holds the scan root, calendar identity, and output location that `daily-recap`, `weekly-recap`, and `week-rollover` all read, rather than each skill keeping its own copy. A skill's own instructions should name which config memory it reads and which fields it needs from it, and defer to this section for the ask/save mechanics rather than restating them.
+Name the memory `<domain>-config`, not `<skill>-config`, when the same facts serve more than one skill, rather than each skill keeping its own copy. A skill's own instructions should name which config memory it reads and which fields it needs from it, and defer to this section for the ask/save mechanics rather than restating them.
 
 ### Distinguishing from Branching Model / PR Platform
 
@@ -132,9 +139,7 @@ If the fact would be the same answer for any teammate cloning the repo (a branch
 
 If a conversation opens with a "continued from a previous conversation that ran out of context" summary, tell Bo immediately and suggest `/clear` before continuing, rather than building further on the compacted history. Hitting that limit once already means the session ran longer than it should have.
 
-This matters even for a session used to derive daily recaps: the recap skill reads git log, plan.md files, calendar, and that day's own session transcript file on disk, not live scrollback. `/clear` after `/daily-recap` loses nothing.
-
-The same logic applies beyond daily recaps: whenever a piece of work is done — a commit landed,
+Whenever a piece of work is done — a commit landed,
 a PR opened — and the record of it lives in git/GitHub rather than in scrollback, suggest
 `/clear` before starting the next independent item instead of carrying the conversation forward.
 Working through a numbered priority list is the common case: pause between items, not just at
