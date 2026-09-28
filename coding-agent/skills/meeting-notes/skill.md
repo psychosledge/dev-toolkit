@@ -40,9 +40,11 @@ let them lead; don't turn this into an interview if they're just dumping notes.
 ## Step 3 — Write the notes doc
 
 Find the right week directory for today's date (list `docs/weeks/`, use whichever range contains
-today). Write to `<that week>/<date> - Meeting Notes - <exact calendar event summary>/notes.md`,
-matching the event's own title exactly. If no calendar event was found (a meeting outside the
-tracked calendar, or the user is capturing something informal), use whatever title they give it.
+today). Write to `<that week>/meetings/<date> - <exact calendar event summary>.md`, matching the
+event's own title exactly. If no calendar event was found (a meeting outside the tracked
+calendar, or the user is capturing something informal), use whatever title they give it. All of a
+week's meeting notes live as flat files under that single `meetings/` directory, not one
+subdirectory per meeting.
 
 If a notes doc already exists for this meeting (a second capture session, e.g. resuming after
 being interrupted), append to it rather than overwriting.
