@@ -32,3 +32,5 @@
 	pager = "command -v hunk >/dev/null 2>&1 && hunk pager || { echo 'hunk not found -- install with: npm install -g hunkdiff' >&2; less; }"
 [include]
 	path = ~/.gitconfig.local
+[pull]
+	rebase = true
