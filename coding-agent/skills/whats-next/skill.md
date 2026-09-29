@@ -18,24 +18,32 @@ project memory (fields defined in the `weekly-tracking` skill). Log format/locat
 
 Skip this step silently unless `Calendar` is set and `Activity log` is `enabled`.
 
-List today's calendar events up through now (`list_events` on the configured calendar identity,
-today's date, events that have already started). For each one, check whether today's activity log
-(`docs/weeks/<monday>/log/<date>.md`) already has a `meeting`-tagged entry referencing it (title
-match) or a placeholder entry for it (see the `activity-log` skill).
+Starting from the most recent calendar event that started before now (`list_events` on the
+configured calendar identity), walk backward event by event, checking each one against its own
+day's activity log (`docs/weeks/<monday-of-the-week-containing-that-date>/log/<date>.md` —
+resolve the week directory from the event's own date, not necessarily the current week) for a
+`meeting`-tagged entry referencing it (title match) or a placeholder entry (see the `activity-log`
+skill). Stop walking backward as soon as an event is found already logged — anything earlier is
+presumably already covered by a prior run — or once the walk reaches 7 calendar days back,
+whichever comes first. This is what catches every uncaptured meeting since the last one that was
+logged, including the last meeting of a previous work day when today has no events yet (e.g.
+running this first thing after a day off or a weekend).
 
-- **Already logged (real entry or resolved placeholder):** nothing to do, move on silently.
+For each unlogged event found along the way:
+
 - **Not logged at all:** a genuine gap — invoke `meeting-notes` for it directly (actually walk
   through capturing it, don't just ask "did anything happen"). If the user says "not now" or
   defers, write the placeholder entry per the `activity-log` skill and move on without pressing
   further.
-- **A placeholder already exists and is still unresolved:** don't re-ask about it again today —
-  the placeholder is what suppresses repeat prompts within the same day. It's fair game to
-  resurface on a later day's check if it's still sitting there, but that happens naturally
-  through that day's own log file, no special handling needed.
+- **A placeholder already exists and is still unresolved:** don't re-ask about it — the
+  placeholder is what suppresses repeat prompts. It counts as "logged" for the walk-back's
+  stopping condition, so it also stops the walk from going further back; it stays visible in that
+  day's own log history if still unresolved.
 
-**Silent when clean.** If every one of today's events-so-far already has a log entry, say nothing
-about this step at all — don't report "checked calendar, all clear" as its own line, just move
-straight to Step 2. The whole point is this costs nothing observable when there's no gap.
+**Silent when clean.** If the most recent event already has a log entry, the walk stops
+immediately, so say nothing about this step at all — don't report "checked calendar, all clear"
+as its own line, just move straight to Step 2. The whole point is this costs nothing observable
+when there's no gap.
 
 **Don't run this for a session that isn't actually oriented around "what's next."** A quick
 troubleshooting question or a one-off ask shouldn't get this check first — it's tied to the
