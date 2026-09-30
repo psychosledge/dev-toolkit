@@ -37,6 +37,10 @@ Take what the user gives as-is — this is their own brain dump, not a document 
 verify against other sources. If they're mid-meeting and typing fast, keep questions minimal and
 let them lead; don't turn this into an interview if they're just dumping notes.
 
+Treat the meeting as still in progress across multiple messages by default. A message is one
+more increment of capture, not a signal the meeting ended — don't wrap up, summarize as final,
+or stop tracking the meeting until the user explicitly says it's over (or a new meeting starts).
+
 ## Step 3 — Write the notes doc
 
 Find the right week directory for today's date (list `docs/weeks/`, use whichever range contains
@@ -46,8 +50,9 @@ calendar, or the user is capturing something informal), use whatever title they 
 week's meeting notes live as flat files under that single `meetings/` directory, not one
 subdirectory per meeting.
 
-If a notes doc already exists for this meeting (a second capture session, e.g. resuming after
-being interrupted), append to it rather than overwriting.
+If a notes doc already exists for this meeting — whether it's a later increment of the same
+in-progress meeting or a separate capture session resuming after being interrupted — append to it
+rather than overwriting.
 
 ## Step 4 — Log it
 

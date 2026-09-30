@@ -114,7 +114,7 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 
 **Owner Mode:** Ask: "Anything else to address before committing? Call out by number, or say 'commit' to proceed."
 
-**Reviewer Mode:** Ask: "Any comments to add or edit before posting? Call out by number, or say 'post' to proceed."
+**Reviewer Mode:** Ask: "Any comments to add or edit? Call out by number, or say 'continue' to move to per-comment wording review." This is a scope check, not a posting decision — Step 3 still walks each comment individually for exact wording before anything posts. Never use the word "post" in this question; it is reserved for Step 3's own gate.
 
 ## Step 3 — Fix Loop (Owner Mode) / Post Comments (Reviewer Mode)
 

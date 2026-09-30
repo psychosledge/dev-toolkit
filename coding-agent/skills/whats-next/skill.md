@@ -18,16 +18,23 @@ project memory (fields defined in the `weekly-tracking` skill). Log format/locat
 
 Skip this step silently unless `Calendar` is set and `Activity log` is `enabled`.
 
-Starting from the most recent calendar event that started before now (`list_events` on the
-configured calendar identity), walk backward event by event, checking each one against its own
-day's activity log (`docs/weeks/<monday-of-the-week-containing-that-date>/log/<date>.md` —
-resolve the week directory from the event's own date, not necessarily the current week) for a
-`meeting`-tagged entry referencing it (title match) or a placeholder entry (see the `activity-log`
-skill). Stop walking backward as soon as an event is found already logged — anything earlier is
-presumably already covered by a prior run — or once the walk reaches 7 calendar days back,
-whichever comes first. This is what catches every uncaptured meeting since the last one that was
-logged, including the last meeting of a previous work day when today has no events yet (e.g.
-running this first thing after a day off or a weekend).
+Call `list_events` with `eventType: ["DEFAULT"]` — this excludes `OUT_OF_OFFICE`/`FOCUS_TIME`/
+`WORKING_LOCATION` blocks (lunch, focus time, etc.) up front, since those aren't meetings and
+would otherwise force a `meeting-notes` invocation on your own calendar block. If the `Calendar`
+field's stored value is a display name rather than a resolved calendar ID (email), resolve it once
+via `list_calendars` and update the memory to store the ID directly, so future runs skip that
+lookup.
+
+Starting from the most recent (now-filtered) calendar event that started before now, walk backward
+event by event, checking each one against its own day's activity log
+(`docs/weeks/<monday-of-the-week-containing-that-date>/log/<date>.md` — resolve the week directory
+from the event's own date, not necessarily the current week) for a `meeting`-tagged entry
+referencing it (title match) or a placeholder entry (see the `activity-log` skill). Stop walking
+backward as soon as an event is found already logged — anything earlier is presumably already
+covered by a prior run — or once the walk reaches 7 calendar days back, whichever comes first.
+This is what catches every uncaptured meeting since the last one that was logged, including the
+last meeting of a previous work day when today has no events yet (e.g. running this first thing
+after a day off or a weekend).
 
 For each unlogged event found along the way:
 

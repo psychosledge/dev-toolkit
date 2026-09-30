@@ -39,7 +39,8 @@ correction gets a new entry, never a rewrite of an old one:
   - No `full-stack` bucket. A story spanning repos gets one entry per repo (see Cross-repo
     below), each correctly domain-tagged, not one combined entry.
 - **Description** — one line, plain language, what actually happened, not what's planned. For a
-  meeting entry: purpose/decisions/feedback, never attendance.
+  meeting entry: a short pointer to the meeting's own topic/purpose, never attendance — the
+  detail (decisions, feedback, follow-ups) belongs in the meeting notes doc, not restated here.
 - **ref** — optional, a link or slug pointing at the shared story/topic doc/PR this entry belongs
   to. Required whenever an entry is one of several logged under the same underlying story;
   omit for a one-off item with nothing to link to.
