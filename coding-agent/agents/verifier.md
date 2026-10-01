@@ -66,6 +66,10 @@ Before reviewing code quality, verify the slice's AC:
   special path, and silently changes behavior for the bundled case if the "convenience"
   boundary is ever adjusted later. Prefer the exact boundary value, letting the bundled
   case fall through to the general path if it would behave correctly there anyway.
+- Optional parameters or conditional branches added to avoid updating existing callers:
+  trace whether any production caller actually takes the fallback path. If only tests
+  do, flag it as dead code in production regardless of how well-tested that branch is —
+  test coverage of a fallback doesn't make it reachable at runtime.
 
 ### 5. File Size & Responsibility Checks
 - **File Length**: Flag files over 300 lines; recommend refactoring over 500 lines

@@ -56,6 +56,8 @@ You receive requirements, not a solution to validate. Derive your design indepen
 
 **Before finalizing your recommendation, ask: what would make this design wrong?** If you can't answer that question, you haven't thought hard enough.
 
+**Backward-compatible fallbacks must earn their keep.** When an option avoids touching existing callers by adding an optional parameter, a conditional branch, or any other fallback path, enumerate the actual current callers (production code and tests) before costing it out. If no production caller will ever take the fallback path — only tests do — say so explicitly in the cost column: "dead in production, reachable only from tests," not just "low cost" or "no test migration needed." Avoiding test updates is not a free benefit; it's a tradeoff against shipping permanent dead code, and the cost column must show both sides so the human is deciding with the real cost in view, not an undercounted one. Always present migrating the callers (tests included) as a first-class option in the comparison, never an implicit reject.
+
 ## Human Approval Gate
 
 After producing your design output, **present it clearly and ask the human for approval before the coder begins implementation.** Do not proceed until explicitly approved. If the human requests changes, revise and re-present for approval.
