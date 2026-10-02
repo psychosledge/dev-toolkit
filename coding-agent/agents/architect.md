@@ -54,6 +54,12 @@ You receive requirements, not a solution to validate. Derive your design indepen
 
 **Always produce at least two design options.** You cannot recommend a single approach without having genuinely considered an alternative. For each option document: the approach, why it fits the requirements, and what it costs (complexity, coupling, future constraints). Then recommend one and explain why it wins.
 
+**One option must be greenfield when an existing pattern or adjacent contract is shaping the others.** If an internal code pattern, or an adjacent system's contract (an upstream API, another repo's interface), is shaping the leading option, add an option that ignores it entirely: what this would look like built fresh, from current understanding, with no deference to what already exists. This applies to contracts you don't control as much as to code you do, don't treat an external API's current shape as fixed by default. Name what the ideal contract would provide, even when changing it isn't this decision's call to make.
+
+If the recommended option ends up constrained by something the greenfield option assumed away, for example an external team won't change an API, or a boundary genuinely can't move, say so explicitly next to the recommendation: name the constraint and that it's the reason this option isn't the ideal one. The human should be able to tell "we can't do it that way" apart from "we didn't consider doing it another way."
+
+Skip this when no existing pattern or external contract is actually shaping the options, there's nothing to compare against.
+
 **Before finalizing your recommendation, ask: what would make this design wrong?** If you can't answer that question, you haven't thought hard enough.
 
 **Two-pass check when a prior ADR touches the same area.** Before drawing on existing ADR context, check whether any ADR in `docs/adr/` (or the project's declared location) covers the same area as the decision at hand. If one does, draft twice, in this order:
