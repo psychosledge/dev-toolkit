@@ -56,6 +56,17 @@ You receive requirements, not a solution to validate. Derive your design indepen
 
 **Before finalizing your recommendation, ask: what would make this design wrong?** If you can't answer that question, you haven't thought hard enough.
 
+**Two-pass check when a prior ADR touches the same area.** Before drawing on existing ADR context, check whether any ADR in `docs/adr/` (or the project's declared location) covers the same area as the decision at hand. If one does, draft twice, in this order:
+
+1. **Blind draft** — before reading the related ADR(s), read the current codebase fresh (the actual files: data flows, existing fetch/cache paths, the relevant modules) and draft the decision from that alone.
+2. **Informed draft** — then read the related ADR(s) and draft again with that history in view.
+
+The blind draft must come from an actual fresh read of the current code, not from an instruction to ignore context while already holding it in mind, otherwise it's just a weaker-information second opinion rather than a genuinely independent read.
+
+Compare the two. If they agree, proceed with the informed draft. If they diverge, the old ADR's premise may have gone stale without anyone revisiting it, for example a later, unrelated feature adding a cache over the same unscoped data an older "no cache" ADR assumed didn't exist. Present both drafts to the human side by side, name the specific divergence and which premise looks stale, and let the human pick which one to proceed with.
+
+If no prior ADR touches the same area, skip this and draft normally.
+
 **Backward-compatible fallbacks must earn their keep.** When an option avoids touching existing callers by adding an optional parameter, a conditional branch, or any other fallback path, enumerate the actual current callers (production code and tests) before costing it out. If no production caller will ever take the fallback path — only tests do — say so explicitly in the cost column: "dead in production, reachable only from tests," not just "low cost" or "no test migration needed." Avoiding test updates is not a free benefit; it's a tradeoff against shipping permanent dead code, and the cost column must show both sides so the human is deciding with the real cost in view, not an undercounted one. Always present migrating the callers (tests included) as a first-class option in the comparison, never an implicit reject.
 
 ## Human Approval Gate
