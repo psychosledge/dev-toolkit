@@ -61,6 +61,10 @@ update the item's row, or add one if no row matches. Match by story slug, PR lin
 | Released by the repo's release skill | `released <ref>` | none |
 | `/code-review` of someone else's PR | review outcome (posted / held / resolved outside this flow) | whose court it's in |
 
+A review-of-someone-else's-PR item never gets shown at Demo Day in its own right, so when demo
+tracking is enabled, `/code-review` sets `Demoed` to `N/A` at this same checkpoint, instead of
+leaving it blank for week-rollover to chase down later.
+
 A `released <ref>` item is finished, so it moves from Active items to Closed items instead of
 staying as a row. A PR item moves to Closed once its merge is confirmed.
 
@@ -68,6 +72,8 @@ staying as a row. A PR item moves to Closed once its merge is confirmed.
 
 A date, filled in once the item has been shown to a stakeholder, in a meeting, async, or any
 other form. Blank means not yet shown. Being finished and being demoed are independent facts.
+`N/A` means the item type doesn't go through Demo Day at all (see the `/code-review` checkpoint
+above) — distinct from blank, which means it does and just hasn't happened yet.
 
 ### Recap Log
 
