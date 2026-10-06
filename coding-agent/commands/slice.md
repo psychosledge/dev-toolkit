@@ -47,17 +47,26 @@ Two independent tests — a slice can pass one and fail the other, so check both
 - If **no** to both: proceed directly to Step 2.
 
 **Step 2 — Implementation**
-Invoke the **coder** subagent to implement the slice using TDD (Red-Green-Refactor). The coder should work within the scope of this slice only.
+If the slice's **Files** line expects production or test code, invoke the **coder**
+subagent to implement it using TDD (Red-Green-Refactor), within this slice's scope only.
+
+If the slice is verification or measurement only (**Files** expects no code beyond scripts
+or notes), invoke a **general-purpose** subagent instead. Give it the plan path, the ACs,
+and a rule to add a failing test first and fix only if verification surfaces a real gap.
 
 **Step 3 — Verify and review**
 
 Invoke the `/code-review` skill and follow all of its steps. It will run the verifier, walk through changes, handle fixes, and commit.
 
+If the working tree has no diff, skip `/code-review`. Present the subagent's results to
+the human and wait for approval before Step 4.
+
 **Step 4 — Plan update**
 
 After the commit, update `docs/stories/<slug>/plan.md` for this slice:
 
-1. Run `git log -1 --format="%h"` to get the commit hash.
+1. Run `git log -1 --format="%h"` to get the commit hash. With no commit (verification-only
+   slice), write `**Commit:** — (no code change)`.
 2. In this slice's section:
    - Change `**Status:** not started` → `**Status:** ✅ done`
    - Change `**Commit:** —` → `**Commit:** <hash>`
