@@ -51,7 +51,11 @@ Otherwise, run `git diff --stat $(git merge-base origin/<diff-base> HEAD)` and `
 
 ## Step 1 — Verify
 
-Run `git rev-parse HEAD` and record the hash as the **verifier baseline HEAD**. This is used later to avoid redundant re-invocations.
+Record the **verifier baseline** as a fingerprint of HEAD plus the working tree. This is used later to avoid redundant re-invocations:
+
+```
+{ git rev-parse HEAD; git diff HEAD; git ls-files -o --exclude-standard; git ls-files -o --exclude-standard | xargs -r cat; } | shasum
+```
 
 Invoke the **verifier** subagent to review code quality and verify correctness. Tell it which mode this is (Owner or Reviewer) — it phrases its Approval Status section differently depending on which.
 
@@ -80,7 +84,7 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 4. Explain **why** — what problem this solves, what alternative was rejected, what constraint drove the structure. This is the most important part.
 5. Surface any verifier findings for this group's files — present as "Verifier flagged:" with their priority. For each finding, paste the relevant code verbatim in a code block so the human can see exactly what is being discussed. If none, skip.
 6. Note any additional quality issues you observe that the verifier didn't catch. Same rule: show the relevant code verbatim in a code block, never just describe it. These get the same fix-now/defer/skip treatment as verifier findings — self-observed issues aren't exempt from step 8's default.
-7. **Comment audit.** Show the verifier's Comment Audit verdicts for this group's files, each comment in full with its verdict (`Keep`, `Remove — wrong`, or `Remove — weak`) and reason. Don't re-audit or override them. If the verifier listed none for this group, skip.
+7. **Comment audit.** Show the verifier's Comment Audit verdicts for this group's files, each comment in full with its verdict (`Keep`, `Remove — wrong`, or `Remove — weak`) and reason. Don't override a verdict. If a comment describing code this group touches is missing from the audit, audit it against `comment-quality` and show it with the others, marked as added during the walk-through. If the verifier listed none for this group, skip.
 8. For each finding surfaced in steps 5–7:
 
    Before writing any of these, confirm the mode recorded in Mode Detection. `Fix now` / `defer` / `skip` belongs only to Owner Mode; `Proposed comment` belongs only to Reviewer Mode. If you're in Reviewer Mode and about to write "Fix now," you're in the wrong branch — write a proposed comment instead.
@@ -133,7 +137,7 @@ Once all requested fixes are done, ask:
 
 > "Want a clean pass before committing?"
 
-If **yes**: run `git rev-parse HEAD` and compare to the verifier baseline HEAD from Step 1. If HEAD is unchanged (no new commits since the last verifier run), the full verifier report is still valid — skip re-invoking the verifier and proceed directly to the targeted re-walk below. If HEAD changed, re-invoke the **verifier** subagent, passing it the list of files changed during this fix session and instructing it to focus its scan on those files for regressions and new issues; for all other files, only surface findings not previously addressed. Update the verifier baseline HEAD.
+If **yes**: recompute the fingerprint and compare it to the verifier baseline from Step 1. If it is unchanged (no commits and no working-tree edits since the last verifier run), the full verifier report is still valid — skip re-invoking the verifier and proceed directly to the targeted re-walk below. If it changed, re-invoke the **verifier** subagent, passing it the list of files changed during this fix session and instructing it to focus its scan on those files for regressions and new issues; for all other files, only surface findings not previously addressed. The Comment Audit still covers every comment in scope across the whole diff, not only the fix-session files. Update the verifier baseline.
 
 Either way, walk through the files changed during this fix session using the same per-group format from Step 2 (show code, explain, surface verifier findings, give recommendations). If new issues come up, go through the per-group decision point and fix as needed, then offer another clean pass. Repeat until the human is satisfied or declines.
 

@@ -38,7 +38,10 @@ Before reviewing code quality, verify the slice's AC:
 - **SOLID Principles**: Are design principles followed?
 - **DRY**: Is there unnecessary duplication?
 - **Comment Quality**: audit every comment in scope against the preloaded `comment-quality`
-  skill, and give each one a verdict in the report's Comment Audit section.
+  skill and give each a verdict in the report's Comment Audit section. A comment is in scope
+  when the diff adds it, edits it, or touches the code it describes, including pre-existing
+  comments with unedited text. `Keep` needs a reason beyond the claim being accurate. List
+  every comment skipped as out of scope, with the reason.
 
 ### 3. Test Coverage & Quality
 - **Coverage**: Are all code paths tested?
@@ -172,6 +175,7 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers.
 
 ## Comment Audit
 - `file:line` — full comment text — Keep / Remove — wrong / Remove — weak: <reason>
+- Skipped as out of scope: `file:line` — <reason>
 
 ## Scaffolding Inventory
 

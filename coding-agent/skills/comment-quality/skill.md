@@ -23,14 +23,23 @@ already says it), weighs the chosen approach against a rejected alternative, or 
 pattern every sibling instance in the file leaves uncommented. Verifying accuracy answers "is
 this true," not "does this earn its place" — always ask the second question separately, even
 for a clause that survives the first, and even for a clause you already trimmed down to
-because the rest of the comment was weak.
+because the rest of the comment was weak. For a comment asserting a performance or mechanism
+consequence (a delay, a cost, a risk), verify the claim's actual significance, not just its
+technical truth — read the real implementation before granting `Keep`. A claim can be accurate
+yet overstated (generic folklore about async wrapping, dressed up as a specific, load-bearing
+fact) once you trace the actual mechanism and find the effect is negligible.
 
 **Two concrete tests, per surviving clause.** (1) Would a competent reader actually try to "fix"
 this without the comment? If the code's intent is already legible on its face — explicit
 arithmetic, a named computed property, a type union, a well-chosen name — a comment answering a
 question nobody would ask fails this test no matter how true or well-written it is. Reserve
 `Keep` for a comment protecting against a *plausible* misreading (a value that looks simplifiable
-but silently breaks something if it is), not a hypothetical one. (2) Is this fact already
+but silently breaks something if it is), not a hypothetical one. Calibrate "competent reader" to
+someone already fluent in this project's own domain and product vocabulary, not a generic
+newcomer, unless the project explicitly targets newcomer onboarding — a comment that only helps a
+reader unfamiliar with the domain fails this test in a domain-fluent codebase, even though the
+identical comment would pass in a context where readers can't be assumed to know the domain.
+(2) Is this fact already
 dictated somewhere else — a project convention, a type declaration, an accessibility/design-system
 rule the repo already enforces, a policy documented anywhere reachable? If a reader who wondered
 "why is it done this way" could find the answer by consulting that authority, restating it here
@@ -66,6 +75,15 @@ explanation written twice — this one catches an explanation written only at a 
 doesn't own the behavior it describes. Point the reader to the source instead of narrating it
 secondhand at the call site.
 
+**Tests already prove it.** Before `Keep`, ask: if this code were broken or deleted, would an
+existing (or obviously-necessary) test fail, and would that failure point a reader back to the
+cause quickly? If yes, the comment is redundant with that test, regardless of how it's phrased —
+this isn't limited to comments that explicitly narrate past-bug history ("Regression: ...", "This
+used to ..."); a comment stated in confident present tense ("X is needed because Y," "this
+degrades to Z on failure") fails the same way when a nearby test already pins the exact behavior
+it's defending. State the underlying fact directly only if it's genuinely non-obvious and not
+reachable from the test's own name/assertions; otherwise, trust the test.
+
 **Always flag:**
 - A comment justifying something every other instance of the same pattern in the file (other
   `emit()` calls, other similar functions) does silently.
@@ -73,11 +91,15 @@ secondhand at the call site.
 - Em-dash-joined comment sentences.
 - A comment that explains what the code already says for itself.
 - A comment citing an ADR/story/other internal doc by name or number instead of inlining the
-  fact (the reader may have no access to that doc).
-- A comment framed around avoiding a past bug ("Regression: ...", "This used to ..."). A test's
-  existence already documents what it guards against. If there's a real fact worth keeping (why
-  the bug happened, a non-obvious mechanism), state that fact directly rather than narrating it
-  as regression history.
+  fact (the reader may have no access to that doc) — treat a citation into a *different
+  repository* (a file path, a module name) as higher risk still: no local tooling catches that
+  drift when the other repo renames or restructures.
+- A comment stating the generic purpose of a structural pattern that the pattern itself already
+  signals (e.g. "this interface mirrors an external system's shape" for a DTO at an integration
+  boundary, "this is cached" for a value named/typed as a cache) — the pattern's existence
+  already says why it exists; the comment adds a pointer, not a reason.
+- A comment framed around avoiding a past bug ("Regression: ...", "This used to ...") — the
+  narrowest case of "tests already prove it," above.
 - `// Arrange` / `// Act` / `// Assert` comments in a test, even when an existing precedent in
   the file already uses them. The blank lines between phases already show the structure.
 
