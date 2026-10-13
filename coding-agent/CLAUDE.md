@@ -22,7 +22,7 @@ Anywhere a fact gets written down for someone else to read later — code, docs,
 - Skip citing the PR/issue, date, or person that prompted a rule when writing it into a CLAUDE.md or similar guidance doc — state the rule as it holds now, not its provenance. This differs from a dated log entry (a recap, a tracker) where the date and source are themselves the fact being recorded.
 - Commit messages need only a short description of what changed, not the reasoning behind a decision. Skip explaining why an approach was chosen, revised, or rejected — that belongs in a PR description's own Why section, not the commit message.
 - Prefer a bare, unadorned list of examples over a backtick-wrapped enumeration when the list is illustrative, not exact values to copy — `(feat, fix, chore)`, not `` (`feat`, `fix`, occasionally `chore`/`feature`) ``.
-- Prefer commas and periods over em dashes and double dashes. Heavy em-dash use is a giveaway that text was generated rather than typed, which matters most for anything Bo will send as his own words (Slack messages, emails) but applies everywhere.
+- Prefer commas and periods over em dashes and double dashes. Heavy em-dash use is a giveaway that text was generated rather than typed, which matters most for anything I will send as my own words (Slack messages, emails) but applies everywhere.
 
 ## Sentence-Level Style
 
@@ -53,7 +53,7 @@ A repo's base branch, release pipeline, branch naming, and PR platform are decla
 
 ## Project Config Memory
 
-Some facts a skill needs are specific to the current workspace or engagement — a scan root, a calendar identity, an output directory, a review-doc destination — not a team-shared convention that belongs in a repo's own `CLAUDE.md` (see Git Conventions above for that category). These are personal to how Bo works, so they belong in project memory instead.
+Some facts a skill needs are specific to the current workspace or engagement — a scan root, a calendar identity, an output directory, a review-doc destination — not a team-shared convention that belongs in a repo's own `CLAUDE.md` (see Git Conventions above for that category). These are personal to how I work, so they belong in project memory instead.
 
 ### Pattern
 
@@ -72,17 +72,15 @@ Name the memory `<domain>-config`, not `<skill>-config`, when the same facts ser
 
 ### Distinguishing from Git Conventions
 
-If the fact would be the same answer for any teammate cloning the repo (a branch name, a PR platform, a docs directory layout), it's team-shared — record it in the repo's own `CLAUDE.md`, not memory. If the fact is about Bo's own environment or workflow (which calendar, which local directory, where a personal record gets written), it's personal — project memory is correct.
+If the fact would be the same answer for any teammate cloning the repo (a branch name, a PR platform, a docs directory layout), it's team-shared — record it in the repo's own `CLAUDE.md`, not memory. If the fact is about my own environment or workflow (which calendar, which local directory, where a personal record gets written), it's personal — project memory is correct.
 
 ## Session Hygiene
 
-If a conversation opens with a "continued from a previous conversation that ran out of context" summary, tell Bo immediately and suggest `/clear` before continuing, rather than building further on the compacted history. Hitting that limit once already means the session ran longer than it should have.
+If a conversation opens with a "continued from a previous conversation that ran out of context" summary, tell me immediately and suggest starting a new session before continuing, rather than building further on the compacted history. Hitting that limit once already means the session ran longer than it should have.
 
-Whenever a piece of work is done — a commit landed,
-a PR opened — and the record of it lives in git/GitHub rather than in scrollback, suggest
-`/clear` before starting the next independent item instead of carrying the conversation forward.
-Working through a numbered priority list is the common case: pause between items, not just at
-the end of the whole list.
+Whenever a piece of work is done — a commit landed, a PR opened — and the record of it lives in git/GitHub rather than in scrollback, suggest starting a new session before beginning the next independent item instead of carrying the conversation forward. Working through a numbered priority list is the common case: pause between items, not just at the end of the whole list.
+
+Before making that suggestion, confirm the weekly tracker and activity log are current and any next steps are captured, so the work is picked back up cleanly later, whether I clear, close the tab, or start a fresh session elsewhere.
 
 ## Never Push Without Explicit Permission
 
