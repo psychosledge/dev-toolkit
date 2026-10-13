@@ -1,6 +1,6 @@
 ---
 name: branching-model
-description: How to resolve a repo's branching model, diff base, release pipeline, branch naming, and how finished work ships (PR or a repo-local release skill) from its own CLAUDE.md, with fallbacks and when to ask. Use before diffing, reviewing, or creating a branch, whenever the base branch matters.
+description: How to resolve a repo's branching model, diff base, release pipeline, branch naming, PR title convention, and how finished work ships (PR or a repo-local release skill) from its own CLAUDE.md, with fallbacks and when to ask. Use before diffing, reviewing, or creating a branch, whenever the base branch matters.
 ---
 
 # Branching Model
@@ -19,6 +19,7 @@ Check the *repo's own* `CLAUDE.md` (not the global one) for a `## Branching` sec
 - Release pipeline: <branch> → <branch> → ...  (release-branching only, optional)
 - Feature branches: yes | short-lived | no
 - Feature branch naming: <pattern>, e.g. `<TICKET>/<slug>` — or "no consistent convention"
+- PR title convention: <pattern>, e.g. `<type>: <summary>` (feat, fix, chore, ...) — or "no consistent convention"
 - Release: pull request | skill <name>
 ```
 
@@ -53,9 +54,15 @@ Don't silently guess, and don't run a cold questionnaire. Ask only when a concre
 
 For naming convention specifically: sample branches from the **last 30 days**, and weight branches authored by others more heavily than branches authored by the current git user (`git config user.email`) — self-authored branches may just reflect a skill's own past default rather than real team convention. Surface exactly what was observed plus a recommendation, and let the human make the call — e.g. *"4 of 5 other-authored branches in the last 30 days follow `<TICKET>/<slug>`; recommend canonizing that — record it?"* Never auto-apply a detected pattern.
 
+The same applies to PR title convention, sampled from merged PR titles over the same window instead of branch names (resolve the repo's PR platform via the `pr-platform` skill first, then list recent merged PRs through it) and weighted the same way by author. A human explicitly asking for a prefix scheme going forward (e.g. "prefix PR titles with feat/fix") is itself the concrete signal — record it directly rather than waiting to detect a pattern first.
+
 On confirmation, write directly into **that repo's own `CLAUDE.md`** under `## Branching` — create the section if absent, fill in only the field just resolved if the rest is still unknown, and record an explicit opt-out (e.g. `Feature branch naming: no consistent convention`) when the human says there isn't one, so the question doesn't resurface every session. This is a team-level fact, not a personal one — it belongs in the versioned file that travels with every clone, never in personal memory and never left as a one-off local git-config fix alone.
 
 ## Fallback branch naming
 
 When no naming convention is declared or detected, propose a bare `<slug>` — no `feature/` prefix, no ticket embedded — even when a ticket ID is on hand. Only add structure once it's actually known to be this repo's convention.
+
+## Fallback PR title convention
+
+When no PR title convention is declared or detected, propose a plain sentence title with no prefix. Only apply a prefix scheme (e.g. `feat:`/`fix:`) once it's confirmed as this repo's convention.
 
