@@ -126,7 +126,6 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 - Any remaining issues not already addressed during the walk-through:
   - **Blockers** (failing tests, unmet AC)
   - **Owner Mode:** Recommended fixes (quality issues, verifier refactoring suggestions, test coverage gaps) and optional improvements
-  - **Reviewer Mode:** Any proposed comments not yet approved or skipped
   - Comment audit tally: comments removed (wrong), removed (weak), kept. **Reviewer Mode:** plus any bundled `Suggestion` raised here for a weak-comment pattern that recurred three or more times across the review.
   - If nothing remains: "No outstanding issues — the implementation looks clean."
 
