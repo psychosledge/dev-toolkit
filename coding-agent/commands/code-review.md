@@ -21,7 +21,19 @@ Record the mode. It governs the rest of the steps.
 
 Invoke the `pr-platform` skill and resolve this repo's PR platform by its rules. State the result on one line: `PR platform: <platform> (<declared | detected>), gh <available | unavailable>`. This mode's `gh` commands (checkout, posting comments) assume it resolves to GitHub with `gh` available — if it doesn't, tell the human and ask how to proceed instead of running them.
 
-Check for a dirty working tree:
+Ask the human, in plain chat, on every Reviewer Mode run and before touching any branch: "Review in a worktree, or check the PR branch out in this checkout?" Wait for the answer. The current checkout may be running a local stack, so never default either way.
+
+**Worktree:** skip the dirty-tree check, since the current checkout is left alone. Create it under `.claude/worktrees/pr-<number>`:
+
+```
+gh pr view <PR URL or number from $ARGUMENTS> --json headRefName --jq .headRefName
+git fetch origin <headRefName>
+git worktree add .claude/worktrees/pr-<number> <headRefName>
+```
+
+Run every later step (diff, verifier, file reads) from the worktree, using absolute paths, and give the verifier the worktree path. Install dependencies in the worktree from the lockfile before the verifier runs tests. Confirm the branch name and that the worktree exists before proceeding.
+
+**This checkout:** check for a dirty working tree:
 
 ```
 git status --porcelain
@@ -98,6 +110,8 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
    **Reviewer Mode** — draft a proposed PR comment on its own line:
    > **Proposed comment ([Blocker | Suggestion | Question | Nit]):** [comment text] *(file:line if inline)*
    Frame the issue as a question, observation, or concern — do not prescribe a solution. Keep it to 1–2 sentences: state the concern and stop, no preamble or hedging (see Concise Comments in global `CLAUDE.md`, which covers PR review comments). Include the target file and line number when the finding is tied to a specific location. These are drafts: no comment is approved for posting per group — the single decision of what to post happens once, together, at the end (Step 2c).
+
+   Before drafting a `Question`, try to answer it: read the code it asks about, then any companion PRs or docs named in the request. Draft the question only for what that leaves open, such as the author's intent or code in a repo you can't read. If the answer turns up, drop the comment, or restate it as a `Suggestion` or `Nit` that carries the evidence. A question the author could see the reviewer could have looked up costs them a round-trip.
 
    For comment-audit findings specifically, Reviewer Mode disposition depends on the verdict. `Remove — wrong` always becomes a proposed comment (Suggestion or Blocker depending on how misleading the claim is) — a false comment is a correctness risk for whoever maintains that code next, regardless of who wrote it. `Remove — weak` does not become a proposed comment by default: note it happened and move on, since raising a stranger's stylistic nit costs them a round-trip for something with no functional effect. Track weak-comment counts across the whole review; if the same weakness recurs three or more times, raise one bundled `Suggestion` in Step 2c's consolidation instead of one `Nit` per instance. `Keep` needs no comment at all.
 

@@ -32,6 +32,10 @@ These apply everywhere: written artifacts, terminal responses, everything.
 - Skip positive-negative contrast constructions, full-sentence ("it's not X, it's Y") and phrase-level alike ("X, not Y", "X rather than Y", "X instead of Y"). State the fact directly.
 - Skip metacommentary verdicts appended to a fact ("which is significant," "worth noting," "a good sign"). State the fact and stop.
 
+## Paste-Ready Text
+
+Present anything I will copy and send elsewhere (Slack messages, emails, PR replies) as plain text in a fenced code block, with no blockquote markers, bullets, or surrounding quotation marks.
+
 ## Improve the Agents, Don't Work Around Them
 
 When working in a project that uses the coding-agent workloop (`/story`, `/plan`, `/slice`, `/code-review`), you will sometimes notice that an agent behaves unexpectedly, skips a step, produces incomplete output, or creates friction in the flow.
