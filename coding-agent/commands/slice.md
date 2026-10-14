@@ -54,6 +54,10 @@ If the slice is verification or measurement only (**Files** expects no code beyo
 or notes), invoke a **general-purpose** subagent instead. Give it the plan path, the ACs,
 and a rule to add a failing test first and fix only if verification surfaces a real gap.
 
+If the working directory is a freshly created git worktree, tell the subagent to bootstrap
+it before the first test run: install dependencies, then run any build step the test command
+depends on, such as workspace packages that resolve each other from build output.
+
 **Step 3 — Verify and review**
 
 Invoke the `/code-review` skill and follow all of its steps. It will run the verifier, walk through changes, handle fixes, and commit.
