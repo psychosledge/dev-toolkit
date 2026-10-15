@@ -90,15 +90,16 @@ This is the critical step for Claude config files. For every non-identical file 
 1. `/story` — author a story card in product-centric, PM-legible language; draft and iterate with the human; no planning begins until the human explicitly approves the card
 2. `/plan` — planner decomposes the approved story into thin vertical slices with AC and a UAT checklist; writes plan to `docs/stories/<slug>/plan.md`; human approves before any work begins
 3. `/slice` — for each slice: architect check (if needed) → coder implements with TDD → verifier runs full review → **human sees full report unconditionally** → human approves → commit
-4. `/bug` — characterize → architect check → coder fix with regression test → verifier → human approves → commit
-5. `/verify` — standalone verification pass
-6. Human gates are **unconditional** — the human always sees complete results before any action is taken, whether passing or failing
-7. Agents surface issues to the human; they never compensate silently or loop autonomously
+4. `/code-review` — verify correctness, walk the human through the changes, handle fixes, and commit; runs the verifier automatically
+5. Human gates are **unconditional** — the human always sees complete results before any action is taken, whether passing or failing
+6. Agents surface issues to the human; they never compensate silently or loop autonomously
 
-**Everything else in scope supports that core workloop indirectly** rather than being a step in it — don't treat "not one of the 7 above" as "not workloop-relevant":
+**Everything else in scope supports that core workloop indirectly** rather than being a step in it — don't treat "not one of the 6 above" as "not workloop-relevant":
 - `brainstorm` — feeds ideation into `/story` before a card is drafted
 - `catchup` — keeps the human's view of remote/team state current, which `/plan` and `/slice` both assume is accurate
-- `pr-description` — writes the artifact the human reviews at the commit/PR step of `/slice` and `/bug`
+- `pr-description` — writes the artifact the human reviews at the commit/PR step of `/slice` and `/code-review`
+- `change-summary` — turns a story's or branch's commits into a verified stakeholder-facing summary of what was added and fixed
+- `readiness-review` / `readiness-review-reference` — a human-invoked production-readiness review producing a ranked register of go-live risks
 - `comment-quality` — the comment bar the coder and verifier preload and `/code-review` applies
 - `branching-model` / `pr-platform` — resolve a repo's base branch and PR platform for every git- or PR-touching command and the verifier
 - `weekly-recap` / `week-rollover` / `weekly-tracking` / `activity-log` / `meeting-notes` / `whats-next` — turn the workloop's own output (commits, plan docs, live-captured log entries) into status the human acts on
