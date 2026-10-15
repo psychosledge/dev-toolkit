@@ -60,6 +60,12 @@ need an architect for the second reason alone.
 
 When a slice deliberately creates a provisional interface or stub that a later slice will depend on, mark it with `Scaffolding for` and `Interface contract` fields (see Step 4 format). Do not use these fields unless the dependency is explicit and the consuming slice is named in this plan.
 
+Every acceptance criterion must be verifiable within its own slice, by that slice's tests or
+checks. A criterion that needs a live environment, a measurement run, or a later slice's code
+belongs to the slice that produces it, usually a dedicated measurement or verification slice.
+When a slice's behavior also needs live confirmation, state its criterion at the level the slice
+can check (unit or integration) and put the live check in the later slice.
+
 ### Step 4: Produce the Slice Plan
 
 ```

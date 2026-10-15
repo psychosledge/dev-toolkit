@@ -22,6 +22,12 @@ Prefer a short measurement to a long argument. Read-only unless stated. Run in a
 - Expect false positives: ambient `.d.ts` files, decorator and dependency-injection wiring, framework-registered functions, Pydantic and state fields, callback methods, config packages and CLIs listed as dependencies. Verify each item by searching for callers before listing it. Most unused exports and types are noise.
 - `madge --circular --extensions ts` also follows `.vue` imports and dynamic `import()` calls. Group cycles by their common edge, since one coupling can produce dozens of cycles. For Python, a small AST import graph with a strongly-connected-components pass is enough.
 
+## Route inventory (L3 and L8)
+
+- Parse controller or router decorators into a table of method, path, guards and file. Decorator order varies between files (a guard can sit before or after the controller decorator), so check the parser against two controllers by reading them. A parser that reports a guard as missing is a false alarm until read.
+- Search every plausible caller for each route's static path with word-boundary patterns: front end source, tests, end-to-end specs, other services, sibling repositories and every remote branch. Common-word routes over-match, so recheck them with exact strings.
+- A route with no caller anywhere is a candidate for removal. Note when it is guarded and recent, since it may precede work in flight. An unguarded route with no caller is attack surface with no benefit.
+
 ## Dependencies and supply chain (L9)
 
 - `npm audit --omit=dev`, `pnpm audit`, `pip-audit` or `uv pip audit`, `osv-scanner`, whichever exists. Report counts by severity and the few that are reachable.
