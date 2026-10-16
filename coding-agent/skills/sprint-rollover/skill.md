@@ -1,13 +1,13 @@
 ---
-name: week-rollover
-description: Closes out the current week's tracker/recaps directory (archives it) and scaffolds the next week's directory in one action. Use when asked to close out the week, start a new week, or "roll over" to the next week.
+name: sprint-rollover
+description: Closes out the current sprint's tracker/recaps directory (archives it) and scaffolds the next sprint's directory in one action. Use when asked to close out the sprint or week, start a new sprint or week, or "roll over" to the next one.
 ---
 
-# Week Rollover
+# Sprint Rollover
 
-Archives a finished week's directory and creates the next one, as a single combined
-action. A week's tracker docs, meeting notes, and recaps all live and move together
-under a single `docs/weeks/<monday>/` directory.
+Archives a finished sprint's directory and creates the next one, as a single combined
+action. A sprint's tracker docs, meeting notes, and recaps all live and move together
+under a single `<tracking root>/<sprint>/` directory.
 
 ## Confirming Items With the User
 
@@ -22,46 +22,47 @@ fine" is a guess about an item's status, not a documented one.
 ## Current Engagement Config
 
 Generic — don't hardcode a path here. Resolve per the Project Config Memory instructions
-in global `CLAUDE.md`, reading the `weekly-tracking-config` project memory (fields defined in the `weekly-tracking` skill) for the **weeks root** (the directory
-holding one `<monday-of-that-week>/` directory per week) and the `Activity log` and
-`Demo tracking` fields. The **stories root** is the `stories/` directory alongside it.
+in global `CLAUDE.md`, reading the `tracking-config` project memory (fields defined in the
+`tracking` skill) for the **tracking root**, `Sprint naming`, `Sprint length`, `Activity log`,
+and `Demo tracking` fields. The **stories root** is the `stories/` directory alongside the
+tracking root.
 
-## Step 1 — Identify the current (outgoing) week
+If `Cadence` is `release`, this skill doesn't apply. Run release close-out per the `tracking`
+skill instead.
 
-List `<weeks root>/`, excluding the `archive/` subdirectory. There should be exactly one
-remaining entry — the live week, named by its Monday date. If there's more than one
-(an unusual state — a prior rollover may not have completed cleanly), stop and ask which
-one is actually meant to close, rather than guessing.
+## Step 1 — Identify the current (outgoing) sprint
+
+Find the live unit per the `tracking` skill. That's the outgoing sprint.
 
 ## Step 2 — Pre-close checks
 
-Don't archive a week that isn't actually ready to close — the source material for its
+Don't archive a sprint that isn't actually ready to close — the source material for its
 retrospective becomes harder to work with once it's sitting in `archive/` rather than
 the live directory, so catch gaps now, not after the move.
 
-- **Check for `recaps/weekly.md` inside the outgoing week.** If it's missing, stop and
-  ask whether to build it now (via the `weekly-recap` skill) before continuing — don't
-  silently archive a week with no retrospective, and don't silently build one without
+- **Check for a recap inside the outgoing sprint's `recaps/`.** If there's none, stop and
+  ask whether to build it now (via the `sprint-recap` skill) before continuing — don't
+  silently archive a sprint with no retrospective, and don't silently build one without
   asking either, in case one is already in progress elsewhere.
-- **Sanity-check that the week actually looks finished** — e.g. the activity log (if
-  enabled) has entries through the most recent work day before today. If the outgoing week looks only
-  partially through (rolling over mid-week, a short week, a holiday), ask for
-  confirmation rather than assuming "close the week" always means every work day already
-  happened.
+- **Sanity-check that the sprint actually looks finished** — e.g. the activity log (if
+  enabled) has entries through the most recent work day before today, and today is at or past
+  the end date in the README's H1. If the outgoing sprint looks only partially through (rolling
+  over early, a short sprint, a holiday), ask for confirmation rather than assuming "close the
+  sprint" always means every work day already happened.
 
 ## Step 3 — Check for not-yet-demoed work
 
-Skip this step if `Demo tracking` is `disabled`. The new week's README then has no
+Skip this step if `Demo tracking` is `disabled`. The new sprint's README then has no
 `Demoed` field and no `## Queued for next demo` section.
 
 `Demoed` is a field directly on each Active/Closed item's own row or bullet in the
-*outgoing* week's own README, not a separate file. An archived week's directory already
-survives intact, so this status doesn't need a home outside the week to avoid being
+*outgoing* sprint's own README, not a separate file. An archived sprint's directory already
+survives intact, so this status doesn't need a home outside the sprint to avoid being
 lost — it just needs to be carried forward correctly when the item itself isn't done
 being tracked yet.
 
 **Ask first, don't assume blank means unshown.** Before walking the outgoing README's
-items, ask directly: "Anything get demoed or otherwise shown to a stakeholder this week
+items, ask directly: "Anything get demoed or otherwise shown to a stakeholder this sprint
 that isn't marked yet?" Apply anything the user reports before the per-item walk below.
 
 Then walk every Active item row and every Closed item bullet in the outgoing README for a
@@ -70,7 +71,7 @@ Then walk every Active item row and every Closed item bullet in the outgoing REA
 1. **Confirm with the user it's still accurate.** The upfront question above may not have
    surfaced every case — don't assume `Demoed` is genuinely still blank just because the
    row says so.
-2. **If still unshown, note it** for Step 7 to carry into the new week's
+2. **If still unshown, note it** for Step 7 to carry into the new sprint's
    `## Queued for next demo` section — regardless of whether the underlying item is fully
    done and otherwise headed for Closed items or Step 4's archiving. Being finished and
    being demoed are independent facts; an item that would otherwise just disappear from
@@ -80,73 +81,55 @@ Then walk every Active item row and every Closed item bullet in the outgoing REA
    README, before it archives.
 
 No hits is a fine, common outcome — don't force a finding, and don't invent one from an
-item that merely finished late in the week without an actual demo — in a meeting,
+item that merely finished late in the sprint without an actual demo — in a meeting,
 async, or any other form — separating it from whenever it gets shown.
 
 ## Step 4 — Archive completed stories
 
-A story only moves to `docs/stories/archive/` at the next weekly kickoff, not
-immediately on completion — even a same-day merge stays in the live `docs/stories/`
-list until this step runs.
+Archive merged stories per the `tracking` skill's Archiving a story procedure, presenting each
+one per the confirmation rule above.
 
-For every story under `<stories root>/` (excluding `archive/`):
-
-1. **Verify merge status directly against git — don't trust the plan.md's own "done" or
-   "merged" claim.** Invoke the `branching-model` skill and resolve the repo's diff base by its rules
-   (its declared integration branch, or trunk — not an assumed
-   default branch), then run `git merge-base --is-ancestor <commit> origin/<diff-base>`
-   for whatever commit the plan.md cites as the final one. A plan.md marking a slice
-   "✅ done" means the implementation was finished in the coding workflow's own sense,
-   not that it's merged. A rebase or squash before merge can rewrite the cited commit's
-   SHA entirely — if the cited hash isn't an ancestor, don't conclude "not merged" on
-   that alone; check the PR's actual state (`gh pr view`) and/or search
-   `git log origin/<diff-base>` by branch name or PR number before ruling it unmerged.
-2. **Present each genuinely-merged story found one at a time, per the confirmation rule
-   above, and confirm before moving.** Don't auto-archive silently — a story can be
-   merged but still have an active, logged follow-up (e.g. a "pick this up once X
-   unblocks" note) that means it's not actually done-done yet. Let the user make that
-   call per story.
-3. On confirmation: `mv <stories root>/<slug> <stories root>/archive/<slug>`.
-4. **Grep-fix every reference to the old path across `docs/weeks/**/*.md`** (both the
-   live week and any archived weeks — these are simple path substitutions, not content
-   rewrites, so there's no reason to carve out an exception for historical weeks). Also
-   check `docs/stories/**/*.md` for any sibling story referencing this one by path.
-5. If nothing is left to move, say so — don't force this step to find something.
-
-## Step 5 — Archive the week (the move)
+## Step 5 — Archive the sprint (the move)
 
 ```
-mv <weeks root>/<outgoing-monday> <weeks root>/archive/<outgoing-monday>
+mv <tracking root>/<outgoing-sprint> <tracking root>/archive/<outgoing-sprint>
 ```
 
 One move. Everything inside — the tracker README, meeting notes, topic docs, and the
 `recaps/` subdirectory — travels together.
 
 **Still-active topic docs that move forward (Step 7) can leave dangling cross-tree
-references behind in `docs/stories/**/*.md`.** A story's `plan.md` can cite a topic doc
-by a path that embeds the week it was written in — once that doc travels forward to the
-new week's directory in Step 7, the story's reference points at a location the file no
+references behind in `<stories root>/**/*.md`.** A story's `plan.md` can cite a topic doc
+by a path that embeds the sprint it was written in — once that doc travels forward to the
+new sprint's directory in Step 7, the story's reference points at a location the file no
 longer occupies. Grep every topic doc being moved forward (its bare filename is enough,
-no need to match the full path) against `docs/stories/**/*.md`, not just
-`docs/weeks/**/*.md`, and fix any hit to the new week's path. Same class of problem as
-Step 4 above — just the reverse direction (a story citing a topic doc, instead of a week
+no need to match the full path) against `<stories root>/**/*.md`, not just
+`<tracking root>/**/*.md`, and fix any hit to the new sprint's path. Same class of problem as
+Step 4 above — just the reverse direction (a story citing a topic doc, instead of a sprint
 citing a story).
 
-## Step 6 — Determine the new week
+## Step 6 — Determine the new sprint
 
-Default to the Monday immediately following the outgoing week's Monday (i.e., 7 days
-later) — this assumes back-to-back weeks with no gap. If today's date doesn't fall
-within that new week (e.g. this rollover is happening late, or after a gap), say so and
-ask which Monday to actually use rather than silently assuming continuity.
+Default to back-to-back sprints with no gap. The new sprint starts the day after the outgoing
+sprint's end date, from the outgoing README's H1. Its name follows `Sprint naming`:
 
-## Step 7 — Scaffold the new week (the create)
+- **`date`:** the new start date.
+- **`number`:** the outgoing number plus one.
+- **`ask`:** ask for the label.
+
+Its end date is the start plus `Sprint length`, or ask when the length is `variable`. If
+today's date doesn't fall within the new sprint (e.g. this rollover is happening late, or after
+a gap), say so and ask which start date to actually use rather than silently assuming
+continuity.
+
+## Step 7 — Scaffold the new sprint (the create)
 
 ```
-mkdir -p <weeks root>/<new-monday>/recaps
+mkdir -p <tracking root>/<new-sprint>/recaps
 ```
 
-Seed `<weeks root>/<new-monday>/README.md` with the README layout from the `weekly-tracking`
-skill, with the outgoing week's archived path in the Continues-from paragraph.
+Seed `<tracking root>/<new-sprint>/README.md` with the README layout from the `tracking`
+skill, with the outgoing sprint's archived path in the Continues-from paragraph.
 
 Don't carry the outgoing README's `## Recap Log` section forward, and don't seed an empty one.
 
@@ -169,11 +152,11 @@ Don't carry the outgoing README's `## Recap Log` section forward, and don't seed
   done." Omit the section entirely if Step 3 found nothing.
 - **Priority order** — always draft one from the carried-forward Active items once that
   list is settled, don't ask whether to. This is two-stage by design, not a one-shot
-  fill-in — the point is to hand the user something to walk into the week's own planning
+  fill-in — the point is to hand the user something to walk into the sprint's own planning
   meeting with (this rollover is meant to run before that meeting, as prep), then adjust
   it together afterward once real input from that meeting exists. It's the real priority
   list from the moment it's written, not a placeholder — updates from the planning
-  meeting or over the course of the week are normal drift, the same as any other Active
+  meeting or over the course of the sprint are normal drift, the same as any other Active
   item, not a special unfinalized state that needs calling out in the doc itself.
   Don't fold PR-review items awaiting the user's own response into this numbered list —
   they surface too often and clear too quickly to hold a fixed rank; carry them forward
@@ -181,7 +164,7 @@ Don't carry the outgoing README's `## Recap Log` section forward, and don't seed
   plain note that they take priority over the numbered list whenever one is actually
   open, distinct from a PR review sitting in someone else's court (that's background,
   not urgent).
-- **Closed items** — always starts empty in a new week's README, and stays empty at
+- **Closed items** — always starts empty in a new sprint's README, and stays empty at
   scaffold time — Step 8 is what may add to it, not this step. When Step 8 confirms an
   item is genuinely finished, it belongs here only if something else *in this same new
   README* still needs a live pointer to it — in practice, almost always because it's
@@ -193,7 +176,7 @@ Don't carry the outgoing README's `## Recap Log` section forward, and don't seed
   disappears from the new README entirely; the previous archived directory already has
   the full record.
 - **Physically move (not copy) every topic doc still referenced by a carried-forward
-  Active item or heads-up** from the outgoing week's directory into the new one — a bare
+  Active item or heads-up** from the outgoing sprint's directory into the new one — a bare
   relative link (`[foo.md](foo.md)`) only resolves if the file is actually there. A doc
   tied to a now-Closed item, or a dated record of one specific past meeting (which never
   continues to be updated), stays behind in the archive and gets cited by explicit
@@ -215,7 +198,7 @@ is correct. That confirmation happens in the per-item walk in Step 8 (covering b
 buckets), which runs regardless of how this draft presentation goes. Carrying forward
 the wrong items (something that was actually resolved in conversation but never marked
 closed in the doc, for instance) is exactly the kind of status-marker staleness worth
-catching before it propagates — don't propagate a stale status into a fresh week's file
+catching before it propagates — don't propagate a stale status into a fresh sprint's file
 without a chance to catch it first.
 
 ## Step 8 — Walk each active item for a freshness check
@@ -313,6 +296,6 @@ stale here is a fine, common outcome — don't force a finding.
 
 ## Step 10 — Confirm
 
-Report what moved and what got created — old week's path → its new archive path, the
-new week's path, any stories archived along the way, and anything carried into
+Report what moved and what got created — old sprint's path → its new archive path, the
+new sprint's path, any stories archived along the way, and anything carried into
 `## Queued for next demo` — so it's easy to verify against the actual directory listing.

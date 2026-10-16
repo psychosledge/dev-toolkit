@@ -1,18 +1,18 @@
 ---
 name: whats-next
-description: Answers "what's next" by checking the current week's priority list and active items, and first runs a quick safety-net check for any of today's calendar events that haven't been captured yet. Use when asked "what next," "what should I work on," "what's on my plate," or to review current priorities.
+description: Answers "what's next" by checking the live tracker's priority list and active items, and first runs a quick safety-net check for any of today's calendar events that haven't been captured yet. Use when asked "what next," "what should I work on," "what's on my plate," or to review current priorities.
 ---
 
 # What's Next
 
 The front door for starting a work session on this engagement. Two jobs, in order: catch any
-uncaptured meeting from earlier today, then answer what to work on next from the current week's
+uncaptured meeting from earlier today, then answer what to work on next from the live unit's
 tracker.
 
 ## Current Engagement Config
 
-Resolve the weeks root, `Activity log`, and `Calendar` fields from the `weekly-tracking-config`
-project memory (fields defined in the `weekly-tracking` skill). Log format/location come from the `activity-log` skill.
+Resolve the tracking root, `Cadence`, `Backlog`, `Activity log`, and `Calendar` fields from the
+`tracking-config` project memory (fields defined in the `tracking` skill). Log format/location come from the `activity-log` skill.
 
 ## Step 1 — Fallback calendar check
 
@@ -26,9 +26,8 @@ via `list_calendars` and update the memory to store the ID directly, so future r
 lookup.
 
 Starting from the most recent (now-filtered) calendar event that started before now, walk backward
-event by event, checking each one against its own day's activity log
-(`docs/weeks/<monday-of-the-week-containing-that-date>/log/<date>.md` — resolve the week directory
-from the event's own date, not necessarily the current week) for a `meeting`-tagged entry
+event by event, checking each one against its own day's activity log (found per the
+`activity-log` skill from the event's own date, which may sit in an archived unit) for a `meeting`-tagged entry
 referencing it (title match) or a placeholder entry (see the `activity-log` skill). Stop walking
 backward as soon as an event is found already logged — anything earlier is presumably already
 covered by a prior run — or once the walk reaches 7 calendar days back, whichever comes first.
@@ -59,7 +58,11 @@ general.
 
 ## Step 2 — Answer what's next
 
-Read the current week's `README.md` (`## Priority order` and `## Active items`) and answer
+**Release cadence with no live unit:** nothing is in flight. When `Backlog` is set, read it and
+suggest what to group into the next release, a single item or several meant to ship together.
+The release itself starts at the first checkpoint that adds a row, per the `tracking` skill.
+
+Otherwise, read the live unit's `README.md` (`## Priority order` and `## Active items`) and answer
 directly from what's there — this skill doesn't re-derive priority itself, the README is already
 the source of truth for that. If the priority order looks stale (references something already
 closed, or a merge status has changed since it was drafted), say so rather than reciting it as-is,
@@ -68,4 +71,7 @@ re-litigate the whole tracker here.
 
 For each Active item whose status is `PR open`, check whether the PR has merged (`gh pr view
 <link> --json state` when the `pr-platform` skill resolves GitHub with `gh` available). If it
-has, offer to move the item to Closed items per the `weekly-tracking` skill.
+has, offer to move the item to Closed items per the `tracking` skill.
+
+In release cadence, when Active items is empty, or becomes empty after those moves, offer to
+close out the release per the `tracking` skill.

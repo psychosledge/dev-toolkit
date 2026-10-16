@@ -44,7 +44,7 @@ Effort describes scope and coordination, with no time estimate. Low is a small c
 ```
 # <System> readiness review
 
-Scope: <repos or services>, reviewed during the week of <Monday date> against <branch or environment>.
+Scope: <repos or services>, reviewed <date> against <branch or environment>.
 
 ## How to read this
 - Tier definitions, Effort, (assumed), Evidence, and the line: Measurements ran against <environments> and are not production figures.

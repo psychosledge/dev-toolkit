@@ -84,7 +84,7 @@ If a conversation opens with a "continued from a previous conversation that ran 
 
 Whenever a piece of work is done — a commit landed, a PR opened — and the record of it lives in git/GitHub rather than in scrollback, suggest starting a new session before beginning the next independent item instead of carrying the conversation forward. Working through a numbered priority list is the common case: pause between items, not just at the end of the whole list.
 
-Before making that suggestion, confirm the weekly tracker and activity log are current and any next steps are captured, so the work is picked back up cleanly later, whether I clear, close the tab, or start a fresh session elsewhere.
+Before making that suggestion, confirm the tracker and activity log are current and any next steps are captured, so the work is picked back up cleanly later, whether I clear, close the tab, or start a fresh session elsewhere.
 
 ## Never Push Without Explicit Permission
 

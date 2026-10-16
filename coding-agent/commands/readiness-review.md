@@ -89,7 +89,7 @@ Show it to the human and take changes one item at a time. Keep working documents
 
 ## Step 9: Close out
 
-Update the charter status, the working register and project memory with where things stand and what needs re-verifying later. If a `weekly-tracking-config` project memory exists, update the weekly tracker and activity log per the `weekly-tracking` and `activity-log` skills. If it does not exist, skip that silently.
+Update the charter status, the working register and project memory with where things stand and what needs re-verifying later. If a `tracking-config` project memory exists, update the tracker and activity log per the `tracking` and `activity-log` skills. If it does not exist, skip that silently.
 
 Then follow the session hygiene rule: confirm the tracker and log are current, and suggest starting a new session.
 

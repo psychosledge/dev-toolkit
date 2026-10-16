@@ -11,9 +11,12 @@ happens.
 
 ## Location
 
-One file per day, alongside that week's tracker: `docs/weeks/<monday-of-that-week>/log/<date>.md`
-— see the `weekly-tracking-config` project memory (fields defined in the `weekly-tracking` skill) for the weeks root. Entries are written only
-when that config has `Activity log: enabled`. Create the
+One file per day, inside the live unit: `<tracking root>/<live unit>/log/<date>.md`. See the
+`tracking-config` project memory (fields defined in the `tracking` skill) for the tracking root
+and how to find the live unit. To read a past day's log, glob `<tracking root>/**/log/<date>.md`,
+which finds it in the live unit or the archive under any naming scheme. Entries are written only
+when that config has `Activity log: enabled`. In release cadence with no live unit, ask whether
+to start the next release per the `tracking` skill before writing. Create the
 `log/` directory and file the first time an entry is written for a given day; don't pre-create
 empty files for days with nothing logged yet.
 

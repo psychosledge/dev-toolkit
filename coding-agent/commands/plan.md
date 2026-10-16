@@ -39,9 +39,9 @@ After approval:
 - If it already exists: `git switch <branch-name>`.
 - Confirm the active branch, then proceed with slice work.
 
-**Update the weekly README, if this project is tracked.** If a `weekly-tracking-config` project memory exists, update this story's row in the current week's README per the `weekly-tracking` skill's workloop checkpoints.
+**Update the tracker README, if this project is tracked.** If a `tracking-config` project memory exists, update this story's row in the live tracker README per the `tracking` skill's workloop checkpoints.
 
-**Log the plan, if this project keeps an activity log.** If a `weekly-tracking-config` project memory exists with `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill for format/location) per repo this story's slices touch (domain inferred from the repo/story content, asking only if genuinely ambiguous), describing the plan in one line, referencing the story's `plan.md`.
+**Log the plan, if this project keeps an activity log.** If a `tracking-config` project memory exists with `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill for format/location) per repo this story's slices touch (domain inferred from the repo/story content, asking only if genuinely ambiguous), describing the plan in one line, referencing the story's `plan.md`.
 
 User story:
 $ARGUMENTS

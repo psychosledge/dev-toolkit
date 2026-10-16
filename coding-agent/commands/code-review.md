@@ -200,10 +200,10 @@ Once the human is satisfied, ask for explicit commit approval:
 
 Commit on approval with a clear commit message describing the change.
 
-**Log it, if this project keeps an activity log.** If a `weekly-tracking-config` project memory exists with `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill for format/location) per repo touched (domain inferred from the changed files, asking only if genuinely ambiguous), describing what was committed in one line, referencing the story's `plan.md` if one was found earlier.
+**Log it, if this project keeps an activity log.** If a `tracking-config` project memory exists with `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill for format/location) per repo touched (domain inferred from the changed files, asking only if genuinely ambiguous), describing what was committed in one line, referencing the story's `plan.md` if one was found earlier.
 
 ### Reviewer Mode — Done
 
-The review is complete once comments are posted. If a `weekly-tracking-config` project memory exists, record the outcome on this PR's row in the current week's README, adding the row if none matches, per the `weekly-tracking` skill's workloop checkpoints.
+The review is complete once comments are posted. If a `tracking-config` project memory exists, record the outcome on this PR's row in the live tracker README, adding the row if none matches, per the `tracking` skill's workloop checkpoints.
 
-**Log it, if this project keeps an activity log.** If a `weekly-tracking-config` project memory exists with `Activity log: enabled`, append one `PR review - <domain>`-tagged activity-log entry (see the `activity-log` skill for format/location) (domain inferred from what was reviewed, asking only if genuinely ambiguous), describing the review's outcome in one line, referencing the PR link.
+**Log it, if this project keeps an activity log.** If a `tracking-config` project memory exists with `Activity log: enabled`, append one `PR review - <domain>`-tagged activity-log entry (see the `activity-log` skill for format/location) (domain inferred from what was reviewed, asking only if genuinely ambiguous), describing the review's outcome in one line, referencing the PR link.
