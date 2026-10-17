@@ -45,6 +45,8 @@ Before implementing, check if the work requires a design decision. If so, **stop
 ### 1. RED: Write Failing Tests First
 Write tests for the behavior described in the slice's acceptance criteria. Run the test suite — tests should **fail**.
 
+For a criterion annotated `(existing: ...)`, confirm the enforcing code is at that location, or find it if `unlocated`, and write the test against that real code path. Report the actual location if it differs from the annotation.
+
 Use the AAA pattern (Arrange-Act-Assert):
 ```
 describe('FeatureName', () => {

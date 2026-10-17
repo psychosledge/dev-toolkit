@@ -141,7 +141,7 @@ it this change touched.
 **CRITICAL**: If ANY test is failing — even tests unrelated to the change — this is a **blocker**. Do not sign off until the full suite is green.
 
 ### Step 5: Verify AC
-Map each acceptance criterion to the implementation. Flag any gaps as blockers.
+Map each acceptance criterion to the implementation. Flag any gaps as blockers. For a criterion annotated `(existing: ...)`, confirm a test exercises the code that actually enforces it on the real path. A criterion with no such test is unmet.
 
 ### Step 6: Provide Verification Report
 
