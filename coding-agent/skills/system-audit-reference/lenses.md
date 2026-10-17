@@ -63,6 +63,10 @@ Look for: loading, empty and error states for every remote call, behavior on str
 Trigger: always, light touch.
 Look for: operations that are unsafe to retry, race conditions between requests for the same user or record, time zone and date boundary handling, values computed once at startup that should be per request, shared mutable state.
 
+## L14 Event sourcing and replication
+Trigger: an append-only event log, event store or multi-replica sync (offline-first clients, several devices, several writers).
+Look for: event ordering and causality across replicas (clocks, sequence numbers, tie-breaks), idempotent append and dedupe by event ID, sync cursors or watermarks that can skip or repeat events, partial upload or download that leaves a replica believing it is current, whether a "synced" or "up to date" indicator reflects actual convergence, snapshot and event-log consistency (snapshot taken at one cursor and restored against another, snapshot versioning and invalidation), projection determinism (same events in any arrival order give the same state, dependence on wall clock or local state during replay), handlers that read projections to validate and so behave differently per replica, event schema versioning and upcasting, events that are mutated, deleted or rewritten, conflicting concurrent commands and how they resolve, and how a diverged replica is detected and repaired.
+
 ## L13 Documentation and handoff
 Trigger: the team or ownership will change, or the audience asks about operability.
 Look for: a runbook, onboarding steps that work from a clean checkout, who operates the system after the review, undocumented manual steps, knowledge that exists only in people's heads or private channels.
