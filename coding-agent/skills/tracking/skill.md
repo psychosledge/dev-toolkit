@@ -45,8 +45,9 @@ remaining fields carry over unchanged.
 ## Unit naming
 
 - **Sprint:** per `Sprint naming`.
-- **Release:** the target version if known, otherwise a short slug for the work, such as
-  `journal-export`. Release close-out renames the directory to the released ref when it differs.
+- **Release:** `<start date>-<slug>`, the date the release is scaffolded (`YYYY-MM-DD`) and a
+  short slug for the work, such as `2026-10-16-journal-export`. Never a version: the version is
+  decided at release time. Release close-out prefixes the released ref.
 
 ## README layout
 
@@ -169,9 +170,9 @@ Active items are empty (see the checkpoint above, and `whats-next`).
    a stakeholder that isn't marked yet, and fill in those `Demoed` dates. Leave blanks as they
    are. `demo-prep` finds them in the archive.
 3. **Archive the release's stories** per Archiving a story above.
-4. **Move the directory.** `mv <tracking root>/<name> <tracking root>/archive/<released ref>`,
-   using the released ref (version or tag) when there is one and differs from the name,
-   otherwise the name unchanged. Grep-fix references to the old path across
+4. **Move the directory.** `mv <tracking root>/<name> <tracking root>/archive/<released ref>-<name>`,
+   such as `archive/v1.22.0-2026-10-16-journal-export`, using the released ref (version or tag).
+   With no released ref, the name stays unchanged. Grep-fix references to the old path across
    `<tracking root>/**/*.md` and `<stories root>/**/*.md`.
 5. **Don't scaffold the next release.** It starts at the next checkpoint that adds a row.
 6. **Report** the archived path, any stories archived, and the top of the backlog as candidates

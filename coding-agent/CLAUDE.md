@@ -47,7 +47,11 @@ When working in a project that uses the coding-agent workloop (`/story`, `/plan`
 - Do **not** add one-off inline instructions to future prompts to compensate.
 - Do **not** silently adjust your own behavior to cover for an agent's deficiency.
 
-The agent files in `coding-agent/` (synced to `~/.claude/`) are the source of truth for workloop behavior. A memory that describes agent behavior or workflow process is almost always a signal that an agent file needs improving — not that you should remember to compensate.
+The agent files in `coding-agent/` (synced to `~/.claude/`) are the source of truth for workloop behavior.
+
+When an approved fix to a skill, agent, or command is made from any repo other than `dev-toolkit`, edit the global copy under `~/.claude/` directly. Never edit the `dev-toolkit` repo's `coding-agent/` directory unless the session's root directory is `dev-toolkit`. A dedicated `dev-toolkit` session compares the global files against the repo and decides what to fold in.
+
+A memory that describes agent behavior or workflow process is almost always a signal that an agent file needs improving — not that you should remember to compensate.
 
 **The test:** Before writing any memory or inline instruction about the workloop, ask yourself: *Is this describing a gap in an agent file?* If yes, flag it to the human instead.
 
