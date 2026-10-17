@@ -23,13 +23,15 @@ Invoke the `pr-platform` skill and resolve this repo's PR platform by its rules.
 
 Ask the human, in plain chat, on every Reviewer Mode run and before touching any branch: "Review in a worktree, or check the PR branch out in this checkout?" Wait for the answer. The current checkout may be running a local stack, so never default either way.
 
-**Worktree:** skip the dirty-tree check, since the current checkout is left alone. Create it under `.claude/worktrees/pr-<number>`:
+**Worktree:** skip the dirty-tree check, since the current checkout is left alone. If `.claude/worktrees/pr-<number>` already exists from an earlier round of this review, reuse it with `git -C .claude/worktrees/pr-<number> pull`. Otherwise create it:
 
 ```
 gh pr view <PR URL or number from $ARGUMENTS> --json headRefName --jq .headRefName
 git fetch origin <headRefName>
 git worktree add .claude/worktrees/pr-<number> <headRefName>
 ```
+
+If the PR is already merged or closed and the worktree exists, offer to remove it with `git worktree remove` instead of reviewing.
 
 Run every later step (diff, verifier, file reads) from the worktree, using absolute paths, and give the verifier the worktree path. Install dependencies in the worktree from the lockfile before the verifier runs tests. Confirm the branch name and that the worktree exists before proceeding.
 

@@ -21,6 +21,7 @@ Check the *repo's own* `CLAUDE.md` (not the global one) for a `## Branching` sec
 - Feature branch naming: <pattern>, e.g. `<TICKET>/<slug>` — or "no consistent convention"
 - PR title convention: <pattern>, e.g. `<type>: <summary>` (feat, fix, chore, ...) — or "no consistent convention"
 - Release: pull request | skill <name>
+- Pre-PR CI: in place | clean checkout
 ```
 
 Any field may be absent — partial declarations are the normal case, not an error state. Treat present fields as authoritative and don't re-derive them. Treat absent fields as genuinely unknown; use the fallback and detection rules below rather than assuming a default silently.
@@ -43,6 +44,13 @@ Read `Release pipeline` if declared, in order. Trunk-based repos have none by de
 - `skill <name>`: a repo-local skill (for example `ship`) owns the release mechanics, such as tagging, publishing, and pushing. The workloop hands off to it and records the ref it released.
 
 When undeclared, look for a repo-local skill named `ship` or `release` (`.claude/skills/` or `.claude/commands/` in the repo). If one exists, or the repo has no PR-capable remote, ask which applies and record the answer under `## Branching` as described below.
+
+## Resolving where pre-PR CI runs
+
+`Pre-PR CI` sets where `/slice` runs the repo's CI checks before proposing a PR:
+
+- `in place`: the current checkout. This is the default when the field is absent.
+- `clean checkout`: a throwaway git worktree of the branch, so tests that depend on uncommitted local files such as `.env` fail locally the same way they would in CI. Use it where a red CI check on a PR is costly, such as a client repo.
 
 ## HEAD on a pipeline branch itself
 
