@@ -60,7 +60,6 @@ general.
 
 **Release cadence with no live unit:** nothing is in flight. When `Backlog` is set, read it and
 suggest what to group into the next release, a single item or several meant to ship together.
-The release itself starts at the first checkpoint that adds a row, per the `tracking` skill.
 
 Otherwise, read the live unit's `README.md` (`## Priority order` and `## Active items`) and answer
 directly from what's there — this skill doesn't re-derive priority itself, the README is already
