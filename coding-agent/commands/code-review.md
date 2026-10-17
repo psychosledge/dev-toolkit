@@ -119,7 +119,7 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 
 9. **Owner Mode:** If any findings were surfaced (steps 5–7): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If the human pushes back on a `Keep` verdict specifically, that's not a fix request, it's a request to investigate: invoke the `comment-quality` skill and dig until the disposition resolves to one of removed, corrected, or identified tech debt (folds into Step 3b). This exploration is opt-in, triggered only by an explicit pushback — never run it automatically just because a comment was defended. If no findings: "Ready to move on?"
 
-   **Reviewer Mode:** If any comments were proposed: ask "Do you agree with these, or any questions/concerns?" Use the answer to refine, merge, or drop drafts — this is not a posting decision, so don't frame it as one ("post", "approve", etc.). Findings may need rephrasing or grouping once later groups are in, so keep everything as drafts until Step 2c. Pushback on a `Keep` verdict triggers the same investigation described above, resolving to removed, corrected, or noted as tech debt — Reviewer Mode has no `TECH_DEBT.md` to write to, so a tech-debt outcome here becomes a proposed comment instead. If no findings: "Ready to move on?"
+   **Reviewer Mode:** If any comments were proposed: ask "Do you agree with these, or any questions/concerns?" Use the answer to refine, merge, or drop drafts — this is not a posting decision, so don't frame it as one ("post", "approve", etc.). Findings may need rephrasing or grouping once later groups are in, so keep everything as drafts until Step 2c. Pushback on a `Keep` verdict triggers the same investigation described above, resolving to removed, corrected, or noted as tech debt — Reviewer Mode records no deferred findings of its own, so a tech-debt outcome here becomes a proposed comment instead. If no findings: "Ready to move on?"
 
 **Do not present the next group until the human replies.** One group per response is the rule — not a suggestion.
 
@@ -158,27 +158,16 @@ Either way, walk through the files changed during this fix session using the sam
 
 If **no**: proceed to Step 3b.
 
-### Step 3b — Reconcile Tech Debt (Owner Mode only)
+### Step 3b — Deferred Findings (Owner Mode only)
 
-Before committing, reconcile every finding from this review against the durable tech-debt record.
-
-Check project memory for this repo's debt-tracking file(s) beyond `TECH_DEBT.md`. Some repos split per-slice debt (`TECH_DEBT.md`, this command writes to it directly) from a separate systemic/curated list owned by another team — memory names that file and its write policy when one exists. Treat any such file as read-only cross-reference: never upsert into it automatically, even for a finding that reads as squarely systemic (true across the codebase, not particular to this slice) — surface it as a candidate for that file in the summary (step 4) and let the human decide whether and how to add it.
+Before committing, settle where every deferred finding from this review goes.
 
 1. **Collect deferred findings.** Gather every finding from Step 2 (and any surfaced during the Fix Loop) whose final disposition is `defer` — recommended defer and left unfixed, or explicitly deferred by the human. Also include any comment-audit `Keep` verdict that, after pushback investigation (Step 2b), resolved to identified tech debt rather than removal or correction. Skip anything disposed as `fix now` (already handled above) or `skip` (not real debt, no record needed).
-2. **Record each one, twice:**
-   - Append to this story's `docs/stories/<slug>/plan.md` under a `## Deferred tech debt` heading (create the heading if this is the first entry in this story).
-   - Upsert into `TECH_DEBT.md` at the root of the repo the finding belongs to (create the file if it doesn't exist yet). Use this entry format:
-     ```
-     ## <file path>
-     - **Line(s):** <line numbers or range>
-     - **Issue:** <one-line description>
-     - **Why deferred:** <the concrete reason it's unsafe or disproportionate to fix now — blast radius wider than this slice, a design decision needing its own discussion, or a file outside this diff; not "not part of this ticket">
-     - **Surfaced in:** <story slug>, Slice <N>
-     ```
-3. **Resolve entries this slice fixed.** Separately — if any fix made *during this slice* resolves a finding that already has an entry in `TECH_DEBT.md` (matched by file and description), remove that entry entirely. `TECH_DEBT.md` is a record of currently-known debt, not a historical log — entries don't accumulate once addressed. If removing an entry leaves the file with no remaining entries, delete the file.
-4. **Show the human a short summary** of what's being added to and removed from `TECH_DEBT.md` (file names and one-line descriptions only), plus any candidates surfaced for another repo's curated debt file, before proceeding to commit. No separate approval gate needed for the `TECH_DEBT.md` changes — those ride along with the commit approval in Step 4. A candidate for another file is a separate ask, not folded into that approval.
+2. **Record each one in the story.** Append it to this story's `docs/stories/<slug>/plan.md` under a `## Deferred findings` heading (create the heading if this is the first entry), with file and lines, a one-line issue, and why it's deferred: the concrete reason it's unsafe or disproportionate to fix now (blast radius wider than this slice, a design decision needing its own discussion, or a file outside this diff), never "not part of this ticket".
+3. **Ask where each one goes next.** Present the deferred findings together, one line each, and ask the human where each should go. Typical destinations: the backlog when the `tracking-config` memory sets `Backlog`, a debt file in the repo, a new ticket in the team's tracker, or nowhere beyond the plan. When a `debt-tracking-config` project memory names a usual destination, propose it as the default. Never write to a destination the human didn't choose. For a ticket, create it through an available tracker connector only on the human's go-ahead; otherwise present a title and description as paste-ready text.
+4. **Resolved items.** If a fix made during this review resolves something already recorded in the backlog or a debt file, point it out and ask whether to remove or close it.
 
-If there's nothing to defer and nothing to resolve, skip this step silently and proceed to commit.
+If there's nothing deferred and nothing resolved, skip this step silently and proceed to commit.
 
 ### Reviewer Mode — Post Comments
 

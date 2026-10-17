@@ -1,11 +1,11 @@
 ---
-name: readiness-review-reference
-description: Reference for the /readiness-review command (tiers, effort and evidence rubrics, writing rules, register template). Not normally invoked directly.
+name: system-audit-reference
+description: Reference for the /system-audit command (tiers, effort and evidence rubrics, writing rules, register template). Not normally invoked directly.
 ---
 
-# Readiness Review Reference
+# System Audit Reference
 
-Read by `/readiness-review`. Supporting files in this directory: `lenses.md` (evidence lens prompts), `measurements.md` (measurement and tooling snippets).
+Read by `/system-audit`. Supporting files in this directory: `lenses.md` (evidence lens prompts), `measurements.md` (measurement and tooling snippets).
 
 ## Tiers
 
@@ -42,7 +42,7 @@ Effort describes scope and coordination, with no time estimate. Low is a small c
 ## Register template
 
 ```
-# <System> readiness review
+# <System> audit
 
 Scope: <repos or services>, reviewed <date> against <branch or environment>.
 

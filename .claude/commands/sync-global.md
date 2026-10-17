@@ -99,7 +99,7 @@ This is the critical step for Claude config files. For every non-identical file 
 - `catchup` — keeps the human's view of remote/team state current, which `/plan` and `/slice` both assume is accurate
 - `pr-description` — writes the artifact the human reviews at the commit/PR step of `/slice` and `/code-review`
 - `demo-prep` — turns finished, not-yet-demoed work into a verified plan of what to show and what to describe at a demo
-- `readiness-review` / `readiness-review-reference` — a human-invoked production-readiness review producing a ranked register of go-live risks
+- `system-audit` / `system-audit-reference` — a human-invoked audit of a system producing a ranked register of production risks, for a handoff or on arrival
 - `comment-quality` — the comment bar the coder and verifier preload and `/code-review` applies
 - `branching-model` / `pr-platform` — resolve a repo's base branch and PR platform for every git- or PR-touching command and the verifier
 - `sprint-recap` / `sprint-rollover` / `tracking` / `activity-log` / `meeting-notes` / `whats-next` — turn the workloop's own output (commits, plan docs, live-captured log entries) into status the human acts on

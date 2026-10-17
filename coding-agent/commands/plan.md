@@ -17,14 +17,14 @@ After the planner produces the Slice Plan and UAT Checklist, determine the propo
    - If nothing is declared, propose a bare `<slug>` — no `feature/` prefix, no ticket embedded, even when a ticket ID is on hand. Only add structure once it's actually known to be this repo's convention (`/catchup` is what detects and records it — this command only consumes the declaration).
 4. Note whether the proposed branch already exists locally (`git branch --list <branch-name>`).
 
-**Scan for relevant tech debt.** For each repo this story's slices touch, check for a `TECH_DEBT.md` at that repo's root, plus any additional debt-tracking file(s) recorded in project memory for that repo (some repos split per-slice debt from a separate systemic/curated list — memory names the file(s) and each one's write policy; don't assume `TECH_DEBT.md` is the only one without checking). If found, cross-reference each file's entries' file paths against each slice's `Files` field. For any overlap, present the matching entries to the human as an explicit, optional addition — do not fold them into the plan automatically:
+**Scan for relevant tech debt.** Check the places this project records known issues: the `Backlog` from the `tracking-config` memory when set, and any debt record named in a `debt-tracking-config` project memory. Cross-reference entries that name file paths against each slice's `Files` field. For any overlap, present the matching entries to the human as an explicit, optional addition — do not fold them into the plan automatically:
 
 > **Related tech debt found:**
-> - `<file>` — <one-line issue description> (from `TECH_DEBT.md` / `<other file>`)
+> - `<file>` — <one-line issue description> (from `<source>`)
 >
 > Fold any of these into this plan's scope, or leave them deferred?
 
-For anything the human chooses to include, add it as its own slice (or fold into an existing slice touching the same file, human's call) before presenting the final package. If none of the applicable files exist in a touched repo, or nothing overlaps, skip this silently — don't mention it.
+For anything the human chooses to include, add it as its own slice (or fold into an existing slice touching the same file, human's call) before presenting the final package. If neither source exists, or nothing overlaps, skip this silently — don't mention it.
 
 Present the Slice Plan, UAT Checklist, and proposed branch as a single package:
 

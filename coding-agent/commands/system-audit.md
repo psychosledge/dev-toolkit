@@ -1,13 +1,13 @@
 ---
-name: readiness-review
-description: Collaborative production-readiness review of one or more repos as a single system. Finds what blocks go-live or bites soon after, verifies every claim, and produces a ranked register with tier, fix direction, effort and evidence. Run only when explicitly called.
+name: system-audit
+description: Collaborative audit of one or more repos as a single system, for handing off to a remaining team or getting oriented on a new project. Finds what blocks production or bites soon after, verifies every claim, and produces a ranked register with tier, fix direction, effort and evidence. Run only when explicitly called.
 argument-hint: "[scope: repo paths or service names | resume]"
 disable-model-invocation: true
 ---
 
-Run a production-readiness review with the human. This command is invoked only by the human. It is collaborative: expect many rounds, one theme and one decision at a time.
+Run a system audit with the human. This command is invoked only by the human. It is collaborative: expect many rounds, one theme and one decision at a time.
 
-Before starting, read `~/.claude/skills/readiness-review-reference/skill.md` (rubrics, rules, register template). Read `lenses.md` and `measurements.md` in that directory when the steps below point to them.
+Before starting, read `~/.claude/skills/system-audit-reference/skill.md` (rubrics, rules, register template). Read `lenses.md` and `measurements.md` in that directory when the steps below point to them.
 
 ## Resume
 
@@ -17,7 +17,7 @@ Compare the lenses listed in the charter with the lenses in `lenses.md`. If the 
 
 ## Step 1: Intake
 
-Look for the `readiness-review-config` project memory first. If found, use its fields without asking again. If missing, ask for the fields below one at a time, then offer to save them as that memory. Fields:
+Look for the `system-audit-config` project memory first. If found, use its fields without asking again. If missing, ask for the fields below one at a time, then offer to save them as that memory. Fields:
 
 - **Scope**: repos or services reviewed as one system (default from `$ARGUMENTS`).
 - **Audience and use**: who reads the result and what decision it informs.
