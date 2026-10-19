@@ -17,6 +17,12 @@ These directories are at different stages of development. `coding-agent/` is the
 
 ---
 
+## install.sh
+
+Entry point for Coder's dotfiles bootstrapping: point a workspace's Dotfiles URL at this repo (SSH, via a read-only deploy key) and Coder clones it and runs `install.sh` automatically. It copies `coding-agent/{CLAUDE.md,agents,commands,skills}` into `~/.claude/` and `dotfiles/{zshrc,zprofile,gitconfig}` into `$HOME`, so a fresh Linux workspace gets the same Claude Code workloop and shell config as this machine.
+
+---
+
 ## coding-agent/
 
 This directory mirrors `~/.claude/` and is its **source of truth**. Claude Code loads agent and command files from `~/.claude/` at runtime — `coding-agent/` is where those files are authored, versioned, and reviewed before going live.
