@@ -1,6 +1,6 @@
 ---
 name: sprint-rollover
-description: Closes out the current sprint's tracker/recaps directory (archives it) and scaffolds the next sprint's directory in one action. Use when asked to close out the sprint or week, start a new sprint or week, or "roll over" to the next one.
+description: Closes out the current sprint's tracker/recaps directory (archives it) and scaffolds the next sprint's directory in one action, or scaffolds the very first sprint on a project with no live unit yet. Use when asked to close out the sprint or week, start a new sprint or week, "roll over" to the next one, or set up sprint tracking for the first time.
 ---
 
 # Sprint Rollover
@@ -29,6 +29,26 @@ tracking root.
 
 If `Cadence` is `release`, this skill doesn't apply. Run release close-out per the `tracking`
 skill instead.
+
+## Step 0 — First unit (no live unit yet)
+
+Skip this step, continuing at Step 1, if a live unit already exists under `<tracking root>/`.
+
+With no live unit (a brand-new `tracking-config`, or a tracking root with nothing but
+`archive/`): this is the first sprint. Steps 1–5, 8, and 9 don't apply — there's no outgoing
+sprint to pre-close-check, archive, demo-sweep, or freshness-walk, and no stories yet to
+archive.
+
+1. **Determine the name and dates.** Start date defaults to today; ask if a different start
+   makes more sense (e.g. aligning with an existing team cadence). End date is the start plus
+   `Sprint length`, or ask when the length is `variable`. Name follows `Sprint naming`, same
+   rule as Step 6.
+2. **Scaffold it** per Step 7's mechanics, with these simplifications: no Continues-from
+   paragraph (there's no predecessor), Active items and Closed items both start empty,
+   Priority order starts empty unless the user already has known work to seed it with (ask
+   once), and `## Queued for next demo` is omitted regardless of `Demo tracking` (nothing
+   could have gone undemoed before anything existed).
+3. **Confirm** the created path, then stop — Steps 1–9 don't apply to a first run.
 
 ## Step 1 — Identify the current (outgoing) sprint
 
