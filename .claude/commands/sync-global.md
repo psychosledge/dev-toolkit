@@ -14,7 +14,7 @@ You are performing a drift audit between this repo's source-of-truth files and w
 - `~/.claude/CLAUDE.md` — global instructions
 - `~/.claude/agents/` — subagent definitions
 - `~/.claude/commands/` — slash command skills
-- `~/.claude/skills/` — skills (each a subdirectory containing `skill.md`, possibly plus supporting files)
+- `~/.claude/skills/` — skills (each a subdirectory containing `SKILL.md`, possibly plus supporting files)
 
 `~/.claude/skills/synced/` is managed by the Claude Code harness, not this repo. Exclude it from discovery entirely.
 
@@ -53,7 +53,7 @@ If a repo root was passed as an argument, use that path instead of the current d
 
 **Claude config:** List all `.md` files in the four flat directories (`agents/`, `commands/`, both locations), plus `CLAUDE.md` at the repo and global roots. Build a complete matrix of every unique filename across all locations.
 
-**Skills are a separate shape.** `skills/` holds one subdirectory per skill (`skills/<name>/skill.md`, possibly with supporting files alongside), not flat `.md` files. List subdirectory names in `coding-agent/skills/` and `~/.claude/skills/`, and diff each pair's `skill.md` the same way as an agent/command file. Treat a skill that exists in only one location as **Repo only** / **Global only**, same as any other orphaned file — do not decide whether it "belongs" in the repo (e.g. because it looks project-specific or personal rather than part of the core workloop); surface it and let the human make that call in Step 5. If a skill directory has supporting files beyond `skill.md`, note their presence but diff only `skill.md` unless the human asks to look closer.
+**Skills are a separate shape.** `skills/` holds one subdirectory per skill (`skills/<name>/SKILL.md`, possibly with supporting files alongside), not flat `.md` files. List subdirectory names in `coding-agent/skills/` and `~/.claude/skills/`, and diff each pair's `SKILL.md` the same way as an agent/command file. Treat a skill that exists in only one location as **Repo only** / **Global only**, same as any other orphaned file — do not decide whether it "belongs" in the repo (e.g. because it looks project-specific or personal rather than part of the core workloop); surface it and let the human make that call in Step 5. If a skill directory has supporting files beyond `SKILL.md`, note their presence but diff only `SKILL.md` unless the human asks to look closer.
 
 **Dotfiles:** Use the declared pairs from the Locations table above — no scanning needed. Also list any file directly inside `dotfiles/` that has no declared pairing, and any file in `dotfiles/` not present at all in the table; surface these to the human in Step 5 as "needs a pairing decision" rather than guessing a home path.
 

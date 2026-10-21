@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 Run a system audit with the human. This command is invoked only by the human. It is collaborative: expect many rounds, one theme and one decision at a time.
 
-Before starting, read `~/.claude/skills/system-audit-reference/skill.md` (rubrics, rules, register template). Read `lenses.md` and `measurements.md` in that directory when the steps below point to them.
+Before starting, read `~/.claude/skills/system-audit-reference/SKILL.md` (rubrics, rules, register template). Read `lenses.md` and `measurements.md` in that directory when the steps below point to them.
 
 ## Resume
 
