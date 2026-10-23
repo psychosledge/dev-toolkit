@@ -1,5 +1,3 @@
-[user]
-	name = Bo Ramsey
 [alias]
 	lg = !git log --graph --decorate --all -n 20 && git status
 	lgs = !git log --graph --decorate -n 20 $@ && git status
@@ -25,12 +23,13 @@
 	rbo = "!git fetch --prune origin && b=$(git symbolic-ref --short HEAD) && if up=$(git rev-parse --abbrev-ref --symbolic-full-name \"$b@{u}\" 2>/dev/null); then behind=$(git rev-list --count \"$b..$up\") && if [ \"$behind\" = \"0\" ]; then git rebase --autostash origin/HEAD; else echo 'You have commits to pull from '\"$up\"; fi; else git rebase --autostash origin/HEAD; fi"
 	dpb = branch -D @{-1}
 [format]
-	#example: xxxxxxxx  30 minutes ago  Bo Ramsey  (HEAD -> master, origin/master, origin/HEAD)  did some stuff
+	#example: xxxxxxxx  30 minutes ago  Jane Doe  (HEAD -> master, origin/master, origin/HEAD)  did some stuff
 	pretty = format:%C(auto,yellow)%h  %C(auto,cyan)%as  %C(auto,green)%aN%C(auto)% gd% d  %C(auto,reset)%s
 [core]
 	editor = code --wait
 	pager = "command -v hunk >/dev/null 2>&1 && hunk pager || { echo 'hunk not found -- install with: npm install -g hunkdiff' >&2; less; }"
 [include]
+	# set [user] name/email and any other per-machine values in this untracked file
 	path = ~/.gitconfig.local
 [pull]
 	rebase = true
