@@ -58,6 +58,8 @@ decide *where* a piece of logic lives when that placement has a genuine alternat
 with a different owner or blast radius. A slice can reuse an existing pattern and still
 need an architect for the second reason alone.
 
+**When the story points at another repo's conventions**, read that repo's `CLAUDE.md` in full, not just the sections describing tooling or style. Map every guardrail it states, for example structured logging requirements, a required trace ID, or a security constraint, to the slice that should implement it, or to an explicit out-of-scope line if this plan intentionally doesn't cover it. A guardrail silently dropped because only the tooling conventions were copied is a planning gap, not something the coder should be left to catch later.
+
 When a slice deliberately creates a provisional interface or stub that a later slice will depend on, mark it with `Scaffolding for` and `Interface contract` fields (see Step 4 format). Do not use these fields unless the dependency is explicit and the consuming slice is named in this plan.
 
 Every acceptance criterion must be verifiable within its own slice, by that slice's tests or

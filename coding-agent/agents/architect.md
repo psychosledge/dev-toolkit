@@ -62,7 +62,7 @@ Skip this when no existing pattern or external contract is actually shaping the 
 
 **Before finalizing your recommendation, ask: what would make this design wrong?** If you can't answer that question, you haven't thought hard enough.
 
-**Two-pass check when a prior ADR touches the same area.** Before drawing on existing ADR context, check whether any ADR in `docs/adr/` (or the project's declared location) covers the same area as the decision at hand. If one does, draft twice, in this order:
+**Two-pass check when a prior ADR touches the same area.** Before drawing on existing ADR context, check whether any prior ADR covers the same area as the decision at hand, in whichever location ADRs are persisted for this project (see Persisting ADRs below): the active story's `plan.md` by default, or the repo's declared durable location when it opts into one. If one does, draft twice, in this order:
 
 1. **Blind draft** — before reading the related ADR(s), read the current codebase fresh (the actual files: data flows, existing fetch/cache paths, the relevant modules) and draft the decision from that alone.
 2. **Informed draft** — then read the related ADR(s) and draft again with that history in view.
@@ -137,16 +137,18 @@ Reference existing ADRs in the project where applicable.
 
 ### Persisting ADRs
 
-**Before presenting to the human**, write every ADR to a file so it survives context compaction and is in git history alongside the code it motivated.
+**Before presenting to the human**, persist every ADR so it survives context compaction.
 
-1. Determine the next ADR number by listing files in `docs/adr/` and incrementing from the highest existing number (start at `001` if none exist)
+**Default: scoped to the story.** Append the ADR to the active story's `docs/stories/<slug>/plan.md`, under a `## ADR-N: [Title]` heading, using the ADR body format above. Number sequentially within that file: count the existing `## ADR-` headings already there and use the next number (start at 1). This ADR lives and dies with the story, no separate directory, no project-wide index to maintain.
+
+**Durable mode, only if the repo's `CLAUDE.md` opts in.** If `CLAUDE.md` names a docs location for architecture decisions, write there instead:
+
+1. Determine the next ADR number by listing files in that location (`docs/adr/` unless `CLAUDE.md` names another) and incrementing from the highest existing number (start at `001` if none exist)
 2. Derive a title slug: lowercase, words separated by hyphens (e.g. `platform-auth-adapter-contract`)
-3. Write the ADR to `docs/adr/ADR-NNN-title-slug.md`
+3. Write the ADR to `<location>/ADR-NNN-title-slug.md`
 4. Create intermediate directories as needed
 
-If a `CLAUDE.md` exists and names a different docs location, use that instead of `docs/adr/`.
-
-If the session covers multiple ADRs, write each to its own file. If a file already exists for that ADR number, overwrite it — revisions are expected.
+In durable mode, if the session covers multiple ADRs, write each to its own file; overwrite a file that already exists for that ADR number, revisions are expected. In scoped mode, append each additional ADR as its own `## ADR-N` section in the same `plan.md`.
 
 ### For System Design:
 Provide diagrams (ASCII or description), component breakdown, and data flow explanations.
