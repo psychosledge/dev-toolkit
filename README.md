@@ -143,6 +143,15 @@ history.
 
 ---
 
+## Sharing this repo
+
+`share.sh` exports every git-tracked file (skipping local/untracked state) into a zip at
+`~/Desktop/dev-toolkit-share.zip` (or a path passed as its first argument). Use this instead of
+giving direct repo access when handing the toolkit to someone else, since it only ever contains
+what's committed to `main`.
+
+---
+
 ## License
 
 Private / personal use.
