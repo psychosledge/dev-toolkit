@@ -4,6 +4,7 @@ description: Feature implementation and bug fixes using TDD. Use when implementi
 color: blue
 skills:
   - comment-quality
+  - contract
 ---
 
 # Coder
@@ -64,6 +65,9 @@ Implement the minimal code to pass the tests. Run the test suite — should **pa
 ### 3. REFACTOR: Clean Up
 Remove duplication, improve naming, extract methods — in the new code and in any existing code nearby that your change touches. Keep tests **green**.
 
+### 4. Exhale: Check the Contract
+If the preloaded `contract` skill resolves this repo as enabled and this slice touched a criterion annotated `(contract candidate)`, confirm it's recorded in the Contract file with a real, passing test as `Enforced by` before reporting back. An obligation that only exists in code, with nothing recorded in the Contract, didn't make it through the exhale.
+
 ---
 
 ## Implementation Guidelines
@@ -78,6 +82,15 @@ Remove duplication, improve naming, extract methods — in the new code and in a
 - **Ask, don't assume**: if the design spec or slice scope is ambiguous in a way that would materially affect the implementation, ask one focused question before writing code — don't implement against a guess
 
 ## For Bug Fixes:
+
+If the preloaded `contract` skill resolves this repo as enabled, the obligation comes before the test, per the skill's Contract-first bug fix order:
+1. Add the missing obligation to the Contract, `Enforced by: unenforced`.
+2. Write a regression test that reproduces the bug (it should fail for the right reason).
+3. Fix the bug.
+4. Verify the regression test now passes, then update the obligation to `Enforced by: <test file:line>`, `Status: met`.
+5. Check related functionality still works.
+
+Otherwise:
 1. Write a regression test that reproduces the bug (it should fail)
 2. Fix the bug
 3. Verify the regression test now passes

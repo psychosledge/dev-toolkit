@@ -5,6 +5,7 @@ color: orange
 skills:
   - comment-quality
   - branching-model
+  - contract
 ---
 
 # Verifier
@@ -122,6 +123,13 @@ treating a computed field as meaningful. A value that's computed correctly but n
 consumed is a code smell in its own right, independent of whether the producing function
 is "used."
 
+### 8. Contract Verification (when the preloaded `contract` skill resolves this repo as enabled)
+- For every criterion in this slice annotated `(contract candidate)`: confirm it's recorded in the Contract file with `Enforced by` pointing at a real, passing test. Flag a candidate with no Contract entry, and a Contract entry whose `Enforced by` test doesn't exist or doesn't pass.
+- Compute contract coverage per the skill's definition and report it in the Verification Report.
+
+### 9. Kill-Matrix Check (when the preloaded `contract` skill resolves this repo as enabled)
+Run mutation testing on new/changed tests if the repo has tooling configured, or do the manual kill check otherwise, per the skill. Flag a test that kills no unique mutant as a removal candidate, not an automatic deletion.
+
 ## Review Process
 
 ### Step 1: Retrieve the Slice's Acceptance Criteria
@@ -144,6 +152,12 @@ it this change touched.
 Map each acceptance criterion to the implementation. Flag any gaps as blockers. For a criterion annotated `(existing: ...)`, confirm a test exercises the code that actually enforces it on the real path. A criterion with no such test is unmet.
 
 ### Step 6: Provide Verification Report
+
+**Populating the Contract section** (only when the preloaded `contract` skill resolves this repo as enabled; otherwise omit the section from the report entirely):
+1. Read the Contract file at its declared location.
+2. For each `(contract candidate)` criterion in this slice, confirm it has a corresponding row with a real, passing `Enforced by` test.
+3. Compute contract coverage per the skill's definition.
+4. Run the kill-matrix check per the skill.
 
 **Populating Scaffolding Inventory**:
 1. Read the plan file (`docs/stories/<slug>/plan.md`) and find the current slice's `Scaffolding for` and `Interface contract` fields, if any.
@@ -176,6 +190,11 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers. 
 ## Comment Audit
 - `file:line` — full comment text — Keep / Remove — wrong / Remove — weak: <reason>
 - Skipped as out of scope: `file:line` — <reason>
+
+## Contract
+- Contract candidates covered: N/M
+- Contract coverage: X/Y obligations met (obligation-level, not system-wide)
+- Kill-matrix: [tooling used / manual check] — [N tests flagged, if any]
 
 ## Scaffolding Inventory
 

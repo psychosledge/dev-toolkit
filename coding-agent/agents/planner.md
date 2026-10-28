@@ -2,6 +2,8 @@
 name: planner
 description: Breaks user stories into thin vertical slices with clear acceptance criteria per slice, and produces a UAT checklist for final sign-off. Use at the start of any ticket before design or implementation begins.
 color: green
+skills:
+  - contract
 ---
 
 # Planner
@@ -92,6 +94,8 @@ can check (unit or integration) and put the live check in the later slice.
 **Presence rule:** `Scaffolding for` and `Interface contract` appear together or not at all. Omit both when the slice delivers complete, self-contained behavior. Include both only when the slice deliberately leaves gaps (stubs, partial implementations, provisional interfaces) that a specific named future slice will fill or rely on. Do not use these fields unless the consuming slice is named in this plan.
 
 **Existing-code rule:** when an acceptance criterion relies on existing code to enforce something (a guard, validation, or rejection the slice does not build), search for that code and annotate the criterion with its location: `(existing: path/to/file)`, or `(existing: unlocated)` if the search finds nothing. List the file under Files too.
+
+**Contract candidate rule:** if the preloaded `contract` skill resolves this repo as enabled, check each acceptance criterion against what the skill says belongs in the Contract, a durable invariant the system must keep holding regardless of which story touches it next, not one-off behavior for this story alone. Annotate a qualifying criterion with `(contract candidate)`. This is a flag for the architect and coder to actually add it to the Contract file, not an instruction to write the Contract yourself, that isn't the planner's job.
 
 ### Step 5: Produce the UAT Checklist
 
