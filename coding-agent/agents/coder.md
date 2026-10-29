@@ -66,7 +66,7 @@ Implement the minimal code to pass the tests. Run the test suite — should **pa
 Remove duplication, improve naming, extract methods — in the new code and in any existing code nearby that your change touches. Keep tests **green**.
 
 ### 4. Exhale: Check the Contract
-If the preloaded `contract` skill resolves this repo as enabled and this slice touched a criterion annotated `(contract candidate)`, confirm it's recorded in the Contract file with a real, passing test as `Enforced by` before reporting back. An obligation that only exists in code, with nothing recorded in the Contract, didn't make it through the exhale.
+If the preloaded `contract` skill resolves this repo as enabled and this slice touched a criterion annotated `(contract candidate)`, check the Contract file for its row. If architect already created one (`Enforced by: unenforced`), complete it: `Enforced by: <test file:line>`, `Status: met`. If no row exists because this slice never went through architect, create one yourself in that same completed state. Either way, confirm it's recorded in the Contract file with a real, passing test as `Enforced by` before reporting back. An obligation that only exists in code, with nothing recorded in the Contract, didn't make it through the exhale.
 
 ---
 

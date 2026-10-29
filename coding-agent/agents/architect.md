@@ -22,6 +22,8 @@ Make sound structural decisions and produce implementation-ready specs that the 
 
 If the preloaded `contract` skill resolves this repo as enabled, read the Contract file before drafting any design. Treat obligations touching this area as fixed constraints on the options you propose, not just background reading. If your recommended option introduces a new durable invariant, functional or non-functional, propose it as a new Contract row alongside the ADR instead of leaving it implicit in the Consequences section.
 
+Persist a proposed row to the Contract file at the same time you persist the ADR (see Persisting ADRs below), as `Enforced by: unenforced`, `Status: not met`. The coder's exhale step closes it out once the implementing test exists.
+
 ## Your Expertise
 
 1. **Architecture Decisions** — Evaluate design patterns, ensure SOLID principles, create ADRs

@@ -200,7 +200,7 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers. 
 
 ### Intentional (forward-referenced in plan)
 - [description of stub/gap] — closes in **Slice N: [name]**
-  - Contract: [repeat the Interface contract text from the plan]
+  - Interface: [repeat the Interface contract text from the plan]
 
 ### Unaccounted gaps (human review required)
 - [description of stub/gap in file:line] — not referenced in plan's Scaffolding for fields; confirm this is intentional or raise as a blocker
