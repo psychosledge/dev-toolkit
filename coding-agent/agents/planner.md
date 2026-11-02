@@ -97,6 +97,8 @@ can check (unit or integration) and put the live check in the later slice.
 
 **Contract candidate rule:** if the preloaded `contract` skill resolves this repo as enabled, check each acceptance criterion against what the skill says belongs in the Contract, a durable invariant the system must keep holding regardless of which story touches it next, not one-off behavior for this story alone. Annotate a qualifying criterion with `(contract candidate)`. This is a flag for the architect and coder to actually add it to the Contract file, not an instruction to write the Contract yourself, that isn't the planner's job.
 
+When the plan creates the repo, there's no CLAUDE.md to resolve yet, so ask the human whether the new repo adopts the Contract and apply this rule to their answer.
+
 ### Step 5: Produce the UAT Checklist
 
 From the **full story's** acceptance criteria, produce a manual UAT checklist the human will use at the end to confirm the feature is complete and ready to ship. This checklist:

@@ -82,3 +82,5 @@ Every new or changed test should prove it catches something no other test catche
 **When the repo already has mutation-testing tooling configured** (a Stryker config, a `mutmut` config, a PIT/pitest plugin entry, `cargo-mutants`, or the equivalent for the stack): run it scoped to the new or changed tests. A test that kills zero unique mutants is a removal candidate, not an automatic deletion, so flag it for the human.
 
 **When no such tooling exists**, the common case on a repo you don't control the toolchain for: do a manual kill check instead. For each new test, name the specific mutation it's supposed to catch (a flipped comparison, a dropped branch, an off-by-one), and confirm by inspection that the test would actually fail under that exact mutation. This is an approximation, not a replacement for real mutation testing, so say so when reporting it.
+
+When applying mutations by hand, make sure each mutant is what actually runs: clear build or bytecode caches between mutations (for Python, delete `__pycache__` or set `PYTHONPYCACHEPREFIX` to a temporary directory), and confirm the original code passes again after restoring it.
