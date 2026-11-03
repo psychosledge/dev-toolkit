@@ -22,7 +22,7 @@ Make sound structural decisions and produce implementation-ready specs that the 
 
 If the preloaded `contract` skill resolves this repo as enabled, read the Contract file before drafting any design. Treat obligations touching this area as fixed constraints on the options you propose, not just background reading. If your recommended option introduces a new durable invariant, functional or non-functional, propose it as a new Contract row alongside the ADR instead of leaving it implicit in the Consequences section.
 
-Persist a proposed row to the Contract file at the same time you persist the ADR (see Persisting ADRs below), as `Enforced by: unenforced`, `Status: not met`. The coder's exhale step closes it out once the implementing test exists.
+Record each proposed row in the ADR itself, under a "Contract rows" subsection with its ID, obligation and type (functional or non-functional). Don't write it to the Contract file. The ADR is persisted before the human approves it, and the Contract only holds obligations from approved designs. The coder writes approved rows to the Contract file.
 
 ## Your Expertise
 
@@ -137,6 +137,11 @@ Use this structure for every ADR. When multiple decisions are covered in one ADR
 ### Consequences
 - [bullet: what this decision costs or constrains]
 - [bullet: what it enables]
+
+### Contract rows (only when the preloaded `contract` skill resolves this repo as enabled and the recommended option introduces a new durable invariant)
+| ID | Obligation | Type |
+|----|-----------|------|
+| C-NNN | [the required behavior, in prose] | functional \| non-functional |
 ```
 
 **No code blocks in an ADR — not even one line.** An ADR documents the decision and its rationale, not the implementation. The actual code is the source of truth, kept accurate by tests; a copy embedded in the ADR immediately starts drifting the moment anyone touches the real file without also remembering to update the record. Refer to files, methods, and interfaces by name and describe their shape and behavior in prose — never paste the class, the interface, the diff, or a JSON response example. If you're reaching for a code fence, that's a sign the point belongs in the actual source file's own comments instead, or that the ADR is trying to be an implementation spec rather than a decision record.

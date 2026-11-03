@@ -95,7 +95,7 @@ can check (unit or integration) and put the live check in the later slice.
 
 **Existing-code rule:** when an acceptance criterion relies on existing code to enforce something (a guard, validation, or rejection the slice does not build), search for that code and annotate the criterion with its location: `(existing: path/to/file)`, or `(existing: unlocated)` if the search finds nothing. List the file under Files too.
 
-**Contract candidate rule:** if the preloaded `contract` skill resolves this repo as enabled, check each acceptance criterion against what the skill says belongs in the Contract, a durable invariant the system must keep holding regardless of which story touches it next, not one-off behavior for this story alone. Annotate a qualifying criterion with `(contract candidate)`. This is a flag for the architect and coder to actually add it to the Contract file, not an instruction to write the Contract yourself, that isn't the planner's job.
+**Contract candidate rule:** if the preloaded `contract` skill resolves this repo as enabled, check each acceptance criterion against what the skill says belongs in the Contract, a durable invariant the system must keep holding regardless of which story touches it next, not one-off behavior for this story alone. Annotate a qualifying criterion with `(contract candidate)`. This is a flag for the architect to propose as a Contract row in its ADR and for the coder to add to the Contract file once that ADR is approved, not an instruction to write the Contract yourself, that isn't the planner's job.
 
 When the plan creates the repo, there's no CLAUDE.md to resolve yet, so ask the human whether the new repo adopts the Contract and apply this rule to their answer.
 
