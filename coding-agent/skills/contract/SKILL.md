@@ -34,18 +34,20 @@ One row per obligation, in the file at the declared location:
 ```
 | ID | Obligation | Type | Enforced by | Status | Added |
 |----|-----------|------|-------------|--------|-------|
-| C-001 | Fetching a user profile completes in <150ms at p99 | non-functional | test/profile.perf.test.ts:12 | met | Slice 2, 2026-10-28 |
+| C-001 | Fetching a user profile completes in <150ms at p99 | non-functional | test/profile.perf.test.ts > profile fetch > completes under 150ms at p99 | met | Slice 2, 2026-10-28 |
 | C-002 | A duplicate webhook delivery is a no-op, not a second charge | functional | unenforced | not met | Slice 3, 2026-10-28 |
 ```
 
 - **ID**: sequential, `C-NNN`, never reused once assigned.
 - **Obligation**: the required behavior in prose, describing what must be true, not how it's implemented. Same rule as an ADR: no code blocks, no pasted implementation.
 - **Type**: `functional` or `non-functional`.
-- **Enforced by**: the file:line of the test that actually checks this obligation, or `unenforced` if no such test exists yet.
+- **Enforced by**: the identifier of the test that actually checks this obligation, in the form the test runner uses to select a single test (pytest node ID `tests/test_x.py::test_name`, JUnit `Class#method`, Jest/Vitest `file > describe > test name`), or `unenforced` if no such test exists yet. Name the test, not a line number, so edits elsewhere in the file don't make the reference stale.
 - **Status**: `met` (enforced and currently passing) or `not met` (enforced but currently failing, or still `unenforced`).
 - **Added**: the slice or story that introduced it, and the date.
 
 A superseded obligation gets a `Superseded by C-NNN` note in its own Status cell instead of being deleted. The file is a versioned record, and git history alone isn't a substitute for an in-file trail when an obligation was explicitly replaced rather than just edited.
+
+Where the repo's checks can run it, add a guard test that reads the Contract file and fails when an `Enforced by` identifier no longer resolves to a collected test, so a renamed or deleted test breaks the build.
 
 On first adoption, write this header at the top of the file, before the table:
 
@@ -71,7 +73,7 @@ When a production bug surfaces in a repo with the Contract enabled, the obligati
 2. Write the regression test.
 3. Confirm the test fails for the right reason before any fix lands.
 4. Fix the code.
-5. Update the obligation: `Enforced by: <test file:line>`, `Status: met`.
+5. Update the obligation: `Enforced by: <test identifier>`, `Status: met`.
 
 A bug found in code with the Contract enabled means the Contract was missing something, not just that a test was missing.
 

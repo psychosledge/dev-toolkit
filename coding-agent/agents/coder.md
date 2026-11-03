@@ -66,7 +66,7 @@ Implement the minimal code to pass the tests. Run the test suite — should **pa
 Remove duplication, improve naming, extract methods — in the new code and in any existing code nearby that your change touches. Keep tests **green**.
 
 ### 4. Exhale: Check the Contract
-If the preloaded `contract` skill resolves this repo as enabled and this slice touched a criterion annotated `(contract candidate)`, check the Contract file for its row. If the slice's approved ADR proposes a row for it, add that row to the Contract file with the ADR's ID and wording, completed: `Enforced by: <test file:line>`, `Status: met`. If no ADR proposes one because this slice never went through architect, create the row yourself in that same completed state. Either way, confirm it's recorded in the Contract file with a real, passing test as `Enforced by` before reporting back. An obligation that only exists in code, with nothing recorded in the Contract, didn't make it through the exhale.
+If the preloaded `contract` skill resolves this repo as enabled and this slice touched a criterion annotated `(contract candidate)`, check the Contract file for its row. If the slice's approved ADR proposes a row for it, add that row to the Contract file with the ADR's ID and wording, completed: `Enforced by: <test identifier>`, `Status: met`. If no ADR proposes one because this slice never went through architect, create the row yourself in that same completed state. Either way, confirm it's recorded in the Contract file with a real, passing test as `Enforced by` before reporting back. An obligation that only exists in code, with nothing recorded in the Contract, didn't make it through the exhale.
 
 ---
 
@@ -87,7 +87,7 @@ If the preloaded `contract` skill resolves this repo as enabled, the obligation 
 1. Add the missing obligation to the Contract, `Enforced by: unenforced`.
 2. Write a regression test that reproduces the bug (it should fail for the right reason).
 3. Fix the bug.
-4. Verify the regression test now passes, then update the obligation to `Enforced by: <test file:line>`, `Status: met`.
+4. Verify the regression test now passes, then update the obligation to `Enforced by: <test identifier>`, `Status: met`.
 5. Check related functionality still works.
 
 Otherwise:
