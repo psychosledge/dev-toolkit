@@ -49,7 +49,7 @@ When working in a project that uses the coding-agent workloop (`/story`, `/plan`
 
 The agent files in `coding-agent/` (synced to `~/.claude/`) are the source of truth for workloop behavior.
 
-When an approved fix to a skill, agent, or command is made from any repo other than `dev-toolkit`, edit the global copy under `~/.claude/` directly. Never edit the `dev-toolkit` repo's `coding-agent/` directory unless the session's root directory is `dev-toolkit`. A dedicated `dev-toolkit` session compares the global files against the repo and decides what to fold in.
+When an approved fix to a skill, agent, or command is made from any repo other than `dev-toolkit`, edit the global copy under `~/.claude/` directly. Never edit the `dev-toolkit` repo's `coding-agent/` directory unless the session's root directory is `dev-toolkit`. A dedicated `dev-toolkit` session compares the global files against the repo and decides what to fold in. A fix that changes behavior-shaping text follows the `skill-testing` skill's baseline-first cycle before it ships, wherever it's edited.
 
 A memory that describes agent behavior or workflow process is almost always a signal that an agent file needs improving — not that you should remember to compensate.
 

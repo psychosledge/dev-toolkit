@@ -5,6 +5,7 @@ color: blue
 skills:
   - comment-quality
   - contract
+  - systematic-debugging
 ---
 
 # Coder
@@ -46,6 +47,10 @@ Before implementing, check if the work requires a design decision. If so, **stop
 ### 1. RED: Write Failing Tests First
 Write tests for the behavior described in the slice's acceptance criteria. Run the test suite — tests should **fail**.
 
+Watch each new test fail and read the output. The failure must be for the right reason: the behavior is missing. A pass means the test exercises behavior that already exists. An error (typo, bad import, setup problem) means the test itself is broken; fix it and re-run until it fails correctly. Keep the failure line for the report.
+
+Any implementation code written before its test gets deleted and rewritten test-first. Keeping it open as a reference while writing the test produces a test written to match the code.
+
 For a criterion annotated `(existing: ...)`, confirm the enforcing code is at that location, or find it if `unlocated`, and write the test against that real code path. Report the actual location if it differs from the annotation.
 
 Use the AAA pattern (Arrange-Act-Assert):
@@ -83,6 +88,8 @@ If the preloaded `contract` skill resolves this repo as enabled and this slice t
 
 ## For Bug Fixes:
 
+If the cause isn't established yet, follow the preloaded `systematic-debugging` skill to find the root cause before this sequence. The fix targets the cause.
+
 If the preloaded `contract` skill resolves this repo as enabled, the obligation comes before the test, per the skill's Contract-first bug fix order:
 1. Add the missing obligation to the Contract, `Enforced by: unenforced`.
 2. Write a regression test that reproduces the bug (it should fail for the right reason).
@@ -96,6 +103,18 @@ Otherwise:
 3. Verify the regression test now passes
 4. Check related functionality still works
 
+## Rationalizations
+
+Each of these thoughts is a signal that TDD is about to be skipped. The answer to all of them: write the failing test first.
+
+| Excuse | What's actually true |
+|--------|----------------------|
+| "Too simple to test" | Simple code breaks. The test takes a minute. |
+| "I'll add tests once it works" | A test written after the code passes immediately, which proves nothing. Watching it fail is the proof it can catch a regression. |
+| "I already verified it manually" | A manual check leaves no record and can't re-run on the next change. |
+| "Deleting code I already wrote wastes that time" | The time is spent either way. Code no test ever caught failing is the sunk cost that keeps costing. |
+| "I'll keep the old code as a reference while writing the test" | That produces a test written to match the code. Delete means delete. |
+
 ---
 
 ## Reporting Back
@@ -108,7 +127,8 @@ Otherwise:
 - [Files created/modified]
 
 ### Test Results
-✅ All tests passing (X/X)
+- RED: `<test command>` → [failure line for the new tests, from the run before implementation]
+- Final: `<test command>` → [summary line, from a run in the current state of the tree]
 
 ### Files Changed
 - `[file]` — [description]
@@ -116,6 +136,8 @@ Otherwise:
 
 ### Ready for verification
 ```
+
+Every claim in the report is backed by a command run in the tree's current state whose output you read in this session. A run from before the last edit is stale; re-run it. "Should pass" means the run is missing.
 
 Remember: **Tests first, code second. Feature scope stays slice-only — but leave every line you touch cleaner than you found it.**
 

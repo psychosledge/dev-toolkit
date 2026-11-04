@@ -6,7 +6,13 @@ argument-hint: "[user story or ticket URL]"
 
 Invoke the **planner** subagent to decompose the following user story into sequenced implementation increments.
 
-After the planner produces the Slice Plan and UAT Checklist, determine the proposed feature branch before presenting anything to the human:
+**Builder check.** After the planner persists `docs/stories/<slug>/plan.md` and before anything is presented, dispatch one **general-purpose** subagent with this charge: "You are the engineer who will implement this plan. Read only `docs/stories/<slug>/plan.md`, with no other context. List every question you would need answered before starting: values or names the plan uses but never defines, interfaces a slice consumes that no earlier slice produces, criteria you couldn't verify from the slice's own scope, and ambiguities where two reasonable implementations differ." Sort its questions into three piles:
+
+- **Answered already** by the plan, the story, or the repo: fold the answer into `plan.md`.
+- **Minor**: a reasonable implementer could settle it without changing what gets built. Settle it, write the answer into `plan.md`, and mark it as the planner's call.
+- **Theirs**: only the human can answer it, and the answer changes the plan. Hold these for the presentation below.
+
+Then determine the proposed feature branch before presenting anything to the human:
 
 1. Invoke the `branching-model` skill and resolve this repo's branching model by its rules (the repo's own `CLAUDE.md` `## Branching` section, with the usual fallbacks). Note the diff base, whether feature branches are used, and the naming convention if declared. State the diff base on one line in the plan presentation: `Diff base: <branch> (<source>)`, where the source is the repo's `CLAUDE.md`, the `workloop.integrationBranch` override, or the remote default.
 2. If `Feature branches: no`, skip branch setup entirely and note it in the presentation.
@@ -26,9 +32,11 @@ After the planner produces the Slice Plan and UAT Checklist, determine the propo
 
 For anything the human chooses to include, add it as its own slice (or fold into an existing slice touching the same file, human's call) before presenting the final package. If neither source exists, or nothing overlaps, skip this silently — don't mention it.
 
-Present the Slice Plan, UAT Checklist, and proposed branch as a single package:
+Present the Slice Plan, Review Focus, UAT Checklist, and proposed branch as a single package, with any builder-check questions from the Theirs pile listed most important first:
 
 > **Proposed branch:** `<branch-name>` _(will be created / already exists)_
+
+Fold the human's answers to the builder-check questions into `plan.md`.
 
 Then ask: "Does this plan and branch look right? Approve to begin."
 
