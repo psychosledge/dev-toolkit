@@ -26,6 +26,8 @@ Before any work begins, orient the human to exactly what this slice covers.
 > - [ ] [criterion]
 > - [ ] [criterion]
 
+If a `workloop-config` project memory sets `Autonomy: auto-slice` or `auto-story`, add one line to the recap noting this slice can run via that command instead. No memory, or any other value, means skip this silently.
+
 4. **Wait for explicit human approval before continuing.** Ask: "Does the scope look right, or do you want to adjust anything before we start?"
 
 Do not proceed to Step 1 until the human confirms. If they flag a scope concern, surface it, revise the plan if needed, and re-present the updated recap before asking again.

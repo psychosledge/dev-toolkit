@@ -91,8 +91,9 @@ This is the critical step for Claude config files. For every non-identical file 
 2. `/plan` — planner decomposes the approved story into thin vertical slices with AC and a UAT checklist; writes plan to `docs/stories/<slug>/plan.md`; human approves before any work begins
 3. `/slice` — for each slice: architect check (if needed) → coder implements with TDD → verifier runs full review → **human sees full report unconditionally** → human approves → commit
 4. `/code-review` — verify correctness, walk the human through the changes, handle fixes, and commit; runs the verifier automatically
-5. Human gates are **unconditional** — the human always sees complete results before any action is taken, whether passing or failing
-6. Agents surface issues to the human; they never compensate silently or loop autonomously
+5. `/auto-slice` and `/auto-story` — opt-in autonomous execution of an approved plan's slices; mid-slice gates become a rulings ledger in `plan.md`, named stops, and an end report; plan approval, architect design approval, the whole-branch review, and UAT remain human gates; nothing is ever pushed
+6. Human gates are **unconditional** in the gated commands — the human always sees complete results before any action is taken, whether passing or failing. In the opt-in autonomy commands, the end report and its exhaustive rulings list carry that duty: every decision and finding still reaches the human, after the run
+7. Agents surface issues to the human; they never compensate silently, and they loop autonomously only inside the autonomy commands' declared loops (the capped fix loop), never elsewhere
 
 **Everything else in scope supports that core workloop indirectly** rather than being a step in it — don't treat "not one of the 6 above" as "not workloop-relevant":
 - `brainstorm` — feeds ideation into `/story` before a card is drafted

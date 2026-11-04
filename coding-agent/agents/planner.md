@@ -134,7 +134,7 @@ Run these checks against the draft before persisting. Fix findings inline.
 
 If a `CLAUDE.md` exists and names a different docs location, use that instead. If you cannot determine the project root, write to `docs/stories/<slug>/plan.md` relative to the working directory.
 
-If the file already exists (re-run), overwrite it — the latest plan is authoritative.
+If the file already exists (re-run), overwrite it — the latest plan is authoritative. Preserve any existing `## Rulings` and `## Deferred findings` sections: those are execution records, and a replan doesn't erase them.
 
 ## Human Approval Gate
 
