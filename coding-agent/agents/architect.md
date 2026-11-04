@@ -109,7 +109,9 @@ Describe entities, their fields, and relationships. Use the project's primary la
 Use this structure for every ADR. When multiple decisions are covered in one ADR, repeat the Options / Recommendation block for each.
 
 ```
-## ADR-NNN: [Title]
+## ADR: [Title]
+
+Added: [slice N of the active story, or brainstorm], [YYYY-MM-DD]
 
 ### Context
 [1–3 sentences: what situation requires this decision]
@@ -152,16 +154,17 @@ Reference existing ADRs in the project where applicable.
 
 **Before presenting to the human**, persist every ADR so it survives context compaction.
 
-**Default: scoped to the story.** Append the ADR to the active story's `docs/stories/<slug>/plan.md`, under a `## ADR-N: [Title]` heading, using the ADR body format above. Number sequentially within that file: count the existing `## ADR-` headings already there and use the next number (start at 1). This ADR lives and dies with the story, no separate directory, no project-wide index to maintain.
+ADRs carry no numbers. A decision is identified by its title, and its title names the question the decision answers, so the identity survives the answer changing. `Cache invalidation strategy` names a question and stays correct through every revision; `Event-driven cache invalidation` names one answer and goes stale the moment the decision changes. Before persisting, check the title against this rule.
+
+**Default: scoped to the story.** Append the ADR to the active story's `docs/stories/<slug>/plan.md`, under a `## ADR: [Title]` heading, using the ADR body format above. One section per decision; titles within the file must be distinct. This ADR lives and dies with the story, no separate directory, no project-wide index to maintain.
 
 **Durable mode, only if the repo's `CLAUDE.md` opts in.** If `CLAUDE.md` names a docs location for architecture decisions, write there instead:
 
-1. Determine the next ADR number by listing files in that location (`docs/adr/` unless `CLAUDE.md` names another) and incrementing from the highest existing number (start at `001` if none exist)
-2. Derive a title slug: lowercase, words separated by hyphens (e.g. `platform-auth-adapter-contract`)
-3. Write the ADR to `<location>/ADR-NNN-title-slug.md`
-4. Create intermediate directories as needed
+1. Derive a file slug from the title: lowercase, words separated by hyphens (e.g. `platform-auth-adapter-contract`)
+2. Write the ADR to `<location>/<title-slug>.md` (`docs/adr/` unless `CLAUDE.md` names another)
+3. Create intermediate directories as needed
 
-In durable mode, if the session covers multiple ADRs, write each to its own file; overwrite a file that already exists for that ADR number, revisions are expected. In scoped mode, append each additional ADR as its own `## ADR-N` section in the same `plan.md`.
+**One decision, one record.** Changing a recorded decision means rewriting its existing record in place: update the body to the new decision and append `Revised: [slice], [YYYY-MM-DD]` to its Added line. In durable mode the existing record is the file for that decision, including one still carrying an old `ADR-NNN-<slug>.md` name; rewrite that file and keep its name. In scoped mode it is the decision's `## ADR:` section in `plan.md`. Never persist a second record answering a question an existing record already answers; the two-pass check above is how you find the existing record. If the session covers multiple decisions, each gets its own file (durable) or its own `## ADR:` section (scoped).
 
 ### For System Design:
 Provide diagrams (ASCII or description), component breakdown, and data flow explanations.
