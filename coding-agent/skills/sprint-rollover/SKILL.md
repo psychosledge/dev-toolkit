@@ -1,12 +1,12 @@
 ---
 name: sprint-rollover
-description: Closes out the current sprint's tracker/recaps directory (archives it) and scaffolds the next sprint's directory in one action, or scaffolds the very first sprint on a project with no live unit yet. Use when asked to close out the sprint or week, start a new sprint or week, "roll over" to the next one, or set up sprint tracking for the first time.
+description: Closes out the current sprint's directory (archives it) and scaffolds the next sprint's directory in one action, or scaffolds the very first sprint on a project with no live unit yet. Use when asked to close out the sprint or week, start a new sprint or week, "roll over" to the next one, or set up sprint tracking for the first time.
 ---
 
 # Sprint Rollover
 
 Archives a finished sprint's directory and creates the next one, as a single combined
-action. A sprint's tracker docs, meeting notes, and recaps all live and move together
+action. A sprint's tracker docs, meeting notes, and recap all live and move together
 under a single `<tracking root>/<sprint>/` directory.
 
 ## Confirming Items With the User
@@ -60,7 +60,8 @@ Don't archive a sprint that isn't actually ready to close — the source materia
 retrospective becomes harder to work with once it's sitting in `archive/` rather than
 the live directory, so catch gaps now, not after the move.
 
-- **Check for a recap inside the outgoing sprint's `recaps/`.** If there's none, stop and
+- **Check for a recap in the outgoing sprint (`recap.md` at its root, or `recaps/` in older
+  directories).** If there's none, stop and
   ask whether to build it now (via the `sprint-recap` skill) before continuing — don't
   silently archive a sprint with no retrospective, and don't silently build one without
   asking either, in case one is already in progress elsewhere.
@@ -116,7 +117,7 @@ mv <tracking root>/<outgoing-sprint> <tracking root>/archive/<outgoing-sprint>
 ```
 
 One move. Everything inside — the tracker README, meeting notes, topic docs, and the
-`recaps/` subdirectory — travels together.
+recap — travels together.
 
 **Still-active topic docs that move forward (Step 7) can leave dangling cross-tree
 references behind in `<stories root>/**/*.md`.** A story's `plan.md` can cite a topic doc
@@ -145,7 +146,7 @@ continuity.
 ## Step 7 — Scaffold the new sprint (the create)
 
 ```
-mkdir -p <tracking root>/<new-sprint>/recaps
+mkdir -p <tracking root>/<new-sprint>
 ```
 
 Seed `<tracking root>/<new-sprint>/README.md` with the README layout from the `tracking`

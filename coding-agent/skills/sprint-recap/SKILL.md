@@ -7,7 +7,7 @@ description: Builds a sprint recap (Things We Worked On / Things We Plan to Work
 
 Builds a rollup from a tracked unit's own activity log (see the `activity-log` skill)
 plus that unit's tracked story/topic-doc activity. Keep it a plain, self-contained
-engineering recap — the artifact's own placement inside that unit's `recaps/` directory
+engineering recap — the artifact's own placement inside that unit's directory
 already establishes what it covers and why.
 
 ## Current Engagement Config
@@ -106,8 +106,8 @@ scratch.
 ## Step 4 — The callback question
 
 Before drafting the mood paragraph: find the previous unit's directory from the target README's
-Continues-from path and read the mood section of the recap in its `recaps/` (`recap.md`, or
-`weekly.md` in older directories), if one exists. Ask the user directly: **"Any callbacks to last sprint's mood note you want to
+Continues-from path and read the mood section of that unit's recap (`recap.md` at its root,
+or `recaps/recap.md` or `recaps/weekly.md` in older directories), if one exists. Ask the user directly: **"Any callbacks to last sprint's mood note you want to
 include — something that followed through, got resolved, or was a deliberate response
 to it?"** Don't guess at a callback from the artifacts alone; this is exactly the kind
 of connective, judgment-call material only the user actually knows (e.g. deliberately
@@ -142,12 +142,13 @@ more literal accounting if it's ever needed.
 
 ## Step 6 — Persist and present
 
-Write to `<unit>/recaps/recap.md`, no title beyond a bare `# Recap`, no "covers <date
+Write to `<unit>/recap.md`, no title beyond a bare `# Recap`, no "covers <date
 range>" line — the file's own path, alongside that unit's activity log, already establishes
 what it covers. No per-section role header (`**Engineering:**` or similar) either — this skill
 produces one person's own recap, not a merged multi-section document.
 
-If `recaps/recap.md` already exists for this unit, read it first and treat this as a
+If `recap.md` (or `recaps/recap.md`, in a unit scaffolded before the flat layout) already
+exists for this unit, read it first and treat this as a
 revision, not a silent overwrite — the user may be iterating on a draft already in
 progress.
 

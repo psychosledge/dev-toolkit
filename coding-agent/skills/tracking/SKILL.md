@@ -7,7 +7,7 @@ description: Reference for the tracking-config project memory, the tracker READM
 
 A tracked project groups its in-flight work into one **unit** at a time, a directory
 `<tracking root>/<unit>/` holding that unit's `README.md` (the working tracker), meeting notes,
-topic docs, `recaps/`, and, when enabled, the activity log. A finished unit moves to
+topic docs, its `recap.md`, and, when enabled, the activity log. A finished unit moves to
 `<tracking root>/archive/`. The cadence decides what a unit is and what ends it:
 
 - **`sprint`:** a time box. It ends on a date, and `sprint-rollover` archives it and scaffolds
@@ -129,7 +129,7 @@ that recap.
 
 | File | Created |
 |---|---|
-| `recaps/recap.md` | 2026-09-08 17:33 EDT |
+| `recap.md` | 2026-09-08 17:33 EDT |
 ```
 
 One row per recap file. A rewrite later the same day appends `(updated HH:MM <tz>)` to the
