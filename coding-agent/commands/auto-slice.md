@@ -66,6 +66,6 @@ Present, in order:
 2. Verification evidence: verifier quality score, AC met N/M, and the test command with its final output line.
 3. **Rulings**, exhaustive, in the order made.
 4. **Deferred findings** recorded this run.
-5. What's next: the next slice by name, or, when this was the plan's final slice, the UAT checklist. UAT confirmation and release/PR prep stay with the human, following `/slice` Step 5.
+5. What's next: the next slice by name, or, when this was the plan's final slice, the walkthrough checklist. Walkthrough confirmation and release/PR prep stay with the human, following `/slice` Step 5.
 
 The per-group walk-through `/code-review` provides in gated mode is deferred here. Offer it: "Want the full walk-through? Run `/code-review` against this branch."

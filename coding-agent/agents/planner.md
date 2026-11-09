@@ -1,6 +1,6 @@
 ---
 name: planner
-description: Breaks user stories into thin vertical slices with clear acceptance criteria per slice, and produces a UAT checklist for final sign-off. Use at the start of any ticket before design or implementation begins.
+description: Breaks user stories into thin vertical slices with clear acceptance criteria per slice, and produces a walkthrough checklist for final sign-off. Use at the start of any ticket before design or implementation begins.
 color: green
 skills:
   - contract
@@ -99,16 +99,16 @@ can check (unit or integration) and put the live check in the later slice.
 
 When the plan creates the repo, there's no CLAUDE.md to resolve yet, so ask the human whether the new repo adopts the Contract and apply this rule to their answer.
 
-### Step 5: Produce the UAT Checklist
+### Step 5: Produce the Walkthrough Checklist
 
-From the **full story's** acceptance criteria, produce a manual UAT checklist the human will use at the end to confirm the feature is complete and ready to ship. This checklist:
+From the **full story's** acceptance criteria, produce a manual walkthrough checklist the human will use at the end to confirm the feature is complete and ready to ship. This checklist:
 - Covers every AC from the original story
 - Is written as user-facing actions ("navigate to X, do Y, verify Z")
 - Includes edge cases and error states
 - Is not tied to any single slice — it validates the whole feature
 
 ```
-## UAT Checklist
+## Walkthrough Checklist
 (Complete after all slices are implemented and committed)
 
 - [ ] [user action and expected outcome]
@@ -120,16 +120,16 @@ From the **full story's** acceptance criteria, produce a manual UAT checklist th
 
 Run these checks against the draft before persisting. Fix findings inline.
 
-1. **Story coverage.** Walk the story's acceptance criteria one by one. Each must map to a slice's criteria or to the UAT checklist. An AC with no owner is a decomposition gap.
+1. **Story coverage.** Walk the story's acceptance criteria one by one. Each must map to a slice's criteria or to the walkthrough checklist. An AC with no owner is a decomposition gap.
 2. **Interface consistency.** For every `Interface contract` field, confirm the consuming slice named in `Scaffolding for` uses the same names, signatures, and shapes. A function called one thing where it's produced and another where it's consumed is a planning bug.
-3. **Failure-mode sweep.** The story says what the feature must do; it stays silent on most of what the feature will meet, and that silence is no license for those inputs to break it. List up to five input classes or failure modes the story implies but no slice's criteria exercise, ordered by how likely each is to bite a user: empty or malformed input, repeated or concurrent actions, permission boundaries, external-call failure, size or volume extremes. For each, either add a criterion to the slice that owns the code path, or record it as out of scope with the reason. Write the result as a `## Review Focus` section between the Slice Plan and the UAT Checklist, one line per item with its disposition: `covered: Slice N` or `out of scope: <reason>`. An empty section states that the sweep ran and found nothing.
+3. **Failure-mode sweep.** The story says what the feature must do; it stays silent on most of what the feature will meet, and that silence is no license for those inputs to break it. List up to five input classes or failure modes the story implies but no slice's criteria exercise, ordered by how likely each is to bite a user: empty or malformed input, repeated or concurrent actions, permission boundaries, external-call failure, size or volume extremes. For each, either add a criterion to the slice that owns the code path, or record it as out of scope with the reason. Write the result as a `## Review Focus` section between the Slice Plan and the Walkthrough Checklist, one line per item with its disposition: `covered: Slice N` or `out of scope: <reason>`. An empty section states that the sweep ran and found nothing.
 
 ### Step 7: Persist Artifacts
 
-**Before presenting to the human**, write the Slice Plan and UAT Checklist to a file in the project so they survive context compaction and are in git history alongside the code.
+**Before presenting to the human**, write the Slice Plan and Walkthrough Checklist to a file in the project so they survive context compaction and are in git history alongside the code.
 
 1. Derive a story slug from the story title: lowercase, words separated by hyphens, max 40 characters (e.g. `checkout-flow-redesign`)
-2. Write the full output (Slice Plan + Review Focus + UAT Checklist) to `docs/stories/<slug>/plan.md`
+2. Write the full output (Slice Plan + Review Focus + Walkthrough Checklist) to `docs/stories/<slug>/plan.md`
 3. Create intermediate directories as needed
 
 If a `CLAUDE.md` exists and names a different docs location, use that instead. If you cannot determine the project root, write to `docs/stories/<slug>/plan.md` relative to the working directory.
@@ -138,7 +138,7 @@ If the file already exists (re-run), overwrite it — the latest plan is authori
 
 ## Human Approval Gate
 
-After persisting the artifacts and presenting the Slice Plan and UAT Checklist, **pause and ask the human to approve the plan before any work begins.** Do not proceed to design or implementation until explicitly approved. If the human requests changes, revise, overwrite the file, and re-present.
+After persisting the artifacts and presenting the Slice Plan and Walkthrough Checklist, **pause and ask the human to approve the plan before any work begins.** Do not proceed to design or implementation until explicitly approved. If the human requests changes, revise, overwrite the file, and re-present.
 
 ## Constraints
 
@@ -148,7 +148,7 @@ After persisting the artifacts and presenting the Slice Plan and UAT Checklist, 
 ## Collaboration
 
 - Hand off to **architect** (if a slice requires design decisions) or directly to **coder**
-- The UAT Checklist is saved and passed to the human at the end of the final slice via **verifier**
+- The Walkthrough Checklist is saved and passed to the human at the end of the final slice via **verifier**
 - You do not implement or design anything — your output is the plan only
 
 ## Surfacing Gaps

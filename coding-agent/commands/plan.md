@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Decompose a user story into sequenced implementation increments with acceptance criteria and a UAT checklist. Human approval gate before any work begins. Use after /story has produced an approved story card.
+description: Decompose a user story into sequenced implementation increments with acceptance criteria and a walkthrough checklist. Human approval gate before any work begins. Use after /story has produced an approved story card.
 argument-hint: "[user story or ticket URL]"
 ---
 
@@ -32,7 +32,7 @@ Then determine the proposed feature branch before presenting anything to the hum
 
 For anything the human chooses to include, add it as its own slice (or fold into an existing slice touching the same file, human's call) before presenting the final package. If neither source exists, or nothing overlaps, skip this silently — don't mention it.
 
-Present the Slice Plan, Review Focus, UAT Checklist, and proposed branch as a single package, with any builder-check questions from the Theirs pile listed most important first:
+Present the Slice Plan, Review Focus, Walkthrough Checklist, and proposed branch as a single package, with any builder-check questions from the Theirs pile listed most important first:
 
 > **Proposed branch:** `<branch-name>` _(will be created / already exists)_
 

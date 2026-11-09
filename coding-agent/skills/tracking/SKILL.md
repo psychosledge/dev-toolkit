@@ -88,7 +88,7 @@ item's row, or add one if no row matches. Match by story slug, PR link, or plain
 |---|---|---|
 | `/story` approved | `story drafted` | `/plan` |
 | `/plan` approved | `planned, 0/N slices` | first slice |
-| `/slice` committed | `k/N slices done` | next slice, or UAT |
+| `/slice` committed | `k/N slices done` | next slice, or walkthrough |
 | PR opened | `PR open` (link in `Item`) | review/merge |
 | Released by the repo's release skill | `released <ref>` | none |
 | `/code-review` of someone else's PR | review outcome (posted / held / resolved outside this flow) | whose court it's in |

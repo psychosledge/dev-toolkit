@@ -4,7 +4,7 @@ description: Execute all remaining slices of an approved plan back to back using
 argument-hint: "[story slug or plan path (optional when one active story exists)]"
 ---
 
-Execute every remaining slice of the approved plan autonomously, one after another, then return to the human for a whole-branch review and UAT.
+Execute every remaining slice of the approved plan autonomously, one after another, then return to the human for a whole-branch review and walkthrough.
 
 Story:
 $ARGUMENTS
@@ -33,4 +33,4 @@ Re-derive position from the record, never from conversation memory: a slice whos
 
 1. Present the run report: slices completed with commit hashes; per-slice verification evidence (quality score, AC met, test command with its final output line); **Rulings**, exhaustive, in order; **Deferred findings**; any slice left incomplete by a stop, with its state.
 2. Invoke `/code-review` over the whole branch (Owner Mode, diff base per the `branching-model` skill). The human walk-through returns here: every group, finding, and fix decision follows that command unchanged. The slices are already committed, so fixes from this review land as new commits.
-3. After the review, present the UAT checklist and follow `/slice` Step 5 for UAT confirmation and release/PR prep with the human.
+3. After the review, present the walkthrough checklist and follow `/slice` Step 5 for walkthrough confirmation and release/PR prep with the human.

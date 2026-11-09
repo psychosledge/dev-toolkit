@@ -79,15 +79,15 @@ After the commit, update `docs/stories/<slug>/plan.md` for this slice:
    - Check off each AC that was verified: `- [ ]` → `- [x]`
 3. Write the updated file.
 
-Do not modify other slices' sections or the UAT checklist.
+Do not modify other slices' sections or the walkthrough checklist.
 
 If a `tracking-config` project memory exists, update this story's row in the live tracker README per the `tracking` skill's workloop checkpoints.
 
-**Step 5 — UAT checklist and PR prep (final slice only)**
+**Step 5 — Walkthrough checklist and PR prep (final slice only)**
 If this is the last slice in the plan, after the commit is approved:
 
-1. Present the full UAT checklist from `docs/stories/<slug>/plan.md` and ask the human to confirm all items.
-2. Once UAT is confirmed, invoke the `branching-model` skill and resolve this repo's `Release` field. State it on one line: `Release: <pull request | skill <name>> (<declared | detected | default>)`.
+1. Present the full walkthrough checklist from `docs/stories/<slug>/plan.md` and ask the human to confirm all items.
+2. Once the walkthrough is confirmed, invoke the `branching-model` skill and resolve this repo's `Release` field. State it on one line: `Release: <pull request | skill <name>> (<declared | detected | default>)`.
 3. **`Release: skill <name>`:** ask "Run `/<name>` now?" On a yes, invoke that skill and let it handle the release. The yes is the human's explicit approval for whatever that skill does, including any push. Skip the PR steps. Take the released ref (version or tag) from the skill's output, then from `git tag --points-at HEAD`, and otherwise ask the human.
 4. **`Release: pull request`:** before proposing the PR, run the repo's CI checks locally. Read whatever CI config the repo actually uses (e.g. `.github/workflows/`, `.gitlab-ci.yml`, a Jenkinsfile) for its lint, format, and test steps, or ask the human if none is detected. Resolve where they run from the `branching-model` skill's `Pre-PR CI` field. `in place` runs them in the current checkout, after `git status --porcelain` confirms nothing untracked or uncommitted that the tests could depend on; anything listed goes to the human before the checks run. `clean checkout` runs them in a throwaway worktree of the branch at `.claude/worktrees/ci-<branch>`, with dependencies installed from the lockfile, and removes it with `git worktree remove` once the checks finish, pass or fail. If a check fails, treat it like any other slice defect: send it back through coder (TDD) → verifier → human approval → a new commit, rather than patching it inline here. Once CI passes, invoke the `pr-description` skill to propose a PR title and description from the story's artifacts. Invoke the `pr-platform` skill and resolve this repo's PR platform by its rules. State the result on one line: `PR platform: <platform> (<declared | detected>), gh <available | unavailable>`. If it resolves to GitHub with `gh` available, offer to create the PR directly with `gh pr create`; otherwise, present the title and description for the human to paste into their platform.
 5. If a release actually happened or a PR was actually opened, and a `tracking-config` project memory exists:

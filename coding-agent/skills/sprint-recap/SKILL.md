@@ -84,10 +84,10 @@ scratch.
   qualifier. Keep it when it's identifying an actual stakeholder-owned thing the sentence
   needs to name (e.g. "the stakeholder's new VPN"), not when it's just framing whose idea
   something was.
-- **Rephrase "UAT" specifically for this artifact.** In the workloop, UAT means local
-  testing where the user plays the role of the end user, not a stakeholder-involved
-  acceptance pass. Use "testing," "local testing," or "pre-flight" here instead, since an
-  outside reader would assume the more formal meaning.
+- **Rephrase the walkthrough checklist ("UAT" in older trackers) for this artifact.** In
+  the workloop it means local testing where the user plays the role of the end user. Use
+  "testing" or "local testing" here, since an outside reader would take "UAT" as a formal
+  stakeholder acceptance pass and "walkthrough" as internal jargon.
 - **Verify claims that span the whole sprint before generalizing them** (e.g. "review
   moved fast in both directions" needs to actually be true across separate instances
   that sprint, not one instance stretched to sound like a pattern).
