@@ -82,6 +82,18 @@ Name the memory `<domain>-config`, not `<skill>-config`, when the same facts ser
 
 If the fact would be the same answer for any teammate cloning the repo (a branch name, a PR platform, a docs directory layout), it's team-shared — record it in the repo's own `CLAUDE.md`, not memory. If the fact is about my own environment or workflow (which calendar, which local directory, where a personal record gets written), it's personal — project memory is correct.
 
+## Memory Location
+
+A workspace keeps one memory store, in the project memory of the workspace root. The workspace root is the nearest ancestor of the session's starting directory that holds a `.code-workspace` file. For a git worktree under `.claude/worktrees/`, start the search from the main checkout. With no such file, the session's own project memory is the store.
+
+A project's memory directory is `~/.claude/projects/<absolute path with every / and . replaced by ->/memory/`.
+
+When the session's own memory directory differs from the workspace root's:
+
+- At the start of the session, read the workspace root's `MEMORY.md` and treat it as the session's memory index.
+- Write every new memory, and every update, to the workspace root's memory directory.
+- The session's own `MEMORY.md` holds a single line pointing to the workspace root's memory directory, and nothing else. If the session's own memory directory holds anything else, move what's still true to the workspace store, then replace the session's own `MEMORY.md` with the pointer line.
+
 ## Session Hygiene
 
 If a conversation opens with a "continued from a previous conversation that ran out of context" summary, tell me immediately and suggest starting a new session before continuing, rather than building further on the compacted history. Hitting that limit once already means the session ran longer than it should have.
@@ -97,3 +109,5 @@ Do not run `git push` (or any variant: `--force`, `-u`, etc.) unless the human h
 The workloop commits incrementally as slices complete. The human's own code review happens after all slices are committed — pushing before that review ships unverified work. A commit is local and safe; a push is public and irreversible.
 
 This applies even if a previous message approved a push, or if a PR workflow seems to imply it. Each push requires fresh, explicit approval.
+
+Exception: once a PR's merge is confirmed, deleting its feature branch on the remote is post-merge cleanup and needs no separate approval. It ships nothing, and every other push still needs fresh approval.

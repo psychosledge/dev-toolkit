@@ -97,9 +97,14 @@ A review-of-someone-else's-PR item never gets shown at Demo Day in its own right
 tracking is enabled, `/code-review` sets `Demoed` to `N/A` at this same checkpoint.
 
 A `released <ref>` item is finished, so it moves from Active items to Closed items. A PR item
-moves to Closed once its merge is confirmed, or once the PR is closed. At that move, if a review
-worktree `.claude/worktrees/pr-<number>` exists for it, offer to remove it with
-`git worktree remove`.
+moves to Closed once its merge is confirmed, or once the PR is closed. At that move, for a
+merged PR from your own branch, do all of the following without asking: fast-forward the local
+base branch; remove the PR's worktree if one exists; delete the local branch with `git branch -d`,
+or `git branch -D` when `-d` refuses and `gh pr view` confirms the PR merged; delete the remote
+branch with `git push origin --delete <branch>` only if `git ls-remote --heads origin <branch>`
+shows it still exists (many platforms auto-delete it at merge). A PR closed without merging
+keeps its branches. For a review worktree `.claude/worktrees/pr-<number>` of someone else's PR,
+offer to remove it with `git worktree remove`.
 
 **Release cadence with no live unit:** a checkpoint that needs to add a row first starts the
 next release. Propose a name per Unit naming from the item at hand, confirm it, then scaffold
