@@ -135,6 +135,8 @@ Run mutation testing on new/changed tests if the repo has tooling configured, or
 ### Step 1: Retrieve the Slice's Acceptance Criteria
 Get the AC for this slice before looking at any code.
 
+With no slice plan, such as a Reviewer Mode PR or changes made outside the workloop, use the acceptance criteria the caller passes, for example claims from a PR description, and name their source at the top of the AC Verification section. With none passed, skip AC verification, write `AC: none available` in its place, and continue with the rest of the review.
+
 ### Step 2: Run `git diff` and `git log`
 Resolve the diff base per the `branching-model` skill — the nearest known ancestor among the repo's declared diff base and any release-pipeline branches, not a hardcoded `main`. Use `git diff $(git merge-base <diff-base> HEAD)` to see what changed on this branch and understand the scope of the implementation — this captures the full branch scope (committed and uncommitted) in one diff, unlike `git diff HEAD`, which would only show uncommitted changes.
 
@@ -156,11 +158,13 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers. 
 **Populating the Contract section** (only when the preloaded `contract` skill resolves this repo as enabled; otherwise omit the section from the report entirely):
 1. Read the Contract file at its declared location.
 2. For each `(contract candidate)` criterion in this slice, confirm it has a corresponding row with a real, passing `Enforced by` test.
+   With no slice plan, there are no `(contract candidate)` annotations. Instead, name each obligation the diff introduces that is as durable as an existing Contract row and has none, with the tests that already enforce it, as a recommendation. Report candidates covered as `n/a (no plan)`.
 3. Compute contract coverage per the skill's definition.
 4. Run the kill-matrix check per the skill.
 
 **Populating Scaffolding Inventory**:
 1. Read the plan file (`docs/stories/<slug>/plan.md`) and find the current slice's `Scaffolding for` and `Interface contract` fields, if any.
+   With no plan file, there are no `Scaffolding for` entries to match. Omit the Intentional subsection, list every gap under Unaccounted gaps, and for each, say whether anything in the diff or on the base branch calls it, naming the ticket or PR that wires it in when the PR description or commits say.
 2. Inspect the implementation for stubs, `TODO` markers, `NotImplementedError`, placeholder returns, or any code path that is intentionally incomplete.
 3. For each gap found:
    - If it matches a `Scaffolding for` entry in the plan: list it as intentional with a forward reference to the named future slice.
