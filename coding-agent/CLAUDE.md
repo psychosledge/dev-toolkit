@@ -36,6 +36,10 @@ These apply everywhere: written artifacts, terminal responses, everything.
 
 Present anything I will copy and send elsewhere (Slack messages, emails, PR replies) as plain text in a fenced code block, with no blockquote markers, bullets, or surrounding quotation marks.
 
+## Questions and Deliverables
+
+Never call AskUserQuestion in the same turn as content the user needs to read, such as a draft, findings, or a report. The question dialog can hide the text that precedes it. Either end the turn with the content and ask in plain chat, or ask first and deliver the content after the answer.
+
 ## Improve the Agents, Don't Work Around Them
 
 When working in a project that uses the coding-agent workloop (`/story`, `/plan`, `/slice`, `/code-review`), you will sometimes notice that an agent behaves unexpectedly, skips a step, produces incomplete output, or creates friction in the flow.
