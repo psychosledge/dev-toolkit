@@ -35,7 +35,7 @@ This covers interpreted ambiguities in AC or scope, workarounds for plan defects
 Run `/slice` Step 0 exactly: locate the plan, present the slice recap, and wait for explicit approval. Add two things:
 
 1. State plainly: "This slice runs autonomously after your approval. The next thing you see is the end report, a design approval request if the architect is needed, or a stop."
-2. Confirm the working branch is the plan's feature branch; never run on the repo's base branch. Ask once: "Run in this checkout, or in a worktree so this checkout stays untouched?" and honor the answer. A worktree goes at `.claude/worktrees/<branch>`, with dependencies installed from the lockfile.
+2. Confirm the working branch is the plan's feature branch; never run on the repo's base branch. Resolve the checkout the way `/slice` Step 0 does.
 
 **Step 1 — Architect check**
 
