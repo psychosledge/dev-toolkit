@@ -77,31 +77,10 @@ scratch.
   unfinished tail of something already described in worked-on, cut it — but a genuinely
   new piece of forward work that a worked-on item enabled (e.g. "the design is now
   approved" this sprint, "build it" next sprint) is a different fact, not a restatement.
-- **Don't name who specifically something got handed off to** — say "prepped for hand
-  off," not the person's name.
-- **Trim redundant stakeholder-qualifier phrasing** — this whole artifact is shareable
-  work by construction, so "a stakeholder-raised request" reads redundant; drop the
-  qualifier. Keep it when it's identifying an actual stakeholder-owned thing the sentence
-  needs to name (e.g. "the stakeholder's new VPN"), not when it's just framing whose idea
-  something was.
-- **Rephrase the walkthrough checklist ("UAT" in older trackers) for this artifact.** In
-  the workloop it means local testing where the user plays the role of the end user. Use
-  "testing" or "local testing" here, since an outside reader would take "UAT" as a formal
-  stakeholder acceptance pass and "walkthrough" as internal jargon.
 - **Verify claims that span the whole sprint before generalizing them** (e.g. "review
   moved fast in both directions" needs to actually be true across separate instances
   that sprint, not one instance stretched to sound like a pattern).
-- **Don't round timeframes generously** — prefer the precise phrasing when it's just as
-  short to write.
-- **Check organization-name capitalization** stays consistent throughout (e.g. the
-  stakeholder organization's name spelled correctly and consistently, not just however a source doc
-  happened to write it).
-- **No internal tooling jargon** — this project's internal workloop (`/plan`/`/slice`/
-  `/code-review`, "architect"/"verifier," "Reviewer Mode," "workloop" itself, an internal
-  slice number as the lead way of referring to a piece of work) means nothing to an
-  outside reader. Describe work by what it actually is. `docs/stories/`, `plan.md`, "PR,"
-  and "ADR" are fine — general engineering terms, not tooling-specific.
-- **No em dashes** — split into two sentences instead.
+- **Apply the `stakeholder-language` skill's wording rules throughout.**
 
 ## Step 4 — The callback question
 

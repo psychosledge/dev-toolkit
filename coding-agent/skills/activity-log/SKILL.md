@@ -39,6 +39,9 @@ correction gets a new entry, never a rewrite of an old one:
     activity-type/domain split.
   - `meeting` — a calendar event. No domain tag even if the meeting was about a specific
     domain; the meeting itself is the unit.
+  - `standup` — a marker written by the `standup` skill recording that a standup recap was
+    generated covering the entries above it. It carries no work content; every consumer other
+    than `standup` skips these entries when reading the log.
   - No `full-stack` bucket. A story spanning repos gets one entry per repo (see Cross-repo
     below), each correctly domain-tagged, not one combined entry.
 - **Description** — one line, plain language, what actually happened, not what's planned. For a

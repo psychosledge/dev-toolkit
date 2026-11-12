@@ -81,6 +81,7 @@ Rules:
 - Leave Hold items out of the file.
 - Follow the global sentence-style rules: no em dashes, no "X, not Y" constructions, no appended
   verdicts.
+- Apply the `stakeholder-language` skill's wording rules in every cell.
 - Test counts come from the latest PR or a fresh run, not from a plan.
 
 ## Reply
