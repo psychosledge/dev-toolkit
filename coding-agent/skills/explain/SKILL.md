@@ -65,6 +65,15 @@ Config Memory mechanics: ask for the directory, offer to save it.
      data flow, or time matters. HTML diagrams only, never ASCII art.
    - **Walkthrough**: the changes grouped by concern (or the topic's moving
      parts), with verbatim code in `<pre>` blocks prefixed by `file:line`.
+   - **Term tooltips**: wrap the first prose occurrence of every acronym,
+     library, service, protocol, or internal system name in
+     `<dfn class="term" data-def="...">term</dfn>`. `data-def` is one
+     plain-text sentence saying what the thing is, standing on its own. The
+     renderer shows it on hover or tap, so a term that is only mentioned
+     needs no definition sentence in the prose; a reader who knows it reads
+     straight past. A term the mechanism hinges on is still explained in the
+     prose, and its tooltip carries just the one-liner. Never put tooltips
+     inside `<pre>` or `<code>`.
    - Section `html` is raw markup. Write the prose to be read, with smooth
      transitions; one idea per paragraph.
 3. **Write the quiz**: five questions, medium difficulty. Hard enough that

@@ -10,6 +10,9 @@ Spec schema:
   slug      (optional) filename slug; defaults to a slugified title
   sections  (required) list of {id, heading, html}
             heading is plain text; html is raw markup inserted unescaped
+            html may wrap a term in
+              <dfn class="term" data-def="one plain-text sentence">term</dfn>
+            and the page shows data-def as a hover/tap tooltip
   quiz      (optional) list of {question, options}
             question is plain text
             options is a list of {text, correct, feedback}:
@@ -191,12 +194,38 @@ th { background: var(--box-bg); font-family: system-ui, sans-serif; font-size: 0
 }
 .feedback.correct { background: var(--ok-bg); border: 1px solid var(--ok); }
 .feedback.wrong { background: var(--bad-bg); border: 1px solid var(--bad); }
+.term {
+  font-style: inherit; cursor: help; position: relative;
+  border-bottom: 1px dotted var(--muted); outline: none;
+}
+.term::after {
+  content: attr(data-def);
+  position: absolute; left: 0; bottom: calc(100% + 6px); z-index: 10;
+  width: max-content; max-width: min(320px, 78vw);
+  background: var(--fg); color: var(--bg);
+  font: 400 0.78rem/1.45 system-ui, sans-serif;
+  padding: 8px 10px; border-radius: 8px;
+  opacity: 0; visibility: hidden; transition: opacity 0.12s;
+  pointer-events: none;
+}
+.term:hover::after, .term:focus::after { opacity: 1; visibility: visible; }
+.term.term-right::after { left: auto; right: 0; }
 @media (max-width: 600px) {
   body { font-size: 16px; }
   main { padding: 24px 16px 60px; }
   .flow { flex-direction: column; align-items: stretch; }
   .arrow { transform: rotate(90deg); text-align: center; }
 }
+"""
+
+TERM_JS = """
+document.querySelectorAll('.term').forEach(function (el) {
+  el.setAttribute('tabindex', '0');
+  var rect = el.getBoundingClientRect();
+  if (rect.left + 320 > document.documentElement.clientWidth) {
+    el.classList.add('term-right');
+  }
+});
 """
 
 QUIZ_JS = """
@@ -273,7 +302,7 @@ def render(spec):
 <nav class="toc"><strong>Contents</strong><ol>{"".join(toc_items)}</ol></nav>
 {"".join(body)}
 </main>
-<script>{QUIZ_JS}</script>
+<script>{TERM_JS}{QUIZ_JS}</script>
 </body>
 </html>
 """

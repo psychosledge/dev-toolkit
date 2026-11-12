@@ -194,11 +194,11 @@ Commit on approval with a clear commit message describing the change.
 
 **Log it, if this project keeps an activity log.** If a `tracking-config` project memory exists with `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill for format/location) per repo touched (domain inferred from the changed files, asking only if genuinely ambiguous), describing what was committed in one line, referencing the story's `plan.md` if one was found earlier.
 
-**Offer the understanding doc.** After the commit, offer once: "Want an understanding doc for this change? (interactive HTML with a quiz, via the `explain` skill)". On yes, invoke the `explain` skill on the committed range, quick depth unless asked otherwise. That skill's scope rule governs the content: the doc teaches the change as committed and carries nothing from this review's verifier report, findings, or recommendations.
+**Offer the understanding doc.** After the commit, offer once: "Want me to `/explain` this change?". On yes, invoke the `explain` skill on the committed range, quick depth unless asked otherwise. That skill's scope rule governs the content: the doc teaches the change as committed and carries nothing from this review's verifier report, findings, or recommendations.
 
 ### Reviewer Mode — Done
 
-The review is complete once comments are posted. Then offer once: "Want an understanding doc for this PR? (interactive HTML with a quiz, via the `explain` skill)". On yes, invoke the `explain` skill on the PR's diff (from the worktree if one was used), quick depth unless asked otherwise; its scope rule keeps the review's findings and proposed comments out of the doc.
+The review is complete once comments are posted. Then offer once: "Want me to `/explain` this PR?". On yes, invoke the `explain` skill on the PR's diff (from the worktree if one was used), quick depth unless asked otherwise; its scope rule keeps the review's findings and proposed comments out of the doc.
 
 If a `tracking-config` project memory exists, record the outcome on this PR's row in the live tracker README, adding the row if none matches, per the `tracking` skill's workloop checkpoints.
 
