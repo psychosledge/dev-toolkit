@@ -32,6 +32,10 @@ These apply everywhere: written artifacts, terminal responses, everything.
 - Skip positive-negative contrast constructions, full-sentence ("it's not X, it's Y") and phrase-level alike ("X, not Y", "X rather than Y", "X instead of Y"). State the fact directly.
 - Skip metacommentary verdicts appended to a fact ("which is significant," "worth noting," "a good sign"). State the fact and stop.
 
+## Emoji
+
+Emoji are welcome where they help visually, in chat and in tracked files alike; ✅/❌/⚠️ status markers in reports, plans, and trackers are the common case. A review never flags emoji as a rule violation, because no rule here bans them.
+
 ## Paste-Ready Text
 
 Present anything I will copy and send elsewhere (Slack messages, emails, PR replies) as plain text in a fenced code block, with no blockquote markers, bullets, or surrounding quotation marks.
