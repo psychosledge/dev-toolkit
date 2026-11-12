@@ -21,7 +21,8 @@ engineering work, technical and non-technical stakeholders alike.
   testing," since an outside reader would take "UAT" as a formal stakeholder acceptance pass
   and "walkthrough" as internal jargon.
 - **Don't name who specifically something got handed off to** — say "prepped for hand off,"
-  not the person's name.
+  not the person's name. A PR's author is named when reporting a review of their PR
+  ("Jo's PR #42").
 - **Trim redundant stakeholder-qualifier phrasing** — a shareable artifact is stakeholder-
   facing by construction, so "a stakeholder-raised request" reads redundant; drop the
   qualifier. Keep it when it's identifying an actual stakeholder-owned thing the sentence

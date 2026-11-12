@@ -6,8 +6,9 @@ description: Builds standup talking points from the activity log since the last 
 # Standup
 
 Turns raw activity-log entries into talking points to speak from at standup: net progress per
-work item, what's next, and what's blocked, presented in chat. The audience includes technical
-and non-technical stakeholders, so every line follows the `stakeholder-language` skill.
+work item since the last standup, what's in motion now, and what's blocked, presented in chat.
+The audience includes technical and non-technical stakeholders, so every line follows the
+`stakeholder-language` skill.
 
 ## Current Engagement Config
 
@@ -34,7 +35,9 @@ math.
 Read every log file the window touches, in full — including today's, which usually holds
 same-morning entries that belong in the window. `[standup]` entries are markers, never
 material. Group the rest by `ref`; entries with no ref stand alone. Read the live unit
-README's Priority order and Active items for each item's current Status and Next step.
+README's Priority order and Active items for each item's current Status and Next step. For
+each item the user is actively building, read its story's plan for the remaining slices in
+order; Doing is built from them.
 
 Log entries are live capture, not verified. Before a talking point says merged, shipped, or
 done: resolve the diff base with the `branching-model` skill and check
@@ -46,26 +49,48 @@ saying where it actually stands, such as "PR open, awaiting review."
 Present in chat only; no file is written. Shape:
 
 ```
-Since <last standup day>'s standup:
-- <Item>: <net progress since then>. <Where it stands now.>
+Done:
+- <Item label>: <net progress across the window>.
 
-Today:
-- <top of the README's Priority order, with its Next step>
+Doing:
+- <Item label>: <the step in progress now, then the steps after it, in order>.
 
-Waiting on:
-- <anything blocked on someone else>
+Blockers:
+- None
 ```
 
-- One bullet per work item, covering the net progress across all of its window entries.
-  Describe what the work does for the product per the `stakeholder-language` skill, never the
-  mechanics of producing it.
-- Each bullet is one or two short sentences a person can say aloud, never a timeline.
+The three headings are fixed: `Done:`, `Doing:`, `Blockers:`, in this order, every run. Done
+covers everything since the last standup marker, however many days that spans; work already
+logged today belongs in Done, never in Doing.
+
+- **One bullet per work item under Done**, covering the net progress across all of its window
+  entries.
+- **Label every bullet** with the item's product name plus its Jira key, such as "Automatic
+  retry for failed exports (ABC-123):", and use that same label for the item across Done and
+  Doing.
+- **First person singular** for the user's own work ("I confirmed ..."). "The team" is only
+  for group decisions.
+- Each bullet is one or two short sentences a person can say aloud, never a timeline. Describe
+  what the work does for the product per the `stakeholder-language` skill, never the mechanics
+  of producing it.
 - A meeting entry earns a bullet only when it produced a decision or direction change; state
   the decision, never the attendance.
-- `PR review - <domain>` entries compress to one line per PR, such as "reviewed the
-  date-picker changes, now approved."
-- "Today" comes from the tracker, never invented; keep it to the top one or two priorities.
-- Omit "Waiting on" when nothing is blocked.
+- **Reviews of someone else's PR:** one line per PR, naming the author and the PR number, with
+  the fixed outcome phrase "reviewed". Example: "Portfolio charts (Jo's PR #42): reviewed."
+  Multiple rounds in the window compress to the same single line, naming the count: "reviewed
+  twice." Leave out review findings, comment counts, approval state and
+  merge state; the author surfaces their own merge in their update. A log entry that only
+  records someone else's PR merging, with no review work of the user's own in the window,
+  earns no bullet.
+- **Doing holds only the items the user is building**: in-flight code with the user's own next
+  implementation step. Each bullet gives that step, then the steps after it from the story's
+  plan (remaining slices in order), described in product language. A finished exploration held
+  as reference, a coordination step (settling an approach with someone, sending asks, taking a
+  proposal to another team), or a demo later in the week never earns a Doing bullet on tracker
+  priority alone.
+- **Blockers** is always present; when nothing is blocked it holds "- None". Waiting on a PR
+  author's replies or a teammate's merge is normal flow. A blocker is something that stops the
+  user's own work.
 
 ## Step 4 — Write the marker
 
