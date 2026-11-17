@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Verify correctness, walk through changes with the human, handle fixes, and commit. Runs the verifier automatically — AC check if criteria are available, quality assessment always.
+description: Verify correctness, walk through changes with the human, handle fixes, and commit. Runs the verifier automatically — AC check if criteria are available, quality assessment always. Owner Mode walks at design depth by default, escalating to the full line-level walkthrough on verifier evidence or request.
 argument-hint: "[PR URL or #number for reviewer mode | acceptance criteria or base ref for owner mode (optional)]"
 ---
 
@@ -90,8 +90,32 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 
 **a) Group the changed files by concern** — not alphabetically, but by what problem they solve together. Small changes may have only one group.
 
-**b) For each group — present ONE group per response, then stop and wait:**
-0. Open the response with a one-line mode header: `**Reviewing PR #<number>**` (Reviewer Mode) or `**Reviewing local changes**` (Owner Mode). Keep the mode anchored every turn rather than relying on the mode recorded once at the start.
+**b) Pick each group's depth before presenting anything.**
+
+- **Reviewer Mode:** every group is full depth.
+- **Owner Mode:** design depth is the default. A group is full depth when any of these holds:
+  - the verifier reported a blocker or a high-priority issue in the group's files
+  - an acceptance criterion this group implements is unmet
+  - the verifier's Test Coverage Analysis names behavior this group changes as untested
+  - the human asks ("go deep on X" for one group, "full walkthrough" for the rest of the review)
+
+If the verifier's quality rating is below 7, recommend full depth for the whole review before presenting the first group, and let the human decide. Design depth is earned by a green verifier floor; it is never a route past a red one.
+
+In the same response as the pre-flight summary, list the depth plan — one line per group: name, depth, and the trigger when full (`event dedupe — full depth: high-priority finding`). Then present the first group.
+
+**c) For each group — present ONE group per response, then stop and wait.** Open every response with a one-line mode header: `**Reviewing PR #<number>**` (Reviewer Mode) or `**Reviewing local changes**` (Owner Mode). Keep the mode anchored every turn rather than relying on the mode recorded once at the start.
+
+**Design depth** (Owner Mode default):
+
+1. Name the group and its purpose in one sentence.
+2. State the behavior delta — what observably changed for a user or a calling system, mapped to the AC it implements where one applies.
+3. Trace **one concrete example** through the change: a representative input or scenario with real values, followed step by step to its outcome. Skip only for groups with no runtime behavior (renames, comments, formatting, config-value changes).
+4. Give the design narrative: the shape of the solution, the invariants it adds or relies on, the ADR it executes (when the plan has one), the alternative that was rejected, and what would make this design wrong.
+5. Present the group's findings as a queue, not a per-finding walkthrough: one line each for low-priority issues, and the comment audit as counts (`Comment audit: 2 remove — weak, 1 keep`). Every `Remove` verdict and every low-priority finding on a line this diff touches is queued as an approved `fix now` for Step 3 by default — say so in one line instead of asking per item. A finding that genuinely warrants `defer` or `skip` gets a full-depth-style Recommendation line instead of silently joining the queue.
+6. No code blocks in a design-depth response — the code is pull, not push. Close with: "Continue? ('show me X' pastes the code; 'go deep' re-presents this group at full depth.)" and wait. On "show me X", paste that code verbatim (exact file path and line range, 10–40 lines, actual file contents) and re-ask. On "go deep", re-present the group at full depth. Pushback on a comment-audit `Keep` verdict triggers the same comment-quality investigation as full-depth step 10. Handle any called-out fix immediately via Step 3 before the next group.
+
+**Full depth** (every Reviewer Mode group; an Owner Mode group that met an escalation trigger — restate the trigger under the group's title):
+
 1. Name the group and its purpose in one sentence
 2. Read the relevant files and paste the meaningful changed code **verbatim in a code block** (typically 10–40 lines — actual file contents, not raw diff syntax), prefixed with the exact file path and line range shown (e.g. `src/foo.ts:42-58`) so the human can jump straight to it. The human cannot see file contents unless you paste them; never describe or reference code without showing it.
 3. Explain **what changed** — specifically and concisely
@@ -124,15 +148,18 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 
 **Do not present the next group until the human replies.** One group per response is the rule — not a suggestion.
 
-**c) After all groups, consolidate:**
+**d) Quiz gate (Owner Mode only, after the last group, in its own response before consolidating):** offer: "Before I consolidate — ask me how any part of this change works, and I'll explain it from the code." Answer every probe by reading the actual files, and paste the code that backs the explanation. An explanation that turns out wrong, or that you can't back with code you've read, is a finding — give it a Recommendation line like any other. When the human declines or says continue, consolidate.
+
+**e) After all groups, consolidate:**
 - 2–3 sentence summary of the full change
 - Any remaining issues not already addressed during the walk-through:
   - **Blockers** (failing tests, unmet AC)
+  - **Owner Mode:** the fix-now queue from design-depth groups, one line per item — this is the human's one look at the batch before Step 3 runs it
   - **Owner Mode:** Recommended fixes (quality issues, verifier refactoring suggestions, test coverage gaps) and optional improvements
   - Comment audit tally: comments removed (wrong), removed (weak), kept. **Reviewer Mode:** plus any bundled `Suggestion` raised here for a weak-comment pattern that recurred three or more times across the review.
   - If nothing remains: "No outstanding issues — the implementation looks clean."
 
-**Owner Mode:** Ask: "Anything else to address before committing? Call out by number, or say 'commit' to proceed."
+**Owner Mode:** Ask: "Anything else to address before committing? Call out by number to change an item's disposition, or say 'commit' to proceed — the fix-now queue runs first in Step 3."
 
 **Reviewer Mode:** Ask: "Any comments to add or edit? Call out by number, or say 'continue' to move to per-comment wording review." This is a scope check, not a posting decision — Step 3 still walks each comment individually for exact wording before anything posts. Never use the word "post" in this question; it is reserved for Step 3's own gate.
 
@@ -141,6 +168,8 @@ The verifier's full report — strengths, refactoring suggestions, and test cove
 ### Owner Mode — Fix Loop
 
 Keep a running list of files changed during this fix session.
+
+The fix-now queue from design-depth groups counts as approved once the human proceeds past consolidation; run it first, then any fixes the human called out.
 
 For each approved fix:
 1. Invoke the **coder** subagent with specific, scoped instructions — reference the exact file and issue
@@ -192,7 +221,7 @@ Once the human is satisfied, ask for explicit commit approval:
 
 Commit on approval with a clear commit message describing the change.
 
-**Log it, if this project keeps an activity log.** If a `tracking-config` project memory exists with `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill for format/location) per repo touched (domain inferred from the changed files, asking only if genuinely ambiguous), describing what was committed in one line, referencing the story's `plan.md` if one was found earlier.
+**Log it, if this project keeps an activity log.** If a `tracking-config` project memory exists with `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill for format/location) per repo touched (domain inferred from the changed files, asking only if genuinely ambiguous), describing what was committed in one line, referencing the story's `plan.md` if one was found earlier, and noting the review depth: `design`, `design, N escalated: <trigger>`, or `full`.
 
 **Offer the understanding doc.** After the commit, offer once: "Want me to `/explain` this change?". On yes, invoke the `explain` skill on the committed range, quick depth unless asked otherwise. That skill's scope rule governs the content: the doc teaches the change as committed and carries nothing from this review's verifier report, findings, or recommendations.
 
