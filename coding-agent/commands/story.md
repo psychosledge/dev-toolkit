@@ -27,7 +27,7 @@ $ARGUMENTS
 
 ## Story structure
 
-**Tier** — `core` or `hardened`. The delivery scope downstream planning honors: core defers non-catastrophic hardening into a follow-up hardening story; hardened delivers all hardening within this story. Draft every card as `core`. A card without the field is treated as core downstream.
+**Tier** — `core` or `hardened`. The delivery scope downstream planning honors: core defers non-catastrophic hardening into a follow-up hardening story; hardened delivers all hardening within this story. Draft every card as `core`.
 
 **Summary** — One declarative sentence stating the user-facing outcome as a headline. Should complete: "When this story is done, a user can..."
 

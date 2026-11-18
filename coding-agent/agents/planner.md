@@ -40,6 +40,8 @@ Read the user story carefully:
 - What domain concepts are involved?
 - What is the complete scope of the feature?
 
+Read the card's `Tier` field: `core` or `hardened`. A missing field means core; proceed silently, never asking about it. An unrecognized value gets one focused question before planning proceeds. The tier picks the failure-mode dispositions in Step 6.3 and is recorded in the plan file in Step 7.
+
 ### Step 2: Assess
 Is this already a thin vertical slice, or does it span multiple independent increments of value?
 
@@ -50,7 +52,7 @@ Is this already a thin vertical slice, or does it span multiple independent incr
 ### Step 3: Decompose
 Identify the thinnest increments of end-to-end user-facing value. Order them so that:
 1. The first slice proves the core behavior works (happy path, minimum viable)
-2. Subsequent slices add error handling, edge cases, or additional behaviors
+2. Subsequent slices add additional behaviors, plus error handling and edge cases at hardened tier. At core tier, non-catastrophic error handling and edge cases belong to the hardening follow-up, judged mode by mode in Step 6.3, never to a v1 slice.
 3. Each slice builds on the previous without requiring rework
 
 For each slice, flag whether it requires architectural decisions (→ **architect**) or
@@ -122,14 +124,22 @@ Run these checks against the draft before persisting. Fix findings inline.
 
 1. **Story coverage.** Walk the story's acceptance criteria one by one. Each must map to a slice's criteria or to the walkthrough checklist. An AC with no owner is a decomposition gap.
 2. **Interface consistency.** For every `Interface contract` field, confirm the consuming slice named in `Scaffolding for` uses the same names, signatures, and shapes. A function called one thing where it's produced and another where it's consumed is a planning bug.
-3. **Failure-mode sweep.** The story says what the feature must do; it stays silent on most of what the feature will meet, and that silence is no license for those inputs to break it. List up to five input classes or failure modes the story implies but no slice's criteria exercise, ordered by how likely each is to bite a user: empty or malformed input, repeated or concurrent actions, permission boundaries, external-call failure, size or volume extremes. For each, either add a criterion to the slice that owns the code path, or record it as out of scope with the reason. Write the result as a `## Review Focus` section between the Slice Plan and the Walkthrough Checklist, one line per item with its disposition: `covered: Slice N` or `out of scope: <reason>`. An empty section states that the sweep ran and found nothing.
+3. **Failure-mode sweep.** The story says what the feature must do; it stays silent on most of what the feature will meet, and that silence is no license for those inputs to break it. List up to five input classes or failure modes the story implies but no slice's criteria exercise, ordered by how likely each is to bite a user: empty or malformed input, repeated or concurrent actions, permission boundaries, external-call failure, size or volume extremes. Then dispose of each mode by the story's tier (Step 1).
+
+   At **hardened** tier: add a criterion to the slice that owns the code path (`covered: Slice N`), or record it as out of scope with the reason (`out of scope: <reason>`).
+
+   At **core** tier: the default disposition is `deferred: hardening story`. A mode earns a v1 criterion in the slice that owns the code path (`covered: Slice N`) only when it is catastrophic on the happy path; data loss, a crossed security boundary, and money moving are examples of catastrophic, and each mode is judged against that test, with the human confirming every covered/deferred call at plan approval. `out of scope: <reason>` remains for modes that belong to neither this story nor its hardening follow-up.
+
+   Write the result as a `## Review Focus` section between the Slice Plan and the Walkthrough Checklist, one line per swept mode with its disposition: `covered: Slice N`, `out of scope: <reason>`, or `deferred: hardening story`. An empty section states that the sweep ran and found nothing.
+
+   When at least one mode is deferred, draft the follow-up story card: the `/story` card structure, `Tier: hardened`, carrying every deferred mode, persisted to `docs/stories/<slug>/hardening-story.md` beside the plan and linked from Review Focus. Zero deferrals means no hardening file. On a replan, overwrite it like the plan; the latest version is authoritative.
 
 ### Step 7: Persist Artifacts
 
 **Before presenting to the human**, write the Slice Plan and Walkthrough Checklist to a file in the project so they survive context compaction and are in git history alongside the code.
 
 1. Derive a story slug from the story title: lowercase, words separated by hyphens, max 40 characters (e.g. `checkout-flow-redesign`)
-2. Write the full output (Slice Plan + Review Focus + Walkthrough Checklist) to `docs/stories/<slug>/plan.md`
+2. Write the full output (Slice Plan + Review Focus + Walkthrough Checklist) to `docs/stories/<slug>/plan.md`. The file opens with an H1 title followed on the next line by `Tier: <value>`, the tier resolved in Step 1; the verifier reads the tier from this line.
 3. Create intermediate directories as needed
 
 If a `CLAUDE.md` exists and names a different docs location, use that instead. If you cannot determine the project root, write to `docs/stories/<slug>/plan.md` relative to the working directory.
@@ -138,7 +148,7 @@ If the file already exists (re-run), overwrite it — the latest plan is authori
 
 ## Human Approval Gate
 
-After persisting the artifacts and presenting the Slice Plan and Walkthrough Checklist, **pause and ask the human to approve the plan before any work begins.** Do not proceed to design or implementation until explicitly approved. If the human requests changes, revise, overwrite the file, and re-present.
+After persisting the artifacts and presenting the Slice Plan and Walkthrough Checklist, **pause and ask the human to approve the plan before any work begins.** On a core-tier story, the presentation states that the covered/deferred line from the failure-mode sweep is the human's to confirm, and any Review Focus line can be moved between dispositions at this gate. Do not proceed to design or implementation until explicitly approved. If the human requests changes, revise, overwrite the file, and re-present.
 
 ## Constraints
 
