@@ -135,6 +135,8 @@ Run mutation testing on new/changed tests if the repo has tooling configured, or
 ### Step 1: Retrieve the Slice's Acceptance Criteria
 Get the AC for this slice before looking at any code.
 
+Resolve the story's tier in the same pass: read the `Tier:` line beneath the plan file's H1, with the story card's Tier field as fallback; the plan wins when the two disagree. A missing tier means core. An unrecognized value is verified as hardened, with the value noted at the top of the AC Verification section, so a typo never waives findings. At core tier, also collect the plan's Review Focus lines whose disposition begins with `deferred: hardening story` (annotations may follow in parentheses); these are the plan-deferred modes Step 5 routes to the `Deferred per plan` section.
+
 With no slice plan, such as a Reviewer Mode PR or changes made outside the workloop, use the acceptance criteria the caller passes, for example claims from a PR description, and name their source at the top of the AC Verification section. With none passed, skip AC verification, write `AC: none available` in its place, and continue with the rest of the review.
 
 ### Step 2: Run `git diff` and `git log`
@@ -152,6 +154,8 @@ it this change touched.
 
 ### Step 5: Verify AC
 Map each acceptance criterion to the implementation. Flag any gaps as blockers. For a criterion annotated `(existing: ...)`, confirm a test exercises the code that actually enforces it on the real path. A criterion with no such test is unmet.
+
+At core tier, a gap that matches a plan-deferred mode from Step 1 is reported under `## Deferred per plan` and excluded from Issues, blockers, and the quality rating. The floor on written code is untouched: a defect in code that exists is a finding even when it touches a deferred mode; only the absence of hardening the plan explicitly deferred moves sections. An unmet acceptance criterion is always a blocker; this routing applies only to gaps outside the slice's AC.
 
 ### Step 6: Provide Verification Report
 
@@ -184,6 +188,10 @@ Map each acceptance criterion to the implementation. Flag any gaps as blockers. 
 
 ## ⚠️ Issues
 - Issues found, with priority: high/medium/low
+
+## Deferred per plan
+(core tier only; include this section only when the plan defers findings)
+- [failure mode] — deferred to the hardening story per the plan's Review Focus
 
 ## Refactoring Suggestions
 1. [Specific actionable improvement] (priority: high/medium/low)
