@@ -140,6 +140,22 @@ that recap.
 One row per recap file. A rewrite later the same day appends `(updated HH:MM <tz>)` to the
 existing row's `Created` cell rather than adding a second row.
 
+## Deferred-finding dispositions
+
+Shared by `/plan` (the planner, when the failure-mode sweep defers findings) and `/code-review` Step 3b. Matches deferred findings against the project's recorded work once per run, so deferral lands somewhere the team can see, without duplicates.
+
+**Sources.** The `tracking-config` memory's `Backlog` field names a local file or directory. A `debt-tracking-config` project memory names a remote board instead, with fields `Board:` (the tracker and project, such as a Jira project key or board URL) and `Query hint:` (optional search terms folded into the scoped search; absent or `disabled` means none). When both configs exist, `debt-tracking-config` is the destination for deferred hardening findings. Resolve and create these per the Project Config Memory instructions in the global `CLAUDE.md`. A source marked `disabled` is skipped while any other configured source still runs. With no config at all, or every source `disabled`, skip this pass silently; the drafted hardening story alone carries the deferrals.
+
+**The pass.** Once per run, per configured source (at most two): batch-match every deferred finding in one go. A local backlog file is read whole (a directory-valued `Backlog`: every file in it, read whole); a remote board gets a scoped search (project-plus-keyword or JQL queries built from the findings, the story slug, and the `Query hint` when set), never a full backlog read. A failed source read (a board search that errors, or a configured backlog file that is missing or unreadable) is stated to the human and the run falls back to the hardening story; a failure is never reported as "no match".
+
+**Dispositions.** Present every match and non-match to the human in one batch; the human picks per finding:
+
+- **covered as-is**: an existing item already covers it. Record the ticket ID or backlog line, and offer an optional trail comment on that item.
+- **covered with a tweak**: an existing item nearly covers it. Draft the expansion text and show it; a shared item changes only after the human approves the draft.
+- **no match**: draft a new ticket or backlog entry carrying the trail `Deferred from story <slug> (docs/stories/<slug>/plan.md)`; it lands only on the human's go-ahead, and sprint placement is the human's call.
+
+**Recording.** Record each outcome in parentheses beside the finding's own record. The planner appends it after the intact Review Focus token on the finding's line, as `deferred: hardening story (covered as-is: PROJ-123)`, `(tweak drafted: PROJ-45)`, or `(new entry: <ref or path>)`, and annotates the hardening story's matching finding the same way; the hardening story stays the story-side record the trails point back to. `/code-review` appends the outcome to the finding's entry under the plan's `## Deferred findings` heading. A finding's outcome never lands on a line it doesn't own. On a replan or repeat review, read the prior run's annotations before overwriting and seed the match with those references, alongside the story slug in the search, so already-ticketed findings match their own tickets instead of accumulating duplicates.
+
 ## Archiving a story
 
 A story moves to `<stories root>/archive/` only at a unit boundary (a sprint rollover or a

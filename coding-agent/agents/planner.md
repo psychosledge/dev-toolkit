@@ -134,6 +134,8 @@ Run these checks against the draft before persisting. Fix findings inline.
 
    When at least one mode is deferred, draft the follow-up story card: the `/story` card structure, `Tier: hardened`, carrying every deferred mode, persisted to `docs/stories/<slug>/hardening-story.md` beside the plan and linked from Review Focus. Zero deferrals means no hardening file. On a replan, overwrite it like the plan; the latest version is authoritative.
 
+4. **Deferred-finding dispositions.** When the sweep deferred findings, run the disposition pass from the `tracking` skill's `## Deferred-finding dispositions` section: batch-match the deferred findings against the configured backlog or board, present each match and non-match with that section's three dispositions for the human to pick at the approval gate, and record each confirmed outcome beside its Review Focus line in that section's annotation syntax (dispositions are picked and recorded at the gate, after Step 7 persists the plan). With no configured source, skip silently per that section; the hardening story alone carries the deferrals.
+
 ### Step 7: Persist Artifacts
 
 **Before presenting to the human**, write the Slice Plan and Walkthrough Checklist to a file in the project so they survive context compaction and are in git history alongside the code.
