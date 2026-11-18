@@ -15,6 +15,7 @@ You are performing a drift audit between this repo's source-of-truth files and w
 - `~/.claude/agents/` — subagent definitions
 - `~/.claude/commands/` — slash command skills
 - `~/.claude/skills/` — skills (each a subdirectory containing `SKILL.md`, possibly plus supporting files)
+- `~/.claude/statusline.sh` — status line script, referenced by `statusLine` in `~/.claude/settings.json`
 
 `~/.claude/skills/synced/` is managed by the Claude Code harness, not this repo. Exclude it from discovery entirely.
 
@@ -23,6 +24,9 @@ You are performing a drift audit between this repo's source-of-truth files and w
 - `coding-agent/agents/` — subagent definitions
 - `coding-agent/commands/` — slash command skills
 - `coding-agent/skills/` — skills (same subdirectory shape as global)
+- `coding-agent/statusline.sh` — status line script
+
+`statusline.sh` is a shell script: diff it as a single file and rate it with the dotfile checks (Step 3b). When copying repo → global, keep it executable and confirm `~/.claude/settings.json` has `statusLine.command` set to `~/.claude/statusline.sh`.
 
 ### Dotfiles
 

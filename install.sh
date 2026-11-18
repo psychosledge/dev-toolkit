@@ -12,6 +12,16 @@ for dir in agents commands skills; do
   cp -rf "$REPO_DIR/coding-agent/$dir/." "$HOME/.claude/$dir/"
 done
 
+install -m 755 "$REPO_DIR/coding-agent/statusline.sh" "$HOME/.claude/statusline.sh"
+SETTINGS="$HOME/.claude/settings.json"
+if command -v jq >/dev/null 2>&1; then
+  [ -f "$SETTINGS" ] || echo '{}' > "$SETTINGS"
+  jq '.statusLine = {"type": "command", "command": "~/.claude/statusline.sh"}' "$SETTINGS" > "$SETTINGS.tmp" \
+    && mv -f "$SETTINGS.tmp" "$SETTINGS"
+else
+  echo "dev-toolkit: jq not found, statusLine not configured"
+fi
+
 find "$HOME/.claude" -name '.gitkeep' -delete
 find "$HOME/.claude" -name '.DS_Store' -delete
 
