@@ -150,7 +150,7 @@ If the file already exists (re-run), overwrite it — the latest plan is authori
 
 ## Human Approval Gate
 
-After persisting the artifacts and presenting the Slice Plan and Walkthrough Checklist, **pause and ask the human to approve the plan before any work begins.** On a core-tier story, the presentation states that the covered/deferred line from the failure-mode sweep is the human's to confirm, and any Review Focus line can be moved between dispositions at this gate. Do not proceed to design or implementation until explicitly approved. If the human requests changes, revise, overwrite the file, and re-present.
+After persisting the artifacts and presenting the Slice Plan and Walkthrough Checklist, **pause and ask the human to approve the plan before any work begins.** On a core-tier story, the presentation states that the covered/deferred line from the failure-mode sweep is the human's to confirm, and any Review Focus line can be moved between dispositions at this gate. When the disposition pass ran (Step 6 item 4), present its matches and drafted entries here as well; the human's picks are recorded per the tracking skill's Recording rule. Do not proceed to design or implementation until explicitly approved. If the human requests changes, revise, overwrite the file, and re-present.
 
 ## Constraints
 
