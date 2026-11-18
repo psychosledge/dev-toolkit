@@ -2,6 +2,13 @@
 
 This repo is a personal dev toolkit, not an application project. There is no build system, test suite, or deployable artifact at the repo root. Work here is primarily authoring and maintaining text files.
 
+## Branching
+
+- Model: trunk-based
+- Trunk: main
+- Feature branches: no
+- Release: direct push to main by the human; no PRs
+
 ## The two CLAUDE.md files
 
 `coding-agent/CLAUDE.md` is a **sync payload** — its contents are destined for `~/.claude/CLAUDE.md` to become global Claude instructions applied in every session on this machine. It is not project context for this repo.
