@@ -1,3 +1,6 @@
+# Workloop story plans (local working artifacts)
+docs/
+
 # OS cruft
 .DS_Store
 Thumbs.db
