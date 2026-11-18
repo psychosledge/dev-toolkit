@@ -27,6 +27,8 @@ $ARGUMENTS
 
 ## Story structure
 
+**Tier** — `core` or `hardened`. The delivery scope downstream planning honors: core defers non-catastrophic hardening into a follow-up hardening story; hardened delivers all hardening within this story. Draft every card as `core`. A card without the field is treated as core downstream.
+
 **Summary** — One declarative sentence stating the user-facing outcome as a headline. Should complete: "When this story is done, a user can..."
 
 **Background** — One short paragraph: why this matters, what problem it solves. No implementation detail.
@@ -46,6 +48,6 @@ $ARGUMENTS
 3. If the input is ambiguous, ask focused clarifying questions before drafting — not a list.
 4. Draft the story using the structure above.
 5. Present the draft and ask what to adjust.
-6. Iterate until the human approves.
-7. When approved, present the final card(s) cleanly. Do not create a ticket in any sprint tool — that is the human's next step. If a `tracking-config` project memory exists, add each approved card to the live tracker README per the `tracking` skill's workloop checkpoints.
+6. Iterate until the human approves. Approval covers the tier: confirm `core` or `hardened` with the human explicitly before finalizing, and record the confirmed value on the card.
+7. When approved, present the final card(s) cleanly, each carrying its confirmed tier. Do not create a ticket in any sprint tool — that is the human's next step. If a `tracking-config` project memory exists, add each approved card to the live tracker README per the `tracking` skill's workloop checkpoints.
 8. After approval, offer: "Ready to decompose this into technical slices? Run /plan with this story." If the input was split into multiple cards, offer this per card, and let the human pick which one to start with rather than assuming an order.
