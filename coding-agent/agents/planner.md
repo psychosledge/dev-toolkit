@@ -52,7 +52,7 @@ Is this already a thin vertical slice, or does it span multiple independent incr
 ### Step 3: Decompose
 Identify the thinnest increments of end-to-end user-facing value. Order them so that:
 1. The first slice proves the core behavior works (happy path, minimum viable)
-2. Subsequent slices add additional behaviors, plus error handling and edge cases at hardened tier. At core tier, non-catastrophic error handling and edge cases belong to the hardening follow-up, judged mode by mode in Step 6.3, never to a v1 slice.
+2. Subsequent slices add additional behaviors, plus error handling and edge cases at hardened tier. At core tier, non-catastrophic error handling and edge cases are deferred, judged mode by mode in Step 6.3, never built in a v1 slice.
 3. Each slice builds on the previous without requiring rework
 
 For each slice, flag whether it requires architectural decisions (→ **architect**) or
@@ -132,7 +132,7 @@ Run these checks against the draft before persisting. Fix findings inline.
 
    Write the result as a `## Review Focus` section between the Slice Plan and the Walkthrough Checklist, one line per swept mode with its disposition: `covered: Slice N`, `out of scope: <reason>`, or `deferred: hardening story`. An empty section states that the sweep ran and found nothing.
 
-   When at least one mode is deferred, draft the follow-up story card: the `/story` card structure, `Tier: hardened`, carrying every deferred mode, persisted to `docs/stories/<slug>/hardening-story.md` beside the plan and linked from Review Focus. Zero deferrals means no hardening file. On a replan, overwrite it like the plan; the latest version is authoritative.
+   When at least one mode is deferred and no disposition source is configured (item 4 below; the tracking skill's Sources paragraph), draft the follow-up story card: the `/story` card structure, drafted `core` like any card, carrying every deferred mode, persisted to `docs/stories/<slug>/hardening-story.md` beside the plan and linked from Review Focus as a draft the approval gate reshapes. With a configured source, write no hardening file: the deferred modes go to the gate, and the disposition pass's drafted entries carry each mode's detail. Zero deferrals means no hardening file. On a replan, overwrite it like the plan; the latest version is authoritative.
 
 4. **Deferred-finding dispositions.** When the sweep deferred findings, run the disposition pass from the `tracking` skill's `## Deferred-finding dispositions` section: batch-match the deferred findings against the configured backlog or board, present each match and non-match with that section's three dispositions for the human to pick at the approval gate, and record each confirmed outcome beside its Review Focus line in that section's annotation syntax (dispositions are picked and recorded at the gate, after Step 7 persists the plan). With no configured source, skip silently per that section; the hardening story alone carries the deferrals.
 
@@ -142,7 +142,8 @@ Run these checks against the draft before persisting. Fix findings inline.
 
 1. Derive a story slug from the story title: lowercase, words separated by hyphens, max 40 characters (e.g. `checkout-flow-redesign`)
 2. Write the full output (Slice Plan + Review Focus + Walkthrough Checklist) to `docs/stories/<slug>/plan.md`. The file opens with an H1 title followed on the next line by `Tier: <value>`, the tier resolved in Step 1; the verifier reads the tier from this line.
-3. Create intermediate directories as needed
+3. Write `docs/stories/<slug>/story.md`. When the story lives in an external artifact (a Jira ticket, an issue), it is a pointer only: the ticket key and link, plus the meta the artifact doesn't hold (the confirmed tier); it never restates ticket content. When the story has no external home (a `/story`-authored card), it carries the approved card text itself.
+4. Create intermediate directories as needed
 
 If a `CLAUDE.md` exists and names a different docs location, use that instead. If you cannot determine the project root, write to `docs/stories/<slug>/plan.md` relative to the working directory.
 

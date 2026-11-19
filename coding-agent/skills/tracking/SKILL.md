@@ -178,8 +178,7 @@ failure is never reported as "no match".
 **Recording.** Record each outcome in parentheses beside the finding's own record. The planner
 appends it after the intact Review Focus token on the finding's line, as
 `deferred: hardening story (covered as-is: PROJ-123)`, `(tweak drafted: PROJ-45)`, or
-`(new entry: <ref or path>)`, and annotates the hardening story's matching finding the same way;
-the hardening story stays the story-side record the trails point back to. `/code-review` appends
+`(new entry: <ref or path>)`. `/code-review` appends
 the outcome to the finding's entry under the plan's `## Deferred findings` heading. A finding's
 outcome never lands on a line it doesn't own. On a replan or repeat review, read the prior run's
 annotations before overwriting and seed the match with those references, alongside the story
