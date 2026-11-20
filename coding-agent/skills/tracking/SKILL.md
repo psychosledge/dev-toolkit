@@ -93,6 +93,9 @@ item's row, or add one if no row matches. Match by story slug, PR link, or plain
 | Released by the repo's release skill | `released <ref>` | none |
 | `/code-review` of someone else's PR | review outcome (posted / held / resolved outside this flow) | whose court it's in |
 
+An item that hasn't been through `/story` yet, picked up from the backlog or a board, has next
+step `/story`. Every story starts there, and `/plan` requires the `story.md` it writes.
+
 A review-of-someone-else's-PR item never gets shown at Demo Day in its own right, so when demo
 tracking is enabled, `/code-review` sets `Demoed` to `N/A` at this same checkpoint.
 

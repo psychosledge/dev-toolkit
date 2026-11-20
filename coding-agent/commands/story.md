@@ -1,13 +1,29 @@
 ---
 name: story
-description: Author a new story card in product-centric, PM-legible language. Drafts collaboratively — no sprint tool is touched until you say so. Use /plan to decompose an approved story into technical slices.
-argument-hint: "[story idea or feature description]"
+description: Every story starts here. Drafts a new story card from an idea or backlog entry, or confirms an existing ticket is story-shaped, in product-centric, PM-legible language, then writes the story's story.md, which /plan requires. No sprint tool is touched. Use /plan to decompose the approved story into technical slices.
+argument-hint: "[idea, backlog entry, or ticket ID/URL]"
 ---
 
-Compose a new story card based on the following input. Work collaboratively — draft first, iterate with the human, and do not finalize until explicitly approved.
+Turn the following input into an approved story. Work collaboratively, and do not finalize until the human explicitly approves.
 
-Story idea:
+Input:
 $ARGUMENTS
+
+---
+
+## Input modes
+
+The input's shape picks the mode:
+
+- **Confirm mode:** the input names or contains an existing ticket in an external tracker: a ticket key (pattern `[A-Z]+-[0-9]+`), a ticket or issue URL, or pasted ticket content carrying its key. Read the ticket (through a connector when one is available, otherwise from what was pasted; if neither gives you its content, ask the human to paste it).
+- **Draft mode:** anything else: a backlog entry, free text, a draft card file.
+
+**Confirm mode output** is a review of the ticket. It never restates or redrafts the ticket whole. Present, in order:
+
+1. A verdict line: `<KEY> is story-shaped` or `<KEY> needs changes before planning`.
+2. One line per authoring principle below (epic test, product framing, PM-legible prose, outcome-level acceptance criteria): ✅ when it passes; ❌ plus the specific problem when it doesn't.
+3. For each ❌, the replacement text for that part of the ticket, paste-ready in a fenced block, for the human to apply in the tracker. An epic gets a proposed split instead: each piece as a full card (Story structure below) in its own fenced block, paste-ready as a new ticket.
+4. The tier question (Process step 6).
 
 ---
 
@@ -43,11 +59,15 @@ $ARGUMENTS
 
 ## Process
 
-1. Read the story idea from $ARGUMENTS or conversation context.
+1. Read the input from $ARGUMENTS or conversation context, and pick the mode (Input modes above). In confirm mode, steps 2 to 5 take the shape of the Confirm mode output.
 2. Check the input against the epic test above. If it describes multiple independently-valuable outcomes, say so and propose splitting into N separate story cards instead of one. Draft each independently (full Story structure per card), present the set together, and let the human approve the split — don't default to bundling just because the input arrived as one request.
 3. If the input is ambiguous, ask focused clarifying questions before drafting — not a list.
 4. Draft the story using the structure above.
 5. Present the draft and ask what to adjust.
 6. Iterate until the human approves. Approval covers the tier: confirm `core` or `hardened` with the human explicitly before finalizing, and record the confirmed value on the card.
-7. When approved, present the final card(s) cleanly, each carrying its confirmed tier. Do not create a ticket in any sprint tool — that is the human's next step. If a `tracking-config` project memory exists, add each approved card to the live tracker README per the `tracking` skill's workloop checkpoints.
+7. When approved, write `docs/stories/<slug>/story.md` for each approved story (a different docs location named in the repo's `CLAUDE.md` wins). The slug comes from the story title: lowercase, hyphen-separated, at most 40 characters. The file opens with an H1 title and, on the next line, `Tier: <value>` with the confirmed tier. Then:
+   - **Draft mode:** the approved card text.
+   - **Confirm mode:** a pointer: `Ticket: <KEY> (<link>)`, with the parenthetical omitted when no link is known. It never restates ticket content; the ticket stays the source of truth, including any changes the human pastes into it.
+
+   Present the final card(s) cleanly, or in confirm mode the confirmed ticket key and tier, and the story.md path. Do not create or edit a ticket in any sprint tool; that is the human's step. If a `tracking-config` project memory exists, add each approved story to the live tracker README per the `tracking` skill's workloop checkpoints.
 8. After approval, offer: "Ready to decompose this into technical slices? Run /plan with this story." If the input was split into multiple cards, offer this per card, and let the human pick which one to start with rather than assuming an order.

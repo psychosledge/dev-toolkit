@@ -60,6 +60,7 @@ general.
 
 **Release cadence with no live unit:** nothing is in flight. When `Backlog` is set, read it and
 suggest what to group into the next release, a single item or several meant to ship together.
+Each backlog item's next step is `/story`.
 
 Otherwise, read the live unit's `README.md` (`## Priority order` and `## Active items`) and answer
 directly from what's there — this skill doesn't re-derive priority itself, the README is already

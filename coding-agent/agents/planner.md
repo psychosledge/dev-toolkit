@@ -34,13 +34,13 @@ A slice is **not**:
 ## Your Workflow
 
 ### Step 1: Understand the Story
-Read the user story carefully:
+The story is the `docs/stories/<slug>/story.md` that `/plan` hands you. When it is a pointer (`Ticket: <KEY>`, with a link when known), read the ticket for the story's content, through a connector when one is available, otherwise by asking the human to paste it. Read the story carefully:
 - What is the user trying to accomplish?
 - What are the full acceptance criteria?
 - What domain concepts are involved?
 - What is the complete scope of the feature?
 
-Read the card's `Tier` field: `core` or `hardened`. A missing field means core; proceed silently, never asking about it. An unrecognized value gets one focused question before planning proceeds. The tier picks the failure-mode dispositions in Step 6.3 and is recorded in the plan file in Step 7.
+Read the `Tier:` line in `story.md`: `core` or `hardened`. A missing line means core; proceed silently, never asking about it. An unrecognized value gets one focused question before planning proceeds. The tier picks the failure-mode dispositions in Step 6.3 and is recorded in the plan file in Step 7.
 
 ### Step 2: Assess
 Is this already a thin vertical slice, or does it span multiple independent increments of value?
@@ -140,12 +140,11 @@ Run these checks against the draft before persisting. Fix findings inline.
 
 **Before presenting to the human**, write the Slice Plan and Walkthrough Checklist to a file in the project so they survive context compaction and are in git history alongside the code.
 
-1. Derive a story slug from the story title: lowercase, words separated by hyphens, max 40 characters (e.g. `checkout-flow-redesign`)
+1. The slug is the name of the story directory holding the `story.md` you were handed.
 2. Write the full output (Slice Plan + Review Focus + Walkthrough Checklist) to `docs/stories/<slug>/plan.md`. The file opens with an H1 title followed on the next line by `Tier: <value>`, the tier resolved in Step 1; the verifier reads the tier from this line.
-3. Write `docs/stories/<slug>/story.md`. When the story lives in an external artifact (a Jira ticket, an issue), it is a pointer only: the ticket key and link, plus the meta the artifact doesn't hold (the confirmed tier); it never restates ticket content. When the story has no external home (a `/story`-authored card), it carries the approved card text itself.
-4. Create intermediate directories as needed
+3. `story.md` belongs to `/story`. Never write or change it.
 
-If a `CLAUDE.md` exists and names a different docs location, use that instead. If you cannot determine the project root, write to `docs/stories/<slug>/plan.md` relative to the working directory.
+The plan goes in the same directory as `story.md`.
 
 If the file already exists (re-run), overwrite it — the latest plan is authoritative. Preserve any existing `## Rulings` and `## Deferred findings` sections: those are execution records, and a replan doesn't erase them.
 

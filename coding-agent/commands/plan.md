@@ -1,10 +1,15 @@
 ---
 name: plan
-description: Decompose a user story into sequenced implementation increments with acceptance criteria and a walkthrough checklist. Human approval gate before any work begins. Use after /story has produced an approved story card.
-argument-hint: "[user story or ticket URL]"
+description: Decompose an approved story into sequenced implementation increments with acceptance criteria and a walkthrough checklist. Human approval gate before any work begins. Requires the story.md that /story writes.
+argument-hint: "[story slug, title, or ticket ID]"
 ---
 
-Invoke the **planner** subagent to decompose the following user story into sequenced implementation increments.
+**Story gate.** Before anything else, find the story's `docs/stories/<slug>/story.md` (a different docs location named in the repo's `CLAUDE.md` wins), matching `$ARGUMENTS` against each story directory's slug, its `story.md` title, and the ticket key in a pointer file.
+
+- **Found:** invoke the planner with that `story.md` path as the story.
+- **Not found:** stop. Tell the human this input has no approved story yet, and offer to run `/story` with it. Do not invoke the planner. This holds for every input without a `story.md`: a backlog entry, a ticket, or a request that already spells out its criteria, however urgent.
+
+Invoke the **planner** subagent to decompose the story into sequenced implementation increments.
 
 **Builder check.** After the planner persists `docs/stories/<slug>/plan.md` and before anything is presented, dispatch one **general-purpose** subagent with this charge: "You are the engineer who will implement this plan. Read only `docs/stories/<slug>/plan.md`, with no other context. List every question you would need answered before starting: values or names the plan uses but never defines, interfaces a slice consumes that no earlier slice produces, criteria you couldn't verify from the slice's own scope, and ambiguities where two reasonable implementations differ." Sort its questions into three piles:
 
@@ -51,5 +56,5 @@ After approval:
 
 **Log the plan, if this project keeps an activity log.** If a `tracking-config` project memory exists with `Activity log: enabled`, append one activity-log entry (see the `activity-log` skill for format/location) per repo this story's slices touch (domain inferred from the repo/story content, asking only if genuinely ambiguous), describing the plan in one line, referencing the story's `plan.md`.
 
-User story:
+Input:
 $ARGUMENTS
