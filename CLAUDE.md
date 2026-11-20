@@ -23,4 +23,5 @@ Never treat these as the same file or apply one in place of the other.
 - Never edit `~/.claude/` files directly when making a lasting change — the repo copy will overwrite them on the next sync.
 - After any set of changes to `coding-agent/`, commit to the repo and then sync. The repo is the record; `~/.claude/` is the runtime.
 - Behavior-shaping edits to `coding-agent/` files follow the `skill-testing` skill before commit: one baseline subagent run before the edit, one verification run after. Mechanical and reference-only edits ship without a test.
+- `.claude/` holds this repo's own tooling (`/sync-global`, `skill-testing`). It is never synced to `~/.claude/`.
 - `reference/` holds vendored third-party material for study, with provenance in `reference/README.md`. It is never synced to `~/.claude/`, and its scripts are never executed.

@@ -48,16 +48,16 @@ Never call AskUserQuestion in the same turn as content the user needs to read, s
 
 When working in a project that uses the coding-agent workloop (`/story`, `/plan`, `/slice`, `/code-review`), you will sometimes notice that an agent behaves unexpectedly, skips a step, produces incomplete output, or creates friction in the flow.
 
-**When this happens — surface it, don't patch it:**
+**When this happens, surface it with a gap report:**
 
-- Tell the human immediately: which agent or command file has the gap, what the observed behavior was, and what a concrete fix would look like.
+- Tell the human immediately with a gap report as paste-ready text: the agent, command, or skill file and section with the gap, the observed incident, and a concrete proposed fix. The incident becomes the baseline scenario when `dev-toolkit` tests the fix.
 - Do **not** write a project memory that describes the workaround (e.g., "the verifier doesn't surface blockers to the human, so remember to check manually").
 - Do **not** add one-off inline instructions to future prompts to compensate.
 - Do **not** silently adjust your own behavior to cover for an agent's deficiency.
 
 The agent files in `coding-agent/` (synced to `~/.claude/`) are the source of truth for workloop behavior.
 
-When an approved fix to a skill, agent, or command is made from any repo other than `dev-toolkit`, edit the global copy under `~/.claude/` directly. Never edit the `dev-toolkit` repo's `coding-agent/` directory unless the session's root directory is `dev-toolkit`. A dedicated `dev-toolkit` session compares the global files against the repo and decides what to fold in. A fix that changes behavior-shaping text follows the `skill-testing` skill's baseline-first cycle before it ships, wherever it's edited.
+Outside `dev-toolkit`, the gap report offers the human two choices: a quick global fix, or the report only. When the human approves a quick global fix, edit the global copy under `~/.claude/` directly and stop there. The edit ships untested, and the gap report is what a `dev-toolkit` session tests it against before folding it in. When the human picks the report only, the report is the whole deliverable. Never edit the `dev-toolkit` repo's `coding-agent/` directory unless the session's root directory is `dev-toolkit`.
 
 A memory that describes agent behavior or workflow process is almost always a signal that an agent file needs improving — not that you should remember to compensate.
 

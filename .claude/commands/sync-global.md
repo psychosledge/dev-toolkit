@@ -207,6 +207,7 @@ For each approved action:
    - For skills: `coding-agent/skills/<name>/` → `~/.claude/skills/<name>/` (whole directory)
    - For dotfiles: `dotfiles/<file>` → the paired live path from the Locations table
 2. **Copy global → repo**: copy the global file to the repo location, overwriting the repo version
+   - A global-ahead change to behavior-shaping text in a Claude config file shipped untested. Before copying it, run the `skill-testing` cycle: the repo version is the baseline, the global version is the candidate, and the scenario is the incident from the gap report that prompted the change (ask the human for it). If the candidate fails verification, stop on that file and report the result. The human picks fixing the wording here, copying repo → global to revert it, or keeping it as is.
    - For `CLAUDE.md`: `~/.claude/CLAUDE.md` → `coding-agent/CLAUDE.md`
    - For agents/commands: `~/.claude/<dir>/<file>` → `coding-agent/<dir>/<file>`
    - For skills: `~/.claude/skills/<name>/` → `coding-agent/skills/<name>/` (whole directory)

@@ -1,6 +1,6 @@
 ---
 name: skill-testing
-description: Test protocol for behavior-shaping edits to skill, agent, and command files. Use when creating or changing any file under coding-agent/ or ~/.claude/ (agents, commands, skills) whose text shapes agent behavior, before the change is committed or synced.
+description: Test protocol for behavior-shaping edits to dev-toolkit's agent, command, and skill files. Use when creating or changing a file under coding-agent/ whose text shapes agent behavior, or when /sync-global folds a global-ahead behavior-shaping change into the repo, before the change is committed or synced.
 ---
 
 # Skill Testing
