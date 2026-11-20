@@ -112,7 +112,7 @@ In the same response as the pre-flight summary, list the depth plan — one line
 3. Trace **one concrete example** through the change: a representative input or scenario with real values, followed step by step to its outcome. Skip only for groups with no runtime behavior (renames, comments, formatting, config-value changes).
 4. Give the design narrative: the shape of the solution, the invariants it adds or relies on, the ADR it executes (when the plan has one), the alternative that was rejected, and what would make this design wrong.
 5. Present the group's findings as a queue, not a per-finding walkthrough: one line each for low-priority issues, and the comment audit as counts (`Comment audit: 2 remove — weak, 1 keep`). Every `Remove` verdict and every low-priority finding on a line this diff touches is queued as an approved `fix now` for Step 3 by default — say so in one line instead of asking per item. A finding that genuinely warrants `defer` or `skip` gets a full-depth-style Recommendation line instead of silently joining the queue.
-6. No code blocks in a design-depth response — the code is pull, not push. Close with: "Continue? ('show me X' pastes the code; 'go deep' re-presents this group at full depth.)" and wait. On "show me X", paste that code verbatim (exact file path and line range, 10–40 lines, actual file contents) and re-ask. On "go deep", re-present the group at full depth. Pushback on a comment-audit `Keep` verdict triggers the same comment-quality investigation as full-depth step 10. Handle any called-out fix immediately via Step 3 before the next group.
+6. No code blocks in a design-depth response — the code is pull, not push. Close with: "Continue? ('show me X' pastes the code; 'go deep' re-presents this group at full depth.)" and wait. On the last group, close with Step 2d's last-group question instead. On "show me X", paste that code verbatim (exact file path and line range, 10–40 lines, actual file contents) and re-ask. On "go deep", re-present the group at full depth. Pushback on a comment-audit `Keep` verdict triggers the same comment-quality investigation as full-depth step 10. Handle any called-out fix immediately via Step 3 before the next group.
 
 **Full depth** (every Reviewer Mode group; an Owner Mode group that met an escalation trigger — restate the trigger under the group's title):
 
@@ -142,13 +142,19 @@ In the same response as the pre-flight summary, list the depth plan — one line
 
    For comment-audit findings specifically, Reviewer Mode disposition depends on the verdict. `Remove — wrong` always becomes a proposed comment (Suggestion or Blocker depending on how misleading the claim is) — a false comment is a correctness risk for whoever maintains that code next, regardless of who wrote it. `Remove — weak` does not become a proposed comment by default: note it happened and move on, since raising a stranger's stylistic nit costs them a round-trip for something with no functional effect. Track weak-comment counts across the whole review; if the same weakness recurs three or more times, raise one bundled `Suggestion` in Step 2c's consolidation instead of one `Nit` per instance. `Keep` needs no comment at all.
 
-10. **Owner Mode:** If any findings were surfaced (steps 6–8): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If the human pushes back on a `Keep` verdict specifically, that's not a fix request, it's a request to investigate: invoke the `comment-quality` skill and dig until the disposition resolves to one of removed, corrected, or identified tech debt (folds into Step 3b). This exploration is opt-in, triggered only by an explicit pushback — never run it automatically just because a comment was defended. If no findings: "Ready to move on?"
+10. **Owner Mode:** If any findings were surfaced (steps 6–8): ask "Want to fix any of these now, or continue?" Wait for an explicit answer — do not move on or start fixes without one. If the human calls out a fix, handle it immediately via Step 3 before proceeding to the next group. If the human pushes back on a `Keep` verdict specifically, that's not a fix request, it's a request to investigate: invoke the `comment-quality` skill and dig until the disposition resolves to one of removed, corrected, or identified tech debt (folds into Step 3b). This exploration is opt-in, triggered only by an explicit pushback — never run it automatically just because a comment was defended. If no findings: "Ready to move on?" On the last group, close with Step 2d's last-group question instead.
 
    **Reviewer Mode:** If any comments were proposed: ask "Do you agree with these, or any questions/concerns?" Use the answer to refine, merge, or drop drafts — this is not a posting decision, so don't frame it as one ("post", "approve", etc.). Findings may need rephrasing or grouping once later groups are in, so keep everything as drafts until Step 2c. Pushback on a `Keep` verdict triggers the same investigation described above, resolving to removed, corrected, or noted as tech debt — Reviewer Mode records no deferred findings of its own, so a tech-debt outcome here becomes a proposed comment instead. If no findings: "Ready to move on?"
 
 **Do not present the next group until the human replies.** One group per response is the rule — not a suggestion.
 
-**d) Quiz gate (Owner Mode only, after the last group, in its own response before consolidating):** offer: "Before I consolidate — ask me how any part of this change works, and I'll explain it from the code." Answer every probe by reading the actual files, and paste the code that backs the explanation. An explanation that turns out wrong, or that you can't back with code you've read, is a finding — give it a Recommendation line like any other. When the human declines or says continue, consolidate.
+**d) Quiz offer (Owner Mode only, folded into the last group's closing question):** The last group's response ends with one question that carries the group's own options and the quiz offer. Step 2d never takes a response of its own.
+
+- Design depth: "That's the last group. Ask me how any part of this change works, or say 'continue' to consolidate. ('show me X' pastes the code; 'go deep' re-presents this group at full depth.)"
+- Full depth with findings: "That's the last group. Want to fix any of these now? Otherwise, ask me how any part of this change works, or say 'continue' to consolidate."
+- Full depth without findings: "That's the last group. Ask me how any part of this change works, or say 'continue' to consolidate."
+
+Every re-ask on the last group (after "show me X", "go deep", a fix, or a `Keep` investigation) closes with the same question. Answer every probe by reading the actual files, and paste the code that backs the explanation. An explanation that turns out wrong, or that you can't back with code you've read, is a finding. Give it a Recommendation line like any other. Close each answer with "More questions, or 'continue' to consolidate?" On "continue", consolidate in the next response.
 
 **e) After all groups, consolidate:**
 - 2–3 sentence summary of the full change
@@ -159,7 +165,10 @@ In the same response as the pre-flight summary, list the depth plan — one line
   - Comment audit tally: comments removed (wrong), removed (weak), kept. **Reviewer Mode:** plus any bundled `Suggestion` raised here for a weak-comment pattern that recurred three or more times across the review.
   - If nothing remains: "No outstanding issues — the implementation looks clean."
 
-**Owner Mode:** Ask: "Anything else to address before committing? Call out by number to change an item's disposition, or say 'commit' to proceed — the fix-now queue runs first in Step 3."
+**Owner Mode:** The consolidation question depends on the fix-now queue. It never mentions committing. "Approve to commit?" is asked only in Step 4.
+
+- Fix-now queue has items: "Anything else to address? Call out by number to change an item's disposition, or say 'fix' to run the fix-now queue." On "fix", Step 3 starts.
+- Fix-now queue is empty: "Anything else to address? Call out by number, or say 'continue'." A called-out fix goes through Step 3. On "continue", skip Step 3 and go to Step 3b.
 
 **Reviewer Mode:** Ask: "Any comments to add or edit? Call out by number, or say 'continue' to move to per-comment wording review." This is a scope check, not a posting decision — Step 3 still walks each comment individually for exact wording before anything posts. Never use the word "post" in this question; it is reserved for Step 3's own gate.
 
@@ -169,7 +178,7 @@ In the same response as the pre-flight summary, list the depth plan — one line
 
 Keep a running list of files changed during this fix session.
 
-The fix-now queue from design-depth groups counts as approved once the human proceeds past consolidation; run it first, then any fixes the human called out.
+The fix-now queue from design-depth groups counts as approved once the human answers "fix" at consolidation; run it first, then any fixes the human called out.
 
 For each approved fix:
 1. Invoke the **coder** subagent with specific, scoped instructions — reference the exact file and issue
