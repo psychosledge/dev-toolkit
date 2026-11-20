@@ -9,6 +9,11 @@
 
 input=$(cat)
 
+if ! command -v jq >/dev/null 2>&1; then
+    echo "statusline: jq not found on PATH"
+    exit 0
+fi
+
 # One field per line: bash 3.2's `read` collapses empty tab-separated fields,
 # which would shift every later value. Newlines are stripped for the same reason.
 {
