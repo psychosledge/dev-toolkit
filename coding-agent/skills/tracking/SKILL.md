@@ -178,6 +178,13 @@ failure is never reported as "no match".
   `Deferred from story <slug> (docs/stories/<slug>/plan.md)`; it lands only on the human's
   go-ahead, and sprint placement is the human's call.
 
+**Known issues.** The planner's sweep also sends known issues through this pass: pre-existing
+defects that are silent and off-path (planner Step 6.3). They match and dispose like deferred
+findings, with two differences. A no-match draft is the planner's one-line entry with no
+`Deferred from story` trail. A local backlog file with a `## Known issues` section takes the
+entry there, unranked. With no configured source, the planner presents the drafted line at the
+approval gate for the human to place, and records the outcome the same way.
+
 **Recording.** Record each outcome in parentheses beside the finding's own record. The planner
 appends it after the intact Review Focus token on the finding's line, as
 `deferred: hardening story (covered as-is: PROJ-123)`, `(tweak drafted: PROJ-45)`, or
