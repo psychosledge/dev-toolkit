@@ -143,6 +143,15 @@ that recap.
 One row per recap file. A rewrite later the same day appends `(updated HH:MM <tz>)` to the
 existing row's `Created` cell rather than adding a second row.
 
+## Backlog entries
+
+Every drafted backlog entry, from release close-out, a deferred finding, or a known issue, holds
+these parts in order: a bold title stating the problem, the affected code, and the evidence. A
+`Deferred from story` trail follows when the dispositions below call for one. The entry ends
+there. Next steps and workloop commands (story, plan, slice, review, ship) belong to Active items
+rows only; scheduling an item is what turns it into workloop input. Existing entries that carry a
+process note are not a model to match.
+
 ## Deferred-finding dispositions
 
 Shared by `/plan` (the planner, when the failure-mode sweep defers findings) and `/code-review`
