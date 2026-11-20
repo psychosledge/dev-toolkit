@@ -89,6 +89,22 @@ landed in doesn't. For every file you touch, check its current total line count 
 or equivalent) and the length of any function you touched, independent of how small the
 diff was — don't let a quiet diff imply there's nothing here to check.
 
+**Classify every over-threshold file or function** as exactly one of these, checked in
+order, and write the class at the start of its Issues entry:
+
+1. **`Fix in this slice`** when the diff adds a new responsibility or concept to the unit,
+   adds or grows a function that was under its threshold (or absent) on the diff base and
+   is now over it, or already restructures that region. Threading a parameter or a small
+   local edit does not qualify. A test file's responsibility is the module it tests, so
+   tests added for that module's behavior do not qualify. Priority medium, with a Refactoring Suggestion naming the
+   mechanical split.
+2. **`Already tracked: <ID>`** when a debt source the invoking command named has an entry
+   covering the unit (a function inside a tracked file counts). One Issues line:
+   `` `file`: over threshold, tracked as <ID> ``. No priority and no Refactoring Suggestion.
+3. **`Record`** otherwise, including when no debt source was named or one couldn't be read.
+   Priority low, with one Refactoring Suggestion worded as a debt entry: the unit and its
+   natural split seams, with no line counts.
+
 ### 6. Domain Pattern Checks (when applicable)
 - Are domain concepts modeled correctly per the architect's design?
 - Are data structures immutable where they should be?

@@ -71,7 +71,7 @@ Record the **verifier baseline** as a fingerprint of HEAD plus the working tree.
 { git rev-parse HEAD; git diff HEAD; git ls-files -o --exclude-standard; git ls-files -o --exclude-standard | xargs -r cat; } | shasum
 ```
 
-Invoke the **verifier** subagent to review code quality and verify correctness. Tell it which mode this is (Owner or Reviewer) — it phrases its Approval Status section differently depending on which.
+Invoke the **verifier** subagent to review code quality and verify correctness. Tell it which mode this is (Owner or Reviewer) — it phrases its Approval Status section differently depending on which. Also give it the project's debt sources, resolved per the `tracking` skill's `## Deferred-finding dispositions` Sources paragraph (the `tracking-config` `Backlog` path, the `debt-tracking-config` board), when either is configured.
 
 - If acceptance criteria are available (passed as `$ARGUMENTS`, or findable in `docs/stories/<slug>/plan.md`), verify each criterion.
 - If no AC exists, skip the AC check and proceed to quality assessment only.
