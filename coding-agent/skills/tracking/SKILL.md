@@ -116,8 +116,13 @@ recently archived release if there is one. Remove the item from the backlog file
 listed there.
 
 **Release cadence, Active items now empty:** when a checkpoint moves the last Active item to
-Closed, ask whether the release is ready to close out, and run release close-out below on a
-yes.
+Closed, the checkpoint decides what happens next:
+
+- **`released <ref>`, with the repo's release skill run in this session on the human's
+  approval:** run release close-out below directly. The human's approval to ship the release's
+  last item is the go-ahead to close the release.
+- **Any other checkpoint**, such as a PR merge or an item moved to the backlog: ask whether the
+  release is ready to close out, and run release close-out below on a yes.
 
 ### `Demoed`
 
@@ -236,7 +241,7 @@ release close-out), never immediately on completion. For each story under `<stor
 ## Release close-out
 
 Release cadence only. Runs when the user asks to close out the release, or when the release's
-Active items are empty (see the checkpoint above, and `whats-next`).
+Active items are empty (directly or on a yes, per the checkpoint above, and `whats-next`).
 
 1. **Confirm it's actually done.** Every Active item is closed, and each closed item's PR is
    merged or its release ref exists. Check rather than trusting the README. Anything still open
