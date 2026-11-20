@@ -180,7 +180,13 @@ Keep a running list of files changed during this fix session.
 
 The fix-now queue from design-depth groups counts as approved once the human answers "fix" at consolidation; run it first, then any fixes the human called out.
 
-For each approved fix:
+**The fix-now queue runs as one batch, in one response:**
+1. Invoke the **coder** subagent once with every queue item, each with its exact file and issue.
+2. After the coder finishes, do one combined re-walk: for each item, show the updated code and say what changed in one line.
+3. Add the changed files to the fix session list.
+4. Ask once: "Good? Anything else to adjust?"
+
+**Each fix the human called out runs on its own:**
 1. Invoke the **coder** subagent with specific, scoped instructions — reference the exact file and issue
 2. After the coder finishes, do a targeted re-walk: show the updated code, explain what changed. Keep it brief — context is already established.
 3. Add the changed files to the fix session list.
