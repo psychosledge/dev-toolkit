@@ -31,7 +31,7 @@ input=$(cat)
     (.cost.total_cost_usd // 0),
     ((.rate_limits.seven_day.used_percentage // -1) | floor),
     ((.worktree.path // "") | clean)
-  ' 2>/dev/null
+  ' 2>/dev/null | tr -d '\r'
 )
 
 MODEL=${MODEL:-?}
