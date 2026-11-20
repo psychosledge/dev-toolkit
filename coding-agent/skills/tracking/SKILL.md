@@ -178,6 +178,12 @@ failure is never reported as "no match".
   `Deferred from story <slug> (docs/stories/<slug>/plan.md)`; it lands only on the human's
   go-ahead, and sprint placement is the human's call.
 
+**Size entries.** A drafted entry or tweak for a size finding (a file or function past a
+verifier length threshold) states three things: the unit, the threshold it is past, and its
+split seams. Example: `` `src/api/orders.ts` past the file-length threshold; split request
+parsing from pricing rules ``. The threshold name
+stays true until the item is fixed. A line count goes stale on the next edit.
+
 **Known issues.** The planner's sweep also sends known issues through this pass: pre-existing
 defects that are silent and off-path (planner Step 6.3). They match and dispose like deferred
 findings, with two differences. A no-match draft is the planner's one-line entry with no
