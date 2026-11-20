@@ -9,6 +9,11 @@ argument-hint: "[story slug, title, or ticket ID]"
 - **Found:** invoke the planner with that `story.md` path as the story.
 - **Not found:** stop. Tell the human this input has no approved story yet, and offer to run `/story` with it. Do not invoke the planner. This holds for every input without a `story.md`: a backlog entry, a ticket, or a request that already spells out its criteria, however urgent.
 
+**Background worktree.** This step applies when this session is a background job whose session instructions require edits in a worktree, and it hasn't entered one yet. Check whether the story's directory is tracked: `git ls-files <story directory>` prints at least one file.
+
+- **Tracked:** resolve the diff base now (branch step 1 below) and run `git fetch origin <diff-base>`. Create a worktree from it with `git worktree add -b plan-<slug> .claude/worktrees/plan-<slug> origin/<diff-base>` and call `EnterWorktree` with that path. If `story.md` isn't committed on `origin/<diff-base>`, copy the story directory from the main checkout into the worktree. Hand the planner the worktree's `story.md`. Every later step runs in the worktree.
+- **Untracked:** stay in the main checkout. A worktree's copy of an untracked file is deleted with the worktree. When the session instructions block writes to the main checkout, stop before invoking the planner and tell the human this story needs `/plan` from a foreground session.
+
 Invoke the **planner** subagent to decompose the story into sequenced implementation increments.
 
 **Builder check.** After the planner persists `docs/stories/<slug>/plan.md` and before anything is presented, dispatch one **general-purpose** subagent with this charge: "You are the engineer who will implement this plan. Read only `docs/stories/<slug>/plan.md`, with no other context. List every question you would need answered before starting: values or names the plan uses but never defines, interfaces a slice consumes that no earlier slice produces, criteria you couldn't verify from the slice's own scope, and ambiguities where two reasonable implementations differ." Sort its questions into three piles:
@@ -50,6 +55,7 @@ Then ask: "Does this plan and branch look right? Approve to begin."
 After approval:
 - If the branch doesn't exist: switch to the resolved diff base first (`git switch <diff-base>`, pulling latest if behind), then create the new branch from there with `git switch -c <branch-name>`.
 - If it already exists: `git switch <branch-name>`.
+- In a worktree from the Background worktree step, skip the switch to the diff base, since the worktree already starts from it. A new branch is a rename: `git branch -m plan-<slug> <branch-name>`. For an existing branch, `git switch <branch-name>` in the worktree, carrying the uncommitted plan files, then delete `plan-<slug>`.
 - Confirm the active branch, then proceed with slice work.
 
 **Update the tracker README, if this project is tracked.** If a `tracking-config` project memory exists, update this story's row in the live tracker README per the `tracking` skill's workloop checkpoints.
