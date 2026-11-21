@@ -151,9 +151,16 @@ existing row's `Created` cell rather than adding a second row.
 ## Backlog entries
 
 Every drafted backlog entry, from release close-out, a deferred finding, or a known issue, holds
-these parts in order: a bold title stating the problem, the affected code, and the evidence. A
-`Deferred from story` trail follows when the dispositions below call for one. The entry ends
-there. Next steps and workloop commands (story, plan, slice, review, ship) belong to Active items
+these parts in order:
+
+- **Title**: bold, stating the problem.
+- **Affected code**: a pointer to the file, function, or area where the problem shows. It names a location only.
+- **Evidence**: for a bug (an entry about behavior someone observed), the observed behavior and the steps to reproduce it. For any other entry, the code-level observation that raised it.
+
+A bug entry records what was seen and where, with no cause, even when the cause is already
+traced. Root-causing happens in `/plan`, where the bug slice confirms the cause with a failing
+regression test. A `Deferred from story` trail follows when the dispositions below call for one.
+The entry ends there. Next steps and workloop commands (story, plan, slice, review, ship) belong to Active items
 rows only; scheduling an item is what turns it into workloop input. Existing entries that carry a
 process note are not a model to match.
 
