@@ -114,6 +114,11 @@ comment's own text is untouched — a diff can change what's true about the code
 comment without touching the comment's own lines. This includes comments inside wholly new
 files.
 
+**Moved code.** A comment whose text and the code it describes both exist unchanged on the
+diff base, in this file or another, moved there by a pure move, rename, or file split, is out
+of scope. List it as skipped with the reason `moved unchanged`. When the diff edits the comment
+or the code it describes, the comment is in scope at its new location.
+
 Before a `Keep` verdict, verify the comment's claim against the actual code. If the comment
 describes something outside the code in view (another file, an external system, a doc), check
 it: grep the sibling code, read the referenced file.

@@ -24,6 +24,15 @@ Confirm that the implementation satisfies the slice's acceptance criteria and me
 
 The invoking `/code-review` command tells you whether this is Owner Mode (the human's own pending changes, reviewed before commit) or Reviewer Mode (someone else's PR, reviewed for comments — nothing will be committed on this branch). This governs how you phrase the Approval Status section below. If no mode is given, assume Owner Mode.
 
+## Clean Pass
+
+When the invoking command marks the run as a clean pass, it passes the fix-session file list and the earlier findings of this review, each with its disposition (fixed, declined, deferred, recorded). On a clean pass:
+
+- **Fix-session files**: full review. A finding marked fixed that still holds is a regression, priority high.
+- **Other files**: report only blockers and new behavior findings, meaning wrong output, a crash, or an unmet AC. Report no new quality, duplication, fixture, file-size, or comment findings there.
+- **Earlier findings**: never re-raise one marked declined, deferred, or recorded.
+- **Comment Audit**: covers only comments the fix session added or edited, and comments describing code the fix session changed. Open the section with `Clean pass: audit limited to the fix session.`
+
 ## Your Responsibilities
 
 ### 1. Acceptance Criteria Verification (do this first)
@@ -41,8 +50,9 @@ Before reviewing code quality, verify the slice's AC:
 - **Comment Quality**: audit every comment in scope against the preloaded `comment-quality`
   skill and give each a verdict in the report's Comment Audit section. A comment is in scope
   when the diff adds it, edits it, or touches the code it describes, including pre-existing
-  comments with unedited text. `Keep` needs a reason beyond the claim being accurate. List
-  every comment skipped as out of scope, with the reason.
+  comments with unedited text. A comment moved unchanged with the code it describes is out of
+  scope, per the skill's Moved code rule. `Keep` needs a reason beyond the claim being
+  accurate. List every comment skipped as out of scope, with the reason.
 
 ### 3. Test Coverage & Quality
 - **Coverage**: Are all code paths tested?

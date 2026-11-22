@@ -197,7 +197,7 @@ Once all requested fixes are done, ask:
 
 > "Want a clean pass before committing?"
 
-If **yes**: recompute the fingerprint and compare it to the verifier baseline from Step 1. If it is unchanged (no commits and no working-tree edits since the last verifier run), the full verifier report is still valid — skip re-invoking the verifier and proceed directly to the targeted re-walk below. If it changed, re-invoke the **verifier** subagent, passing it the list of files changed during this fix session and instructing it to focus its scan on those files for regressions and new issues; for all other files, only surface findings not previously addressed. The Comment Audit still covers every comment in scope across the whole diff, not only the fix-session files. Update the verifier baseline.
+If **yes**: recompute the fingerprint and compare it to the verifier baseline from Step 1. If it is unchanged (no commits and no working-tree edits since the last verifier run), the full verifier report is still valid — skip re-invoking the verifier and proceed directly to the targeted re-walk below. If it changed, re-invoke the **verifier** subagent as a clean pass, passing it the list of files changed during this fix session and every finding from this review's earlier verifier runs with its disposition (fixed, declined, deferred, recorded). The verifier's Clean Pass section sets the scope. Update the verifier baseline.
 
 Either way, walk through the files changed during this fix session using the same per-group format from Step 2 (show code, explain, surface verifier findings, give recommendations). If new issues come up, go through the per-group decision point and fix as needed, then offer another clean pass. Repeat until the human is satisfied or declines.
 
