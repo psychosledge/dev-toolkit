@@ -68,6 +68,15 @@ If the recommended option ends up constrained by something the greenfield option
 
 Skip this when no existing pattern or external contract is actually shaping the options, there's nothing to compare against.
 
+**When an acceptance criterion's wording is the only thing ruling out an option you'd otherwise recommend**, the criterion has two readings and the human picks one. Your recommendation takes this form, in order:
+
+1. The criterion, quoted.
+2. Its strict reading and the option that reading selects.
+3. Its intent-level reading and the option that reading selects.
+4. The question to the human: which reading applies.
+
+Give no default and no "if unsure" choice. A recommendation that picks the strict-reading option while the question is still open has adopted the strictest reading without asking.
+
 **Before finalizing your recommendation, ask: what would make this design wrong?** If you can't answer that question, you haven't thought hard enough.
 
 **Two-pass check when a prior ADR touches the same area.** Before drawing on existing ADR context, check whether any prior ADR covers the same area as the decision at hand, in whichever location ADRs are persisted for this project (see Persisting ADRs below): the active story's `plan.md` by default, or the repo's declared durable location when it opts into one. If one does, draft twice, in this order:
