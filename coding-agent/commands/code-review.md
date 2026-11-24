@@ -193,9 +193,14 @@ The fix-now queue from design-depth groups counts as approved once the human ans
 4. Ask: "Good? Anything else to adjust?"
 5. Repeat for remaining fixes.
 
-Once all requested fixes are done, ask:
+Once all requested fixes are done, ask with your recommendation on its own line:
 
 > "Want a clean pass before committing?"
+> **Recommendation:** Yes — [one-sentence reason]
+
+The label must be `yes` or `no`, keyed to what the fix session changed:
+- **Yes** when it changed behavior the verifier hasn't seen: logic, control flow, signatures, data shapes, or tests. Name the change in the reason.
+- **No** when it changed only comments, names, formatting, or imports. Name that in the reason.
 
 If **yes**: recompute the fingerprint and compare it to the verifier baseline from Step 1. If it is unchanged (no commits and no working-tree edits since the last verifier run), the full verifier report is still valid — skip re-invoking the verifier and proceed directly to the targeted re-walk below. If it changed, re-invoke the **verifier** subagent as a clean pass, passing it the list of files changed during this fix session and every finding from this review's earlier verifier runs with its disposition (fixed, declined, deferred, recorded). The verifier's Clean Pass section sets the scope. Update the verifier baseline.
 
