@@ -1,5 +1,6 @@
-# Workloop story plans (local working artifacts)
-docs/
+# Workloop working artifacts; stories are tracked while in flight
+docs/*
+!docs/stories/
 
 # OS cruft
 .DS_Store
