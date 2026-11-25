@@ -67,6 +67,12 @@ A memory that describes agent behavior or workflow process is almost always a si
 
 A repo's base branch, release pipeline, branch naming, and PR platform are declared in its own `CLAUDE.md` under `## Branching` and `## PR Platform`. Resolve them with the `branching-model` and `pr-platform` skills instead of assuming `main` or GitHub.
 
+## Worktree-Isolated Sessions
+
+When the session works in a git worktree under `.claude/worktrees/`, the sandbox refuses any Bash call it can't prove stays inside the worktree. Each Bash call there is one plain command with literal arguments, run from the worktree root, such as `git merge-base HEAD origin/develop` or `gh pr checks 87`. Take a value from one call's output and type it literally into the next call.
+
+Work that needs a chain, a pipe, a variable, a command substitution, a glob, a loop, or a heredoc goes in a script file instead. Write it with the Write tool to the session's scratch directory (`$CLAUDE_JOB_DIR/tmp` in a background job, by its literal path), then run it as `bash <script path> <literal args>` or `python3 <script path> <literal args>`. Python that edits a file follows the same pattern. A call count kept low never justifies a chained call, since each refusal costs a retry.
+
 ## Project Config Memory
 
 Some facts a skill needs are specific to the current workspace or engagement — a scan root, a calendar identity, an output directory, a review-doc destination — not a team-shared convention that belongs in a repo's own `CLAUDE.md` (see Git Conventions above for that category). These are personal to how I work, so they belong in project memory instead.
