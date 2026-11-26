@@ -25,7 +25,7 @@ Two of the toolkit's safeguards only run on repos that have turned on the Contra
 
 ## Acceptance criteria
 
-- A developer designing a change on a repo without a Contract is asked which unwritten requirements it touches. Each one they confirm appears in the design as a required test.
-- A developer whose change adds a test that catches nothing the existing tests catch sees that test flagged as a removal candidate, on a repo without a Contract.
+- A developer designing a change, on a repo with or without a Contract, is asked which unwritten requirements it touches. Each one they confirm appears in the design as a required test.
+- A developer whose change adds a test that catches nothing the existing tests catch sees that test flagged as a removal candidate, on a repo with or without a Contract.
 - A flagged test is only removed when the developer agrees.
-- On a repo with the Contract turned on, each safeguard runs once, with no repeated questions or duplicate flags.
+- On a repo with the Contract turned on, the unwritten-requirements question is asked once and each redundant test is flagged once.
