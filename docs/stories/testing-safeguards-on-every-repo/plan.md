@@ -48,7 +48,7 @@ Tier: core
 - [ ] In an `/auto-slice` run, the question is presented with the design at the design-approval gate (existing: coding-agent/commands/auto-slice.md, Step 1), which waits for the human in every mode. It is not answered by a ruling.
 - [ ] The architect's Contract section no longer contains the unwritten-requirements behavior; it holds only the Contract-file reading and row proposal.
 - [ ] Changes committed on main and synced with `/sync-global`.
-- [ ] Before this commit, `hardening-story.md` has been taken through `/story` into its own `docs/stories/<slug>/` directory with an entry in `docs/stories/README.md`.
+- [x] Before this commit, the hardening story has been taken through `/story` into its own `docs/stories/<slug>/` directories with entries in `docs/stories/README.md`.
 - [ ] The commit deletes `docs/stories/testing-safeguards-on-every-repo/` and removes its entry from `docs/stories/README.md`.
 **Files:** coding-agent/agents/architect.md, coding-agent/commands/auto-slice.md (existing: design-approval gate), docs/stories/README.md
 **Needs Architect:** yes. Where the question sits in the architect's flow, how it shares one answer with the Contract-row proposal, and the shape of the ADR's required-tests field are open decisions with alternatives.
@@ -59,12 +59,12 @@ Failure-mode sweep, core tier:
 
 - A flagged test deleted without the human's agreement, in either `/slice` or `/auto-slice` (silent loss of coverage): covered: Slice 1, Slice 2
 - Diff adds no tests, or the repo has no test suite (dev-toolkit itself): kill check should report "no new tests" without inventing mutants. covered: Slice 1
-- Developer confirms zero unwritten requirements or skips the question: design proceeds with an empty required-tests field and no re-ask. deferred: hardening story
-- An ADR's required test never gets written by the coder, and nothing at review checks for it: deferred: hardening story
-- Configured mutation tooling fails, times out, or is too slow to run scoped: deferred: hardening story
+- Developer confirms zero unwritten requirements or skips the question: design proceeds with an empty required-tests field and no re-ask. deferred: design-moves-on-when-none-apply
+- An ADR's required test never gets written by the coder, and nothing at review checks for it: deferred: review-catches-missing-required-tests
+- Configured mutation tooling fails, times out, or is too slow to run scoped: deferred: redundant-test-check-survives-failures
 - Slices marked `Needs Architect: no` never get the unwritten-requirements question: out of scope: the story places the question in design
 
-Hardening story draft: [hardening-story.md](hardening-story.md)
+Hardening stories: [design-moves-on-when-none-apply](../design-moves-on-when-none-apply/story.md), [review-catches-missing-required-tests](../review-catches-missing-required-tests/story.md), [redundant-test-check-survives-failures](../redundant-test-check-survives-failures/story.md)
 
 ## Walkthrough Checklist
 (Complete after all slices are implemented and committed)
