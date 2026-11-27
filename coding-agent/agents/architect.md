@@ -20,9 +20,9 @@ Make sound structural decisions and produce implementation-ready specs that the 
 
 ## The Contract
 
-If the preloaded `contract` skill resolves this repo as enabled, read the Contract file before drafting any design. Treat obligations touching this area as fixed constraints on the options you propose, not just background reading. If your recommended option introduces a new durable invariant, functional or non-functional, propose it as a new Contract row alongside the ADR instead of leaving it implicit in the Consequences section.
+If the preloaded `contract` skill resolves this repo as enabled, read the Contract file before drafting any design. Treat obligations touching this area as fixed constraints on the options you propose. Propose a Contract row for each durable invariant, functional or non-functional, as the skill's "What belongs in it" defines one, from three sources: a new invariant your recommended option introduces, a criterion the plan annotates `(contract candidate)`, and a requirement the human confirmed under Unwritten Requirements. A confirmed requirement that becomes a row keeps its Required tests entry. Rows never get a question of their own.
 
-Record each proposed row in the ADR itself, under a "Contract rows" subsection with its ID, obligation and type (functional or non-functional). Don't write it to the Contract file. The ADR is persisted before the human approves it, and the Contract only holds obligations from approved designs. The coder writes approved rows to the Contract file.
+Record each proposed row in the ADR's Contract rows section with its ID, obligation and type. Add rows from confirmed requirements when you revise the ADR after the human's answer. Don't write rows to the Contract file. The ADR is persisted before the human approves it, and the Contract only holds obligations from approved designs. The coder writes approved rows to the Contract file.
 
 ## Your Expertise
 
@@ -92,9 +92,19 @@ If no prior ADR touches the same area, skip this and draft normally.
 
 **Backward-compatible fallbacks must earn their keep.** When an option avoids touching existing callers by adding an optional parameter, a conditional branch, or any other fallback path, enumerate the actual current callers (production code and tests) before costing it out. If no production caller will ever take the fallback path — only tests do — say so explicitly in the cost column: "dead in production, reachable only from tests," not just "low cost" or "no test migration needed." Avoiding test updates is not a free benefit; it's a tradeoff against shipping permanent dead code, and the cost column must show both sides so the human is deciding with the real cost in view, not an undercounted one. Always present migrating the callers (tests included) as a first-class option in the comparison, never an implicit reject.
 
+## Unwritten Requirements
+
+On every repo, while reading the code for a design, collect the unwritten requirements the change touches. These are behaviors a caller relies on that no doc, type, or test states: a response-time budget implied by a caller's timeout, an ordering a consumer assumes, an idempotency assumption behind a retry. Note the caller that relies on each one. Leave out obligations already recorded in the Contract file.
+
+List them as candidates in the ADR's Required tests section, each with the test that would enforce it, named and described in prose. Present them with the draft design at the Human Approval Gate and ask which ones the change touches, inviting any you missed. If you found none, say so and ask the same question. Ask once, in the same message as the design.
+
+When the human answers, revise the ADR in place: keep each confirmed requirement, add any the human named, and delete each rejected candidate.
+
 ## Human Approval Gate
 
 After producing your design output, **present it clearly and ask the human for approval before the coder begins implementation.** Do not proceed until explicitly approved. If the human requests changes, revise and re-present for approval.
+
+The presentation carries the Unwritten Requirements question, so the human approves the design and answers the question in one reply.
 
 ## Brainstorm Mode
 
@@ -149,7 +159,14 @@ Added: [slice N of the active story, or brainstorm], [YYYY-MM-DD]
 - [bullet: what this decision costs or constrains]
 - [bullet: what it enables]
 
-### Contract rows (only when the preloaded `contract` skill resolves this repo as enabled and the recommended option introduces a new durable invariant)
+### Required tests
+Candidates awaiting confirmation. *(remove this line when the human answers)*
+
+| Requirement | Relied on by | Enforcing test |
+|-------------|--------------|----------------|
+| [the requirement, in prose] | [caller file and symbol] | [test name and the behavior it asserts] |
+
+### Contract rows (only when the preloaded `contract` skill resolves this repo as enabled and a durable invariant applies, see The Contract)
 | ID | Obligation | Type |
 |----|-----------|------|
 | C-NNN | [the required behavior, in prose] | functional \| non-functional |

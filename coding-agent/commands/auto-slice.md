@@ -39,7 +39,7 @@ Run `/slice` Step 0 exactly: locate the plan, present the slice recap, and wait 
 
 **Step 1 — Architect check**
 
-Apply `/slice` Step 1's two tests (pattern, ownership). If either says yes, invoke the **architect**, present the design, and wait for explicit human approval. Design approval is a human gate in every mode.
+Apply `/slice` Step 1's two tests (pattern, ownership). If either says yes, invoke the **architect**, present the design, and wait for explicit human approval. Design approval is a human gate in every mode. The architect's unwritten-requirements question is part of the design: only the human answers it, at this gate, and no ruling stands in for that answer.
 
 **Step 2 — Implementation**
 

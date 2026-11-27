@@ -28,6 +28,7 @@ The Contract was meant to be the team's complete, executable description of what
 - Enabling the Contract is a team agreement recorded in the repo's `CLAUDE.md`. The skill's solo opt-in wording goes away.
 - Files: `skills/contract/SKILL.md`, `agents/planner.md`, `agents/architect.md` (Contract section and template row), `agents/coder.md` (step 4 and bug-fix order), `agents/verifier.md` (section 8, report section, and the shared-IDs line from de0a7b2), `commands/code-review.md`, `skills/systematic-debugging/SKILL.md`.
 - An active client project is on `Enabled: yes`, so the ledger mode gets its own verification run.
+- coder.md step 5 writes Contract rows only for criteria annotated `(contract candidate)`. Rows the ADR proposes from the design or from confirmed unwritten requirements never reach the Contract file.
 - Depends on Testing safeguards on every repo.
 
 ## Acceptance criteria

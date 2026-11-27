@@ -18,6 +18,7 @@ Design now turns each confirmed unwritten requirement into a required test. Noth
 
 - Depends on Testing safeguards on every repo, Slice 3 (the ADR's Required tests section).
 - Verifier reads the slice's ADR; slices without an architect have no Required tests section.
+- Invariants the design itself introduces get no Required tests entry. On a repo without the Contract, nothing in the ADR names a test for them.
 - Open question: whether a missing required test blocks approval or is advisory like the kill-matrix result.
 - Behavior-shaping, so skill-testing applies.
 
