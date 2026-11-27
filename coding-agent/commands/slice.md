@@ -62,6 +62,9 @@ If the working directory is a freshly created git worktree, tell the subagent to
 it before the first test run: install dependencies, then run any build step the test command
 depends on, such as workspace packages that resolve each other from build output.
 
+When the coder returns, show the human its report's `### Kill Check` subsection as written,
+then move to Step 3.
+
 **Step 3 — Verify and review**
 
 Invoke the `/code-review` skill and follow all of its steps. It will run the verifier, walk through changes, handle fixes, and commit.

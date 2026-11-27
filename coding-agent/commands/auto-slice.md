@@ -43,7 +43,7 @@ Apply `/slice` Step 1's two tests (pattern, ownership). If either says yes, invo
 
 **Step 2 — Implementation**
 
-Same as `/slice` Step 2: invoke the **coder** (or a **general-purpose** subagent for verification-only slices), scoped to this slice, with the worktree bootstrap note when applicable.
+Same as `/slice` Step 2: invoke the **coder** (or a **general-purpose** subagent for verification-only slices), scoped to this slice, with the worktree bootstrap note when applicable, and the coder's `### Kill Check` goes to Step 3's recording.
 
 **Step 3 — Verify with a capped fix loop**
 
@@ -52,7 +52,8 @@ Invoke the **verifier** (Owner Mode). Act on its report without pausing:
 - **Blockers** (unmet AC, failing suite): send each back through the coder with scoped instructions, then re-invoke the verifier focused on the changed files. This loop runs at most 3 rounds. Blockers still open at the cap are a named stop.
 - **High-priority findings** on files this slice's diff touches: fix in the same loop, within the same cap.
 - **Medium and low findings, and refactoring suggestions**: record each under `## Deferred findings` in `plan.md` (the section `/code-review` Step 3b uses), with file, one-line issue, and a ruling for why it waits.
-- **Kill-Matrix removal candidates**: record each under `## Deferred findings` with the verifier's entry line. They never enter the fix loop, and the test stays in the code.
+- **Kill-Matrix removal candidates**: record each from the coder's `### Kill Check` and the verifier's `## Kill-Matrix` under `## Deferred findings` with its entry line. A test both flag is recorded once. They never enter the fix loop, and the test stays in the code.
+- **Uncaught mutants**: record each `uncaught:` line from the coder's `### Kill Check` under `## Deferred findings` with the mutation it names. They never enter the fix loop either.
 - **Comment audit**: apply `Remove` verdicts directly; `Keep` verdicts stand.
 
 **Step 4 — Commit and plan update**

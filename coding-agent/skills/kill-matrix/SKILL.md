@@ -1,6 +1,6 @@
 ---
 name: kill-matrix
-description: Checks that each new or changed test catches a mutation no other test catches, using the repo's mutation-testing tooling or a manual kill check, and defines how a test that kills nothing unique is reported. Read by the verifier on every review, on every repo.
+description: Checks that each new or changed test catches a mutation no other test catches, using the repo's mutation-testing tooling or a manual kill check, and defines how a test that kills nothing unique is reported. Read by the coder before handoff and by the verifier on every review, on every repo.
 ---
 
 # Kill-Matrix
@@ -15,7 +15,7 @@ When applying mutations by hand, make sure each mutant is what actually runs: cl
 
 ## Reporting the outcome
 
-A test that kills no unique mutant is a removal candidate. Report it in the report's `## Kill-Matrix` section, one line per test, naming the mutation or mutations checked:
+A test that kills no unique mutant is a removal candidate. Report it in the report's Kill-Matrix section (the verifier's `## Kill-Matrix`, the coder's `### Kill Check`), one line per test, naming the mutation or mutations checked:
 
 ```
 - <test identifier> — <mutation checked> — no unique kill

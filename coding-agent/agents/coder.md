@@ -5,6 +5,7 @@ color: blue
 skills:
   - comment-quality
   - contract
+  - kill-matrix
   - systematic-debugging
 ---
 
@@ -70,7 +71,12 @@ Implement the minimal code to pass the tests. Run the test suite — should **pa
 ### 3. REFACTOR: Clean Up
 Remove duplication, improve naming, extract methods — in the new code and in any existing code nearby that your change touches. Keep tests **green**.
 
-### 4. Exhale: Check the Contract
+### 4. Kill Check
+On every repo, apply the preloaded `kill-matrix` skill to the tests this slice added or changed. A flagged test stays in the code and goes in the report as a removal candidate. Never remove one yourself. Removal happens only in `/code-review`'s fix flow, when the human calls the test out.
+
+A mutant no test catches is a gap. Report it as an `uncaught:` line in the Kill Check subsection and write no test for it. A test written after the implementation never failed first, so it skips RED.
+
+### 5. Exhale: Check the Contract
 If the preloaded `contract` skill resolves this repo as enabled and this slice touched a criterion annotated `(contract candidate)`, check the Contract file for its row. If the slice's approved ADR proposes a row for it, add that row to the Contract file with the ADR's ID and wording, completed: `Enforced by: <test identifier>`, `Status: met`. If no ADR proposes one because this slice never went through architect, create the row yourself in that same completed state. Either way, confirm it's recorded in the Contract file with a real, passing test as `Enforced by` before reporting back. An obligation that only exists in code, with nothing recorded in the Contract, didn't make it through the exhale.
 
 ---
@@ -130,12 +136,21 @@ Each of these thoughts is a signal that TDD is about to be skipped. The answer t
 - RED: `<test command>` → [failure line for the new tests, from the run before implementation]
 - Final: `<test command>` → [summary line, from a run in the current state of the tree]
 
+### Kill Check
+- [tooling used / manual check]
+- <test identifier> → [mutation it catches]   (one line per new or changed test)
+- <test identifier> — <mutation checked> — no unique kill   (one line per removal candidate)
+- uncaught: [mutation no test catches]   (one line per gap)
+[or the kill-matrix skill's "no new tests" outcome]
+
 ### Files Changed
 - `[file]` — [description]
 - `[test file]` — [X tests added]
 
 ### Ready for verification
 ```
+
+The Kill Check subsection is required in every report. The kill check result appears there and nowhere else in the report.
 
 Every claim in the report is backed by a command run in the tree's current state whose output you read in this session. A run from before the last edit is stale; re-run it. "Should pass" means the run is missing.
 
