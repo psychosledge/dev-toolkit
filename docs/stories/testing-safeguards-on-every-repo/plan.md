@@ -8,8 +8,8 @@ Tier: core
 **Status:** not started
 **Commit:** —
 **Acceptance Criteria:**
-- [ ] A skill-testing baseline run (fresh subagent, current verifier text, repo with no `## Contract` section, diff adding a test that duplicates an existing test's coverage) is captured in full before the edit and shows no kill-matrix flag.
-- [ ] The same scenario after the edit shows the redundant test flagged as a removal candidate in the verifier's report, with the mutation it was checked against named.
+- [x] A skill-testing baseline (5 fresh runs, current verifier text, repo with no `## Contract` section, diff adding a test strictly subsumed by an existing one) is captured before the edit. Observed: 5/5 detected the redundant test; 5/5 filed it under Issues as medium and lowered the quality rating (6–7/10); 5/5 recommended deleting it as a Refactoring Suggestion; no run reported it in a dedicated Kill-Matrix section.
+- [ ] The same scenario after the edit (5 fresh runs) shows the redundant test listed only in the `## Kill-Matrix` section as a removal candidate, with the mutation it was checked against named. It does not appear in Issues or Refactoring Suggestions, no run recommends deleting it, and the quality rating doesn't count it.
 - [ ] The verifier's report carries the kill-matrix result in a `## Kill-Matrix` section, placed after Test Coverage Analysis and present on every repo. It opens with `tooling used / manual check` and lists each flagged test as `test identifier — mutation checked — no unique kill`. The Contract section no longer contains a Kill-matrix line, and section 9 is no longer gated on the Contract.
 - [ ] The `contract` skill no longer holds the kill-matrix rules or a pointer to them, and no file under `coding-agent/` sends a reader to the `contract` skill for them.
 - [ ] A verification run on a repo with `Enabled: yes`, with the same redundant-test diff, shows that test flagged as a removal candidate. The kill-matrix result appears exactly once in the report, and each flagged test is listed once.
@@ -17,7 +17,7 @@ Tier: core
 - [ ] The verifier checks independently of the coder: a test the coder flagged and the human kept is flagged again at review if it still kills nothing unique. "Once" applies within each report.
 - [ ] The verifier never deletes or edits a flagged test, and a flagged test doesn't lower the approval status. In an `/auto-slice` run, a flagged test is recorded under `## Deferred findings`, is never sent to the fix loop, reaches the human in the end report, and stays in the code.
 - [ ] Changes committed on main and synced with `/sync-global`.
-**Files:** coding-agent/agents/verifier.md, coding-agent/skills/contract/SKILL.md, coding-agent/skills/kill-matrix/SKILL.md (new), coding-agent/commands/auto-slice.md (existing: end-report and Deferred findings handling)
+**Files:** coding-agent/agents/verifier.md, coding-agent/skills/contract/SKILL.md, coding-agent/skills/kill-matrix/SKILL.md (new), coding-agent/commands/auto-slice.md (existing: end-report and Deferred findings handling), coding-agent/commands/code-review.md (existing: consolidation)
 **Needs Architect:** no. Planner's call: the home is a standalone skill. Inlining the rules in both agents would make two copies, which the interface contract rules out.
 **Scaffolding for:** Slice 2: Coder checks new tests before handoff. The `kill-matrix` skill is the single source both agents read.
 **Interface contract:** The kill-matrix rules live only in `coding-agent/skills/kill-matrix/SKILL.md` and state the tooling path, the manual-check path, and the "removal candidate, never automatic deletion" outcome. The flagged-test entry format is the one in this slice's report criterion. Slice 2 preloads the same skill, reuses that entry format, and adds no second copy of the rules. Removing a flagged test happens only through `/code-review`'s fix flow, when the human calls it out.

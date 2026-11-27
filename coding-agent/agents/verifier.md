@@ -6,6 +6,7 @@ skills:
   - comment-quality
   - branching-model
   - contract
+  - kill-matrix
 ---
 
 # Verifier
@@ -31,6 +32,7 @@ When the invoking command marks the run as a clean pass, it passes the fix-sessi
 - **Fix-session files**: full review. A finding marked fixed that still holds is a regression, priority high.
 - **Other files**: report only blockers and new behavior findings, meaning wrong output, a crash, or an unmet AC. Report no new quality, duplication, fixture, file-size, or comment findings there.
 - **Earlier findings**: never re-raise one marked declined, deferred, or recorded.
+- **Kill-Matrix**: check only tests the fix session added or changed. A candidate marked declined is not re-listed.
 - **Comment Audit**: covers only comments the fix session added or edited, and comments describing code the fix session changed. Open the section with `Clean pass: audit limited to the fix session.`
 
 ## Your Responsibilities
@@ -153,8 +155,8 @@ is "used."
 - For every criterion in this slice annotated `(contract candidate)`: confirm it's recorded in the Contract file with `Enforced by` pointing at a real, passing test. Flag a candidate with no Contract entry, and a Contract entry whose `Enforced by` test doesn't exist or doesn't pass.
 - Compute contract coverage per the skill's definition and report it in the Verification Report.
 
-### 9. Kill-Matrix Check (when the preloaded `contract` skill resolves this repo as enabled)
-Run mutation testing on new/changed tests if the repo has tooling configured, or do the manual kill check otherwise, per the skill. Flag a test that kills no unique mutant as a removal candidate, not an automatic deletion.
+### 9. Kill-Matrix Check
+Run the check on every repo, per the preloaded `kill-matrix` skill: mutation testing on new or changed tests when the repo has tooling configured, the manual kill check otherwise. Check independently of anything the coder reported. Each test that kills no unique mutant goes in the report's Kill-Matrix section as a removal candidate, and only there.
 
 ## Review Process
 
@@ -192,7 +194,6 @@ At core tier, a gap that matches a plan-deferred mode from Step 1 is reported un
 2. For each `(contract candidate)` criterion in this slice, confirm it has a corresponding row with a real, passing `Enforced by` test.
    With no slice plan, there are no `(contract candidate)` annotations. Instead, name each obligation the diff introduces that is as durable as an existing Contract row and has none, with the tests that already enforce it, as a recommendation. Report candidates covered as `n/a (no plan)`.
 3. Compute contract coverage per the skill's definition.
-4. Run the kill-matrix check per the skill.
 
 **Populating Scaffolding Inventory**:
 1. Read the plan file (`docs/stories/<slug>/plan.md`) and find the current slice's `Scaffolding for` and `Interface contract` fields, if any.
@@ -227,6 +228,12 @@ At core tier, a gap that matches a plan-deferred mode from Step 1 is reported un
 ## Test Coverage Analysis
 - What's tested well, what's missing, edge cases to add
 
+## Kill-Matrix
+- [tooling used / manual check]
+- [test identifier] — [mutation checked] — no unique kill
+(or: No new or changed tests; no removal candidates.)
+(Each redundant or overlapping test appears in this report once, on its line here.)
+
 ## Comment Audit
 - `file:line` — full comment text — Keep / Remove — wrong / Remove — weak: <reason>
 - Skipped as out of scope: `file:line` — <reason>
@@ -234,7 +241,6 @@ At core tier, a gap that matches a plan-deferred mode from Step 1 is reported un
 ## Contract
 - Contract candidates covered: N/M
 - Contract coverage: X/Y obligations met (obligation-level, not system-wide)
-- Kill-matrix: [tooling used / manual check] — [N tests flagged, if any]
 
 ## Scaffolding Inventory
 
