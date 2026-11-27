@@ -33,7 +33,6 @@ Tier: core
 - Planner's call: the fixture is a fresh subagent given architect.md and a scripted design-gate exchange with two candidates (a timeout-implied response budget and an ordering a consumer assumes). `/slice` and `/auto-slice` Step 1 are driven by a second subagent given the command text, the architect output, and the scripted human reply, reporting what it does next.
 - Human's call: a skipped question leaves `Offered, not reviewed: <candidates>` below `None.` A "none" answer leaves only `None.`
 - Human's call: a revised design asks about only candidates new since the first presentation.
-- Human's call: the hardening draft goes through `/story` into its own directory before the landing commit deletes this one.
 - Planner's call: AC 17 is checked inside the verification run with a third scripted reply (confirm one, reject one). It doesn't need a separate baseline, because that text doesn't change.
 
 ## Review Focus
@@ -41,7 +40,7 @@ Tier: core
 - Human requests design changes without answering the question, then the architect re-presents: covered: Slice 1
 - `/auto-slice` treats an empty Required tests list as something needing a ruling or a stop: covered: Slice 1
 - A skipped question discards candidates the architect found, so a real unwritten requirement the human never looked at drops out of the ADR silently: covered: Slice 1 (`Offered, not reviewed:` line)
-- A partial or ambiguous reply ("approved, the first one maybe") leaves unclear which candidates survive: deferred: hardening story ([draft](hardening-story.md))
+- A partial or ambiguous reply ("approved, the first one maybe") leaves unclear which candidates survive: deferred: `clarify-unclear-requirement-answers`
 - Verifier or `/code-review` flagging an empty Required tests section as a missing deliverable: out of scope: owned by `review-catches-missing-required-tests`
 
 ## Walkthrough Checklist
