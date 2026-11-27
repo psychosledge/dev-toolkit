@@ -24,15 +24,15 @@ Tier: core
 
 ### Slice 2: Coder checks new tests before handoff
 **Scope:** The coder runs the kill-matrix check on the tests it added or changed before reporting back, on every repo, and lists any test that catches nothing new as a removal candidate in its report. The coder has no kill check today. This adds one as a new workflow step after REFACTOR and before the Contract exhale, and it isn't gated on the Contract. The coder does not delete the test. The verifier's check from Slice 1 still runs at review.
-**Status:** not started
-**Commit:** —
+**Status:** ✅ done
+**Commit:** d79eb25
 **Acceptance Criteria:**
-- [ ] A skill-testing baseline run (fresh subagent, current coder text, repo with no `## Contract` section, slice whose natural test set includes one test fully covered by another) is captured in full before the edit and shows no kill check in the coder's report.
-- [ ] The same scenario after the edit shows the coder naming, per new test, the mutation it catches, and listing the redundant test as a removal candidate under a `### Kill Check` subsection of its report, in Slice 1's entry format.
-- [ ] The coder leaves a flagged test in place and reports it. It never removes one itself. Removal happens in `/code-review`'s fix flow when the human calls it out.
-- [ ] The coder preloads the `kill-matrix` skill through its frontmatter `skills:` list; no rule text is duplicated in coder.md.
-- [ ] On a repo with `Enabled: yes`, the same scenario shows the redundant test flagged as a removal candidate, with the kill check appearing once in the coder's report.
-- [ ] Changes committed on main and synced with `/sync-global`.
+- [x] A skill-testing baseline run (fresh subagent, current coder text, repo with no `## Contract` section, slice whose natural test set includes one test fully covered by another) is captured in full before the edit and shows no kill check in the coder's report.
+- [x] The same scenario after the edit shows the coder naming, per new test, the mutation it catches, and listing the redundant test as a removal candidate under a `### Kill Check` subsection of its report, in Slice 1's entry format.
+- [x] The coder leaves a flagged test in place and reports it. It never removes one itself. Removal happens in `/code-review`'s fix flow when the human calls it out.
+- [x] The coder preloads the `kill-matrix` skill through its frontmatter `skills:` list; no rule text is duplicated in coder.md.
+- [x] On a repo with `Enabled: yes`, the same scenario shows the redundant test flagged as a removal candidate, with the kill check appearing once in the coder's report.
+- [x] Changes committed on main and synced with `/sync-global`.
 **Files:** coding-agent/agents/coder.md, coding-agent/commands/slice.md and coding-agent/commands/auto-slice.md (where the coder's report reaches the human)
 **Needs Architect:** no. Reuses the home and outcome decided in Slice 1.
 
