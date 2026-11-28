@@ -7,7 +7,7 @@ This repo is a personal dev toolkit, not an application project. There is no bui
 - Model: trunk-based
 - Trunk: main
 - Feature branches: no
-- Release: direct push to main by the human; no PRs
+- Release: direct push
 
 ## The two CLAUDE.md files
 

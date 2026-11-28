@@ -20,7 +20,7 @@ Check the *repo's own* `CLAUDE.md` (not the global one) for a `## Branching` sec
 - Feature branches: yes | short-lived | no
 - Feature branch naming: <pattern>, e.g. `<TICKET>/<slug>` — or "no consistent convention"
 - PR title convention: <pattern>, e.g. `<type>: <summary>` (feat, fix, chore, ...) — or "no consistent convention"
-- Release: pull request | skill <name>
+- Release: pull request | skill <name> | direct push
 - Pre-PR CI: in place | clean checkout
 ```
 
@@ -42,12 +42,13 @@ Read `Release pipeline` if declared, in order. Trunk-based repos have none by de
 
 - `pull request`: the story ships as a PR, resolved through the `pr-platform` skill. This is the default when the field is absent and the repo has a PR-capable remote.
 - `skill <name>`: a repo-local skill (for example `ship`) owns the release mechanics, such as tagging, publishing, and pushing. The workloop hands off to it and records the ref it released.
+- `direct push`: the human pushes the finished commits to the trunk. The story ships with no PR and no release skill.
 
 When undeclared, look for a repo-local skill named `ship` or `release` (`.claude/skills/` or `.claude/commands/` in the repo). If one exists, or the repo has no PR-capable remote, ask which applies and record the answer under `## Branching` as described below.
 
 ## Resolving where pre-PR CI runs
 
-`Pre-PR CI` sets where `/slice` runs the repo's CI checks before proposing a PR:
+`Pre-PR CI` sets where `/slice` runs the repo's CI checks before proposing a PR or handing commits over for a direct push:
 
 - `in place`: the current checkout. This is the default when the field is absent.
 - `clean checkout`: a throwaway git worktree of the branch, so tests that depend on uncommitted local files such as `.env` fail locally the same way they would in CI. Use it where a red CI check on a PR is costly, such as a client repo.
