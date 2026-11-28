@@ -98,7 +98,11 @@ On every repo, while reading the code for a design, collect the unwritten requir
 
 List them as candidates in the ADR's Required tests section, each with the test that would enforce it, named and described in prose. Present them with the draft design at the Human Approval Gate and ask which ones the change touches, inviting any you missed. If you found none, say so and ask the same question. Ask once per design, in the same message as the first presentation.
 
-Every reply to the presentation answers the question, an approval and a change request alike. Revise the ADR in place by what the reply says:
+Every reply to the presentation answers the question, an approval and a change request alike. First check whether the reply leaves any listed candidate's status unclear. A candidate is unclear when the reply hedges on it (maybe, probably, not sure), refers to it in a way that matches no candidate or more than one, or keeps some candidates and says nothing about it. A reference that matches no candidate or more than one leaves every candidate it might mean unclear. A reply that says the rest go ("only the first", "just the first") is clear. With two candidates, "approved, keep the first" leaves the second unclear, and "approved, the first one maybe" leaves both unclear.
+
+When any candidate is unclear, send one question naming exactly the unclear candidates, and leave the ADR unrevised until the answer arrives. Fold the answer in by the three cases below. A requirement the human names in it is added and counts as confirmed. A candidate the answer still leaves unclear is dropped and listed on the `Offered, not reviewed:` line. Ask nothing further about the requirements. Never keep an unclear candidate, or add one nobody listed or named, without the human's confirmation. A hedged reply that carries no approval is no approval. Send the question and keep the gate open for the approval, which can come in the same answer.
+
+With every candidate clear, revise the ADR in place by what the reply says:
 
 - It names candidates to keep or requirements to add: keep each confirmed requirement, add any the human named, and delete each rejected candidate.
 - It refers to the requirements and keeps none ("none of these apply", "nothing to add"): replace the table with the single line `None.`
@@ -110,7 +114,7 @@ A re-presented design keeps the recorded answer and asks only about candidates n
 
 After producing your design output, **present it clearly and ask the human for approval before the coder begins implementation.** Do not proceed until explicitly approved. If the human requests changes, revise and re-present for approval.
 
-The presentation carries the Unwritten Requirements question, so the human approves the design and answers the question in one reply. An approval completes the gate whatever the Required tests section holds after the revision.
+The presentation carries the Unwritten Requirements question, so the human approves the design and answers the question in one reply. An approval completes the gate whatever the Required tests section holds after the revision. When a clarifying question is open, the approval completes the gate once the answer is folded in. The human does not approve again, and a clarification that requests no design change does not re-present the design.
 
 ## Brainstorm Mode
 

@@ -5,18 +5,18 @@ Tier: core
 
 ### Slice 1: An unclear answer gets one clarifying question
 **Scope:** The architect's Unwritten Requirements revision gets a fourth case beside the three from design-moves-on-when-none-apply: the reply leaves one or more listed candidates' status unclear. The architect asks one question naming only the unclear candidates, then revises the ADR from the clarification and does not ask again. The design does not move to implementation while the question is open. The `/slice` and `/auto-slice` design-approval gates relay the question to the human and wait for the answer. Under `/auto-slice`, only the human answers it. Out of scope: how the verifier or `/code-review` treats the Required tests section (owned by `review-catches-missing-required-tests`).
-**Status:** not started
+**Status:** done
 **Commit:** —
 **Acceptance Criteria:**
-- [ ] A baseline run (skill-testing) on the current text, before any edit, presents a design with two candidates and receives "approved, the first one maybe"; a second baseline receives "approved, keep the first". Each output is captured verbatim. If neither baseline guesses (drops or keeps an unclear candidate without asking), the slice stops with no guidance written and the finding goes to the human.
-- [ ] After the edit, a verification run given "approved, the first one maybe" asks one question naming the first candidate as unclear, and the design does not proceed to implementation before the answer.
-- [ ] After the edit, a verification run given "approved, keep the first" asks one question naming only the second candidate. The first candidate is not part of the question.
-- [ ] When the clarification answers each unclear candidate, the ADR is revised by the existing keep/add/reject rule (existing: coding-agent/agents/architect.md, Unwritten Requirements), and the design proceeds with no further question about the requirements.
-- [ ] When the clarification still leaves a candidate unclear, the architect asks nothing further: the candidate is dropped and listed on the `Offered, not reviewed:` line, and the design proceeds.
-- [ ] A clear reply gets no clarifying question: "none of these apply, approved", an approval silent on the requirements, "keep the first, drop the second", and "only the first". Each follows its existing outcome (existing: coding-agent/agents/architect.md, Unwritten Requirements).
-- [ ] Under `/slice` Step 1 and `/auto-slice` Step 1, the orchestrator relays the clarifying question to the human and waits. Under `/auto-slice`, no ruling answers it and no named stop is raised.
-- [ ] The architect never keeps an unclear candidate, or invents one, without the human's confirmation.
-- [ ] The edited text follows the repo's writing rules (no em-dash-joined sentences, no contrast constructions) and is synced to `~/.claude/` with `/sync-global` after commit.
+- [x] A baseline run (skill-testing) on the current text, before any edit, presents a design with two candidates and receives "approved, the first one maybe"; a second baseline receives "approved, keep the first". Each output is captured verbatim. If neither baseline guesses (drops or keeps an unclear candidate without asking), the slice stops with no guidance written and the finding goes to the human.
+- [x] After the edit, a verification run given "approved, the first one maybe" asks one question naming the first candidate as unclear, and the design does not proceed to implementation before the answer.
+- [x] After the edit, a verification run given "approved, keep the first" asks one question naming only the second candidate. The first candidate is not part of the question.
+- [x] When the clarification answers each unclear candidate, the ADR is revised by the existing keep/add/reject rule (existing: coding-agent/agents/architect.md, Unwritten Requirements), and the design proceeds with no further question about the requirements.
+- [x] When the clarification still leaves a candidate unclear, the architect asks nothing further: the candidate is dropped and listed on the `Offered, not reviewed:` line, and the design proceeds.
+- [x] A clear reply gets no clarifying question: "none of these apply, approved", an approval silent on the requirements, "keep the first, drop the second", and "only the first". Each follows its existing outcome (existing: coding-agent/agents/architect.md, Unwritten Requirements).
+- [x] Under `/slice` Step 1 and `/auto-slice` Step 1, the orchestrator relays the clarifying question to the human and waits. Under `/auto-slice`, no ruling answers it and no named stop is raised.
+- [x] The architect never keeps an unclear candidate, or invents one, without the human's confirmation.
+- [x] The edited text follows the repo's writing rules (no em-dash-joined sentences, no contrast constructions) and is synced to `~/.claude/` with `/sync-global` after commit.
 **Files:** coding-agent/agents/architect.md (Unwritten Requirements, Human Approval Gate), coding-agent/commands/slice.md (Step 1), coding-agent/commands/auto-slice.md (Step 1)
 **Needs Architect:** no — the question, its gate, and the revision cases were placed in architect.md with pointers from the two command files in f5d60d3 and f58af2e; this slice adds one case inside that shape.
 
@@ -89,3 +89,17 @@ Tier: core
 - [ ] At a clarifying question, answer it and request a design change in the same reply. Confirm the revised design comes back with the requirements settled and no requirements question.
 - [ ] On a re-presented design that lists a new candidate, reply "approved, the new one maybe". Confirm one question names only the new candidate and the earlier answer is not reopened.
 - [ ] Confirm the architect kept no candidate you did not confirm.
+
+## Rulings
+
+> Ruling (Slice 1): Baseline B ("approved, keep the first") guessed, deleting the unnamed second candidate as rejected; baseline A ("approved, the first one maybe") asked without guessing but also reopened the option choice. The guidance is one general unclear-candidate rule covering hedges, unmatched references, and keep-some-silent-on-the-rest, with the clear "only the first" form stated. Why: the human-confirmed definition is a single rule, the Human Approval Gate sentence must change for either shape, and A's question was not limited to the candidates. Cost if wrong: a few words of guidance for the hedge shape that the baseline already handled.
+
+> Ruling (Slice 1): /sync-global runs once after Slice 2 commits, covering both slices. Why: its Step 5 approval gate would interrupt the autonomous run, and Slice 2 edits the same architect.md section. Cost if wrong: ~/.claude/ runs the pre-story text until the end of the run.
+
+## Deferred findings
+
+- (Slice 1, medium) coding-agent/agents/architect.md, Unwritten Requirements: "Fold the answer in by the three cases below" does not say that the first reply's clear statuses stand, so a silent or "none" clarifying answer after "keep the first" could read as replacing the kept row with `None.`; placement of `Offered, not reviewed:` below a table with kept rows is unstated. Ruling: waits for the whole-branch /code-review, where the fix and a silent-follow-up regression run can land together. Cost if wrong: a kept requirement loses its test on that reply shape until fixed.
+- (Slice 1, low) coding-agent/agents/architect.md, Unwritten Requirements: the third unclear clause covers "keeps some", so the rule alone does not make the second candidate unclear in "the first one maybe"; the example carries it. Ruling: waits for /code-review; V1 already asks about both. Cost if wrong: a three-candidate hedge may leave the rest to inference.
+- (Slice 1, low) coding-agent/agents/architect.md, Unwritten Requirements: an unmatched reference "leaves every candidate it might mean unclear" is undefined when it matches none, and the plan's "plus any the reply does not otherwise settle" is missing. Ruling: waits for /code-review; no run exercised it. Cost if wrong: an unmatched reference may be read as a new requirement.
+- (Slice 1, low) coding-agent/agents/architect.md, Unwritten Requirements: "Ask once per design" can read as conflicting with the clarifying question. Ruling: waits for /code-review; no run misread it. Cost if wrong: a literal reader skips the clarifying question.
+- (Slice 1, low) plan.md Rulings: the guidance reaches past the one guessing baseline shape. Ruling: the human confirms or trims at /code-review. Cost if wrong: unbaselined text for hedges and unmatched references.

@@ -50,6 +50,8 @@ Two independent tests — a slice can pass one and fail the other, so check both
   requested, revise and re-present. An approval passes the gate, including one that says
   nothing about the architect's unwritten requirements. Send the reply to the architect,
   which revises the ADR's Required tests section per its Unwritten Requirements section.
+  When the architect comes back with a clarifying question, relay it to the human and
+  wait, then send the answer to the architect per its Unwritten Requirements section.
 - If **no** to both: proceed directly to Step 2.
 
 **Step 2 — Implementation**

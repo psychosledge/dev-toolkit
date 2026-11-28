@@ -39,7 +39,7 @@ Run `/slice` Step 0 exactly: locate the plan, present the slice recap, and wait 
 
 **Step 1 — Architect check**
 
-Apply `/slice` Step 1's two tests (pattern, ownership). If either says yes, invoke the **architect**, present the design, and wait for explicit human approval. Design approval is a human gate in every mode. The architect's unwritten-requirements question is part of the design: only the human answers it, at this gate, and no ruling stands in for that answer. An approval that says nothing about the requirements still passes the gate. Send the reply to the architect, which revises the ADR's Required tests section per its Unwritten Requirements section.
+Apply `/slice` Step 1's two tests (pattern, ownership). If either says yes, invoke the **architect**, present the design, and wait for explicit human approval. Design approval is a human gate in every mode. The architect's unwritten-requirements question is part of the design: only the human answers it, at this gate, and no ruling stands in for that answer. An approval that says nothing about the requirements still passes the gate. Send the reply to the architect, which revises the ADR's Required tests section per its Unwritten Requirements section. When the architect comes back with a clarifying question, only the human answers it too: relay it and wait, with no ruling and no named stop, then send the answer to the architect per its Unwritten Requirements section.
 
 **Step 2 — Implementation**
 
