@@ -35,7 +35,7 @@ This covers interpreted ambiguities in AC or scope, workarounds for plan defects
 Run `/slice` Step 0 exactly: locate the plan, present the slice recap, and wait for explicit approval. Add two things:
 
 1. State plainly: "This slice runs autonomously after your approval. The next thing you see is the end report, a design approval request if the architect is needed, or a stop."
-2. Confirm the working branch is the plan's feature branch; never run on the repo's base branch. Resolve the checkout the way `/slice` Step 0 does.
+2. Confirm the working branch, resolved with the `branching-model` skill. When the repo declares `Feature branches: no`, the working branch is the trunk, and the recap states that the commit lands locally on the trunk. Otherwise it is the plan's feature branch, and the run never starts on the repo's base branch. Resolve the checkout the way `/slice` Step 0 does.
 
 **Step 1 — Architect check**
 
