@@ -57,11 +57,11 @@ Check for a `CLAUDE.md` at the project root. Read it and apply project-specific 
 
 Check for a story plan at `docs/stories/*/plan.md`. If found, note the story name and its one-line summary — you'll surface it at the top of the review so the human has product context before the technical walk-through begins.
 
-Invoke the `branching-model` skill and resolve the diff base by its rules — the nearest known ancestor among the repo's declared diff base and any release-pipeline branches, not a hardcoded `main`. State the result on one line before using it: `Diff base: <branch> (<source>)`, where the source is the repo's `CLAUDE.md`, the `workloop.integrationBranch` override, or the remote default. **Before using it, check whether HEAD itself is one of those declared branches** (trunk, integration branch, or any pipeline branch) rather than a feature branch cut from one — if so, this is likely a promotion or release audit, not a feature review. Say so and ask how to proceed instead of walking what could be a large, multi-PR diff as if it were one slice.
+Invoke the `branching-model` skill and resolve the diff base by its rules — the nearest known ancestor among the repo's declared diff base and any release-pipeline branches, not a hardcoded `main`. State the result on one line before using it: `Diff base: <branch> (<source>)`, where the source is the repo's `CLAUDE.md`, the `workloop.integrationBranch` override, or the remote default. **Before using it, check whether HEAD itself is one of those declared branches** (trunk, integration branch, or any pipeline branch) rather than a feature branch cut from one — if so, this is likely a promotion or release audit, not a feature review. Say so and ask how to proceed instead of walking what could be a large, multi-PR diff as if it were one slice. When the repo declares `Feature branches: no` and HEAD is the trunk, the check does not apply: the review covers the unpushed commits, per the skill's "HEAD on a pipeline branch itself" section, and the fetch and merge-base diff below compute exactly that range.
 
 Run `git fetch origin <diff-base>` before computing the merge-base — a stale local ref silently pulls already-merged upstream commits into what looks like this PR's/slice's own diff.
 
-Otherwise, run `git diff --stat $(git merge-base origin/<diff-base> HEAD)` and `git diff --name-only $(git merge-base origin/<diff-base> HEAD)` to understand the scope of changes.
+Unless the check stopped to ask, run `git diff --stat $(git merge-base origin/<diff-base> HEAD)` and `git diff --name-only $(git merge-base origin/<diff-base> HEAD)` to understand the scope of changes.
 
 ## Step 1 — Verify
 

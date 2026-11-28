@@ -56,6 +56,8 @@ When undeclared, look for a repo-local skill named `ship` or `release` (`.claude
 
 Before running a normal feature review, check whether the current branch **is** one of the declared branches (trunk, integration branch, or any pipeline branch) rather than a feature branch cut from one. If so, this is likely a promotion or release audit, not a feature diff — say so and ask how to proceed instead of walking a large, multi-PR diff as if it were one slice.
 
+When the repo declares `Feature branches: no` and HEAD is the trunk, the check does not apply. The review range is the unpushed commits, from `git merge-base origin/<trunk> HEAD` to HEAD. State it on one line with the commits it holds, and proceed. With no unpushed commits, ask which range to review.
+
 ## When the declaration is missing or incomplete
 
 Don't silently guess, and don't run a cold questionnaire. Ask only when a concrete signal makes the gap relevant right now — e.g. an unmerged sibling branch alongside the assumed default (`origin/dev` sitting unmerged next to `origin/main`), or a consistent shape across recently-created branches suggesting an undeclared naming convention.
