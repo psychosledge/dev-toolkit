@@ -28,7 +28,7 @@ Before any work begins, orient the human to exactly what this slice covers.
 
 If a `workloop-config` project memory sets `Autonomy: auto-slice` or `auto-story`, add one line to the recap noting this slice can run via that command instead. No memory, or any other value, means skip this silently.
 
-4. Resolve the checkout. Read the `workloop-config` project memory's `Checkout` field. If it says `worktree`, or the human asks for one, create it with `git -C <repo> worktree add -b <temp-branch> <repo>/.claude/worktrees/<name> <feature-branch>`, from the plan's feature branch and never the base branch. Call `EnterWorktree` with that path only when the repo is the session's launch directory or nested under it. Otherwise stay in place and give every subagent the worktree's absolute path. With no `Checkout` field, ask once: "Run in this checkout, or in a worktree so this checkout stays untouched?", then offer to save the answer as `Checkout` in `workloop-config` so future runs skip the question.
+4. Resolve the checkout. Read the `workloop-config` project memory's `Checkout` field. If it says `worktree`, or the human asks for one, create it with `git -C <repo> worktree add -b <temp-branch> <repo>/.claude/worktrees/<name> <working-branch>`. The working branch is the plan's feature branch, never the base branch. When the repo declares `Feature branches: no` (`branching-model` skill), it is the trunk, and the recap states that Step 4 fast-forwards the trunk in the main checkout, which updates that checkout's files. Call `EnterWorktree` with that path only when the repo is the session's launch directory or nested under it. Otherwise stay in place and give every subagent the worktree's absolute path. With no `Checkout` field, ask once: "Run in this checkout, or in a worktree so this checkout stays untouched?", then offer to save the answer as `Checkout` in `workloop-config` so future runs skip the question.
 
 5. **Wait for explicit human approval before continuing.** Ask: "Does the scope look right, or do you want to adjust anything before we start?"
 
@@ -76,7 +76,7 @@ the human and wait for approval before Step 4.
 
 **Step 4 — Plan update**
 
-If the slice ran in a worktree (Step 0), return to the main checkout first: fast-forward the feature branch from the temp branch with `git -C <main checkout> merge --ff-only <temp-branch>`, then remove the worktree with `git -C <main checkout> worktree remove <path>` and delete the temp branch. The plan update below happens in the main checkout.
+If the slice ran in a worktree (Step 0), return to the main checkout first: fast-forward the working branch from the temp branch with `git -C <main checkout> merge --ff-only <temp-branch>`, then remove the worktree with `git -C <main checkout> worktree remove <path>` and delete the temp branch. The plan update below happens in the main checkout.
 
 After the commit, update `docs/stories/<slug>/plan.md` for this slice:
 
