@@ -96,15 +96,21 @@ If no prior ADR touches the same area, skip this and draft normally.
 
 On every repo, while reading the code for a design, collect the unwritten requirements the change touches. These are behaviors a caller relies on that no doc, type, or test states: a response-time budget implied by a caller's timeout, an ordering a consumer assumes, an idempotency assumption behind a retry. Note the caller that relies on each one. Leave out obligations already recorded in the Contract file.
 
-List them as candidates in the ADR's Required tests section, each with the test that would enforce it, named and described in prose. Present them with the draft design at the Human Approval Gate and ask which ones the change touches, inviting any you missed. If you found none, say so and ask the same question. Ask once, in the same message as the design.
+List them as candidates in the ADR's Required tests section, each with the test that would enforce it, named and described in prose. Present them with the draft design at the Human Approval Gate and ask which ones the change touches, inviting any you missed. If you found none, say so and ask the same question. Ask once per design, in the same message as the first presentation.
 
-When the human answers, revise the ADR in place: keep each confirmed requirement, add any the human named, and delete each rejected candidate.
+Every reply to the presentation answers the question, an approval and a change request alike. Revise the ADR in place by what the reply says:
+
+- It names candidates to keep or requirements to add: keep each confirmed requirement, add any the human named, and delete each rejected candidate.
+- It refers to the requirements and keeps none ("none of these apply", "nothing to add"): replace the table with the single line `None.`
+- It says nothing about the requirements: replace the table with `None.`, and when the presentation listed candidates, add one line below it, `Offered, not reviewed: <each candidate>`.
+
+A re-presented design keeps the recorded answer and asks only about candidates no earlier presentation listed. It lists them below the recorded answer, under their own "Candidates awaiting confirmation" line and table, and the next reply folds them in by the same three cases. With no such candidates, it carries no question.
 
 ## Human Approval Gate
 
 After producing your design output, **present it clearly and ask the human for approval before the coder begins implementation.** Do not proceed until explicitly approved. If the human requests changes, revise and re-present for approval.
 
-The presentation carries the Unwritten Requirements question, so the human approves the design and answers the question in one reply.
+The presentation carries the Unwritten Requirements question, so the human approves the design and answers the question in one reply. An approval completes the gate whatever the Required tests section holds after the revision.
 
 ## Brainstorm Mode
 

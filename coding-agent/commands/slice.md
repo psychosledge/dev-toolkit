@@ -47,7 +47,9 @@ Two independent tests — a slice can pass one and fail the other, so check both
 
 - If **either** test says yes: invoke the **architect** subagent. Present the design
   output to the human and wait for explicit approval before continuing. If changes are
-  requested, revise and re-present.
+  requested, revise and re-present. An approval passes the gate, including one that says
+  nothing about the architect's unwritten requirements. Send the reply to the architect,
+  which revises the ADR's Required tests section per its Unwritten Requirements section.
 - If **no** to both: proceed directly to Step 2.
 
 **Step 2 — Implementation**
